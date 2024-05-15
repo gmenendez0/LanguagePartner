@@ -1,0 +1,11 @@
+{
+  "users": [
+    {
+      "id": "4109424b-1962-4497-ae20-7537b47c6ddf",
+      "city": "Buenos Aires",
+      "name": "Bruno",
+      "email": "bruno@mail.com",
+      "password": "1234"
+    }
+  ]
+}
