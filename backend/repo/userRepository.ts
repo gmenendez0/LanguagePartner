@@ -7,7 +7,7 @@ interface UserData {
   users: User[];
 }
   
-export class UserRepository {
+class UserRepository {
   private users: User[];
 
   constructor() {
@@ -56,3 +56,6 @@ export class UserRepository {
     return this.users.find(user => user.email === email);
   }
 }
+
+const userRepository = new UserRepository();
+export default userRepository;
