@@ -5,7 +5,16 @@
       "city": "Buenos Aires",
       "name": "Bruno",
       "email": "bruno@mail.com",
-      "password": "1234"
+      "password": "1234",
+      "approved": [],
+      "matched": [],
+      "rejected": [],
+      "known_languages": [
+        "Spanish"
+      ],
+      "wanted_languages": [
+        "German"
+      ]
     }
   ]
 }
