@@ -94,3 +94,75 @@ app.post('/logout', (req: Request, res: Response) => {
   req.session.user = null;
   res.json({ message: 'Logged out successfully' });
 });
+
+app.post('/add_known_language', (req: Request, res: Response) => {
+  const { language } = req.body;
+
+  if (!language) {
+    return res.status(400).json({ message: 'Language is required' });
+  }
+
+  const user = req.session.user;
+
+  if (!user) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
+
+  user.known_languages.push(language);
+  userRepository.saveUser(user);
+  res.json(user);
+});
+
+app.post('/add_wanted_language', (req: Request, res: Response) => {
+  const { language } = req.body;
+
+  if (!language) {
+    return res.status(400).json({ message: 'Language is required' });
+  }
+
+  const user = req.session.user;
+
+  if (!user) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
+
+  user.wanted_languages.push(language);
+  userRepository.saveUser(user);
+  res.json(user);
+});
+
+app.post('/remove_known_language', (req: Request, res: Response) => {
+  const { language } = req.body;
+
+  if (!language) {
+    return res.status(400).json({ message: 'Language is required' });
+  }
+
+  const user = req.session.user;
+
+  if (!user) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
+
+  user.known_languages = user.known_languages.filter(l => l !== language);
+  userRepository.saveUser(user);
+  res.json(user);
+});
+
+app.post('/remove_wanted_language', (req: Request, res: Response) => {
+  const { language } = req.body;
+
+  if (!language) {
+    return res.status(400).json({ message: 'Language is required' });
+  }
+
+  const user = req.session.user;
+
+  if (!user) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
+
+  user.wanted_languages = user.wanted_languages.filter(l => l !== language);
+  userRepository.saveUser(user);
+  res.json(user);
+});
