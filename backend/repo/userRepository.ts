@@ -34,6 +34,15 @@ export class UserRepository {
     this.saveUsers();
   }
 
+  public getUser(id: string): User | undefined {
+    return this.users.find(user => user.id === id);
+  }
+
+  public saveUser(user: User): void {
+    this.users = this.users.map(u => (u.id === user.id ? user : u));
+    this.saveUsers();
+  }
+
   public deleteUser(id: string): void {
     this.users = this.users.filter(user => user.id !== id);
     this.saveUsers();
@@ -41,26 +50,5 @@ export class UserRepository {
 
   public getUsersFromCity(city: string): User[] {
     return this.users.filter(user => user.city === city);
-  }
-
-  public rejectUser(current: string, id: string): void {
-    const user = this.users.find(user => user.id === current);
-    if (user) {
-      user.rejected.push(id);
-      this.saveUsers();
-    }
-  }
-
-  public approveUser(current: string, id: string): void {
-    const current_user = this.users.find(user => user.id === current);
-    const second_user = this.users.find(user => user.id === id);
-    if (current_user && second_user) {
-      current_user.approved.push(id);
-      if (second_user.approved.includes(current)) {
-        current_user.matched.push(id);
-        second_user.matched.push(current);
-      }
-      this.saveUsers();
-    }
   }
 }
