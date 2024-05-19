@@ -51,4 +51,8 @@ export class UserRepository {
   public getUsersFromCity(city: string): User[] {
     return this.users.filter(user => user.city === city);
   }
+
+  public getUserByEmail(email: string): User | undefined {
+    return this.users.find(user => user.email === email);
+  }
 }

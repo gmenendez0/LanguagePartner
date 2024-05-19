@@ -15,6 +15,18 @@
       "wanted_languages": [
         "German"
       ]
+    },
+    {
+      "id": "9c83c814-a326-4db8-806d-d3cd9c6f855f",
+      "city": "Buenos Aires",
+      "name": "Juan Carlos",
+      "email": "juancarlos@mail.com",
+      "password": "1234",
+      "approved": [],
+      "rejected": [],
+      "matched": [],
+      "known_languages": [],
+      "wanted_languages": []
     }
   ]
 }
