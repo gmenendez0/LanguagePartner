@@ -4,7 +4,7 @@ import userRepository from '../repo/userRepository';
 import User from '../model/user'; // Adjust the path
 import '../app'
 
-export const AddKnownLanguage = (req: Request, res: Response) => {
+export const addKnownLanguage = (req: Request, res: Response) => {
   const { language } = req.body;
 
   if (!language) {
@@ -22,7 +22,7 @@ export const AddKnownLanguage = (req: Request, res: Response) => {
   res.json(user);
 };
 
-export const AddWantedLanguage = (req: Request, res: Response) => {
+export const addWantedLanguage = (req: Request, res: Response) => {
   const { language } = req.body;
 
   if (!language) {
@@ -40,7 +40,7 @@ export const AddWantedLanguage = (req: Request, res: Response) => {
   res.json(user);
 };
 
-export const RemoveKnownLanguage = (req: Request, res: Response) => {
+export const removeKnownLanguage = (req: Request, res: Response) => {
   const { language } = req.body;
 
   if (!language) {
@@ -58,7 +58,7 @@ export const RemoveKnownLanguage = (req: Request, res: Response) => {
   res.json(user);
 };
 
-export const RemoveWantedLanguage = (req: Request, res: Response) => {
+export const removeWantedLanguage = (req: Request, res: Response) => {
   const { language } = req.body;
 
   if (!language) {

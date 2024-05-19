@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import userRepository from '../repo/userRepository';
-import User from '../model/user'; // Adjust the path
+import User from '../model/user';
 import '../app'
 
 export const register = (req: Request, res: Response) => {
