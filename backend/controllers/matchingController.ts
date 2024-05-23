@@ -53,6 +53,14 @@ export const approveUser = (req: Request, res: Response) => {
     user.approved.push(userId);
   }
 
+  // Si el usuario aprobado también nos ha aprobado, se produce un match
+  if (userRepository.getUser(userId)?.approved.includes(user.id)) {
+    user.matched.push(userId);
+    userRepository.getUser(userId)?.matched.push(user.id);
+    // Logica de crear chats??
+  }
+
+  userRepository.saveUser(user);
   res.json(user);
 }
 
@@ -72,5 +80,6 @@ export const rejectUser = (req: Request, res: Response) => {
     user.rejected.push(userId);
   }
 
+  userRepository.saveUser(user);
   res.json(user);
 }
