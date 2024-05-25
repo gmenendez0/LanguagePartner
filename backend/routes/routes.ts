@@ -22,5 +22,6 @@ router.post('/reject-user', matchingController.rejectUser);
 
 router.post('/upload-profile-picture', imageController.uploadMiddleware,  imageController.uploadProfilePicture);
 router.delete('/delete-profile-picture', imageController.deleteProfilePicture);
+router.get('/profile-picture/:id', imageController.getProfilePicture);
 
 export default router;
