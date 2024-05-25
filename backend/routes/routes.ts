@@ -21,5 +21,6 @@ router.post('/approve-user', matchingController.approveUser);
 router.post('/reject-user', matchingController.rejectUser);
 
 router.post('/upload-profile-picture', imageController.uploadMiddleware,  imageController.uploadProfilePicture);
+router.delete('/delete-profile-picture', imageController.deleteProfilePicture);
 
 export default router;
