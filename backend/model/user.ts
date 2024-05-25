@@ -9,4 +9,6 @@ export default interface User {
   matched: string[];
   known_languages: string[];
   wanted_languages: string[];
+  profile_picture: string | null;
 }
+

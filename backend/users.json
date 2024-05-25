@@ -6,15 +6,20 @@
       "name": "Bruno",
       "email": "bruno@mail.com",
       "password": "1234",
-      "approved": [],
-      "matched": [],
+      "approved": [
+        "9c83c814-a326-4db8-806d-d3cd9c6f855f"
+      ],
+      "matched": [
+        "9c83c814-a326-4db8-806d-d3cd9c6f855f"
+      ],
       "rejected": [],
       "known_languages": [
         "Spanish"
       ],
       "wanted_languages": [
         "German"
-      ]
+      ],
+      "profile_picture": null
     },
     {
       "id": "9c83c814-a326-4db8-806d-d3cd9c6f855f",
@@ -22,11 +27,16 @@
       "name": "Juan Carlos",
       "email": "juancarlos@mail.com",
       "password": "1234",
-      "approved": [],
+      "approved": [
+        "4109424b-1962-4497-ae20-7537b47c6ddf"
+      ],
       "rejected": [],
-      "matched": [],
+      "matched": [
+        "4109424b-1962-4497-ae20-7537b47c6ddf"
+      ],
       "known_languages": [],
-      "wanted_languages": []
+      "wanted_languages": [],
+      "profile_picture": null
     }
   ]
 }

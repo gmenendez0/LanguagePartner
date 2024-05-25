@@ -21,7 +21,8 @@ export const register = (req: Request, res: Response) => {
     rejected: [],
     matched: [],
     known_languages: [],
-    wanted_languages: []
+    wanted_languages: [],
+    profile_picture: null
   };
 
   userRepository.addUser(newUser);
