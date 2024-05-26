@@ -15,3 +15,5 @@ backend/node_modules/
 
 # Ignore npm package lock file
 backend/package-lock.json
+backend/node-v14.17.0-linux-x64.tar.xz
+/backend/node-v14.17.0-linux-x64
