@@ -1,6 +1,4 @@
 #!/bin/bash
-# IMPORTANT: remember to change the /etc/postgresql/<VERSION NUMBER>/main/pg_hba.conf file to use md5 instead of peer
-# IMPORTANT: remember to have .env file with the variables defined in cargo root directory
 # IMPORTANT: run chmod +x create_database.sh to allow execution of this file
 # IMPORTANT: to execute this run ./create_database.sh
 
