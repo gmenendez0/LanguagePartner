@@ -17,3 +17,6 @@ backend/node_modules/
 backend/package-lock.json
 backend/node-v14.17.0-linux-x64.tar.xz
 /backend/node-v14.17.0-linux-x64
+
+# Ignore swagger_output directory
+backend/swagger_output.json

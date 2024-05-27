@@ -1,13 +1,14 @@
-import * as express from 'express';
+import express from 'express';
 import { Request, Response } from 'express';
-import * as session from 'express-session';
+import session from 'express-session';
 import User from './model/user';
 import myRouter from './routes/routes';
 import "reflect-metadata";
 import { AppDataSource } from "./src/data-source"
 import { Userr } from "./src/entity/User"
+import swaggerUi from 'swagger-ui-express';
+import * as swaggerDocument from './swagger_output.json';
 
-// ... rest of your code
 
 
 const sessionOptions: session.SessionOptions = {
@@ -40,6 +41,7 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(session(sessionOptions));
 app.use('/', myRouter);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello, World!');
