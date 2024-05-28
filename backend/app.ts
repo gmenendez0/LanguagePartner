@@ -1,15 +1,18 @@
 import express from 'express';
 import { Request, Response } from 'express';
 import session from 'express-session';
-import User from './model/user';
+import UserModel from './model/user';
 import myRouter from './routes/routes';
 import "reflect-metadata";
 import { AppDataSource } from "./src/data-source"
-import { Userr } from "./src/entity/User"
+import { User } from "./src/entity/User"	
+import { Language } from "./src/entity/Language"
 import swaggerUi from 'swagger-ui-express';
-import * as swaggerDocument from './swagger_output.json';
+import { UserRepository } from './src/repository/UserRepository';
+// import * as swaggerDocument from './swagger_output.json';
 
-
+const userRepository = AppDataSource.getRepository(User) as UserRepository;
+const languageRepository = AppDataSource.getRepository(Language);
 
 const sessionOptions: session.SessionOptions = {
   secret: 'yourSecretKey', // replace with a strong secret key
@@ -23,7 +26,7 @@ const sessionOptions: session.SessionOptions = {
 
 declare module 'express-session' {
   interface SessionData {
-    user: User | null;
+    user: number | null;
   }
 }
 
@@ -41,7 +44,7 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(session(sessionOptions));
 app.use('/', myRouter);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello, World!');
@@ -53,18 +56,7 @@ AppDataSource.initialize().then(async () => {
   await AppDataSource.runMigrations({
     transaction: 'all',
   });
-  console.log("Inserting a new user into the database...")
-  const user = new Userr()
-  user.firstName = "Timber"
-  user.lastName = "Saw"
-  user.age = 25
-  user.age2 = 25
-  await AppDataSource.manager.save(user)
-  console.log("Saved a new user with id: " + user.id)
 
-  console.log("Loading users from the database...")
-  const users = await AppDataSource.manager.find(Userr)
-  console.log("Loaded users: ", users)
 
   console.log("Here you can setup and run express / fastify / any other framework.")
 

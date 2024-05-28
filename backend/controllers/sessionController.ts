@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import { v4 as uuidv4 } from 'uuid';
-import userRepository from '../repo/userRepository';
-import User from '../model/user';
+import { User } from '../src/entity/User';
 import '../app'
+import { AppDataSource } from '../src/data-source';
+import { UserRepository } from '../src/repository/UserRepository';
 
 export const register = (req: Request, res: Response) => {
   const { city, name, email, password } = req.body;
@@ -11,22 +11,16 @@ export const register = (req: Request, res: Response) => {
     return res.status(400).json({ message: 'All fields are required' });
   }
 
-  const newUser: User = {
-    id: uuidv4(),
-    city,
-    name,
-    email,
-    password,
-    approved: [],
-    rejected: [],
-    matched: [],
-    known_languages: [],
-    wanted_languages: [],
-    profile_picture: null
-  };
+  const newUser = new User();
+  newUser.city = city;
+  newUser.name = name;
+  newUser.email = email;
+  newUser.password = password;
 
-  userRepository.addUser(newUser);
-  req.session.user = newUser;
+  const userRepository = AppDataSource.getRepository(User) as UserRepository;
+
+  userRepository.save(newUser);
+  req.session.user = newUser.id;
   res.status(201).json(newUser);
 };
   
@@ -37,18 +31,26 @@ export const login = (req: Request, res: Response) => {
     return res.status(400).json({ message: 'Email and password are required' });
   }
 
-  const user = userRepository.getUserByEmail(email);
+  const userRepository = AppDataSource.getRepository(User) as UserRepository;
+  const user = userRepository.findOneBy({ email }).then(user => {
+    if (!user || user.password !== password) {
+      return res.status(401).json({ message: 'Invalid email or password' });
+    }
 
-  if (!user || user.password !== password) {
-    return res.status(401).json({ message: 'Invalid email or password' });
-  }
-
-  req.session.user = user;
-  res.json(user);
+    req.session.user = user.id;
+    res.json(user);
+  });
 };
 
 export const me = (req: Request, res: Response) => {
-  res.json(req.session.user);
+  const userRepository = AppDataSource.getRepository(User) as UserRepository;
+  const user = userRepository.findOneBy({ id: req.session.user }).then(user => {
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.json(user);
+  });
 };
 
 export const logout = (req: Request, res: Response) => {

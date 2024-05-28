@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import userRepository from '../repo/userRepository';
 import User from '../model/user';
 import '../app'
-
+/*
 export const getMatchableUser = (req: Request, res: Response) => {
   const user = req.session.user;
   
@@ -82,4 +82,4 @@ export const rejectUser = (req: Request, res: Response) => {
 
   userRepository.saveUser(user);
   res.json(user);
-}
+}*/
