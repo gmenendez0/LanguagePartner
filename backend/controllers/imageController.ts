@@ -69,29 +69,29 @@ export const deleteProfilePicture = async (req: Request, res: Response) => {
   }
 
   const userRepository = AppDataSource.getRepository(User) as UserRepository;
-  const user = userRepository.findOneBy({ id: userid }).then(user => {
-    if (!user.profilePicHash) {
-      return res.status(404).json({ message: 'No profile picture found' });
-    }
-    deleteImage(user);
-    userRepository.save(user);
-    return res.status(200).json(user);
-  });
+  const user = await userRepository.findOneBy({ id: userid })
+  if (!user.profilePicHash) {
+    return res.status(404).json({ message: 'No profile picture found' });
+  }
+  await deleteImage(user);
+  userRepository.save(user);
+  return res.status(200).json(user);
 }
 
 export const getProfilePicture = async (req: Request, res: Response) => {
+  const { id } = req.body;
   const userRepository = AppDataSource.getRepository(User) as UserRepository;
-  const user = userRepository.findOneBy({ id: req.body.id }).then(user => {
-    if (!user || !user.profilePicHash) {
-      return res.status(404).json({ message: 'No profile picture found' });
-    }
+  const user = await userRepository.findOneBy({ id });
 
-    const response = axios.get(
+  if (!user || !user.profilePicHash) {
+      return res.status(404).json({ message: 'No profile picture found' });
+  }
+
+  const response = await axios.get(
       `https://api.imgur.com/3/image/${user.profilePicHash}`,
       { headers: { Authorization: `Bearer ${TOKEN}` } }
-    );
+  );
 
-    return res.status(response.status).json(response.data);
-    //la foto esta en data.link (response.data.data.link)
-  });
+  return res.status(response.status).json(response.data);
+  // The photo is in data.link (response.data.data.link)
 }

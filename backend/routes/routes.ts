@@ -22,6 +22,6 @@ router.post('/add-known-language', userController.addKnownLanguage);
 
 router.post('/upload-profile-picture', imageController.uploadMiddleware,  imageController.uploadProfilePicture);
 router.delete('/delete-profile-picture', imageController.deleteProfilePicture);
-router.get('/profile-picture/:id', imageController.getProfilePicture);
+router.get('/profile-picture', imageController.getProfilePicture);
 
 export default router;
