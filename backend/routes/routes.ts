@@ -3,6 +3,7 @@ import * as userController from '../controllers/userController';
 import * as sessionController from '../controllers/sessionController';
 import * as matchingController from '../controllers/matchingController';
 import * as imageController from '../controllers/imageController';
+import * as languageController from '../controllers/languageController';
 
 const router = Router();
 
@@ -23,5 +24,8 @@ router.post('/add-known-language', userController.addKnownLanguage);
 router.post('/upload-profile-picture', imageController.uploadMiddleware,  imageController.uploadProfilePicture);
 router.delete('/delete-profile-picture', imageController.deleteProfilePicture);
 router.get('/profile-picture', imageController.getProfilePicture);
+
+router.get('/languages', languageController.getLanguages);
+router.post('/languages', languageController.addLanguages);
 
 export default router;
