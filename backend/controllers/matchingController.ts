@@ -14,7 +14,10 @@ export const getMatchableUser = async (req: Request, res: Response) => {
 
   const userRepository = AppDataSource.getRepository(User) as UserRepository;
 
-  const user = await userRepository.findOneBy({ id: req.session.user });
+  const user = await userRepository.findOne({
+    where: { id: req.session.user },
+    relations: ["approvedUsers", "rejectedUsers"],
+  });
   
   const matchableUsers = await userRepository.findBy({ city: user.city });
 
@@ -25,6 +28,7 @@ export const getMatchableUser = async (req: Request, res: Response) => {
   } else {
     // Si no hay usuarios posibles, borro la lista de rechazados y vuelvo a intentar
     user.rejectedUsers = [];
+    userRepository.save(user);
     const filteredUsers = fiterMatchableUsers(user, matchableUsers);
     if (filteredUsers.length > 0) {
       return res.status(200).json(filteredUsers[Math.floor(Math.random() * filteredUsers.length)]);
@@ -34,19 +38,20 @@ export const getMatchableUser = async (req: Request, res: Response) => {
   }
 }
 
-const fiterMatchableUsers = (user: User, matchableUsers: User[]) => {
-  if (!matchableUsers) {
-    return [];
-  }
+const fiterMatchableUsers = (user: User, matchableUsers: User[]): User[] => {
+  // Map approvedUsers and rejectedUsers to arrays of their IDs
+  const approvedUserIds = user.approvedUsers.map(approvedUser => approvedUser.id);
+  const rejectedUserIds = user.rejectedUsers.map(rejectedUser => rejectedUser.id);
 
+  // Filter matchableUsers by checking IDs against approved and rejected IDs
   return matchableUsers.filter(matchableUser => {
     return (
-      (!user.approvedUsers || !user.approvedUsers.includes(matchableUser)) &&
-      (!user.rejectedUsers || !user.rejectedUsers.includes(matchableUser)) &&
+      !approvedUserIds.includes(matchableUser.id) &&
+      !rejectedUserIds.includes(matchableUser.id) &&
       matchableUser.id !== user.id
     );
   });
-}
+};
 
 export const approveUser = async (req: Request, res: Response) => {
   if (!req.session.user) {
@@ -55,22 +60,29 @@ export const approveUser = async (req: Request, res: Response) => {
   if (!req.body.userId) {
     return res.status(400).json({ message: 'userId is required' });
   }
+  if (req.session.user === req.body.userId) {
+    return res.status(400).json({ message: 'You cannot approve yourself' });
+  }
 
   const userRepository = AppDataSource.getRepository(User) as UserRepository;
 
-  const user = await userRepository.findOneBy({ id: req.session.user });
-  const userToApprove = await userRepository.findOneBy({ id: req.body.userId });
+  const user = await userRepository.findOne({
+    where: { id: req.session.user },
+    relations: ["approvedUsers", "matchedUsers"],
+  });
+  const userToApprove = await userRepository.findOne({
+    where: { id: req.body.userId },
+    relations: ["approvedUsers", "matchedUsers"],
+  });
 
   if (!userToApprove) {
     return res.status(404).json({ message: 'User not found' });
   }
 
-  if (!user.approvedUsers.includes(userToApprove)) {
-    user.approvedUsers.push(userToApprove);
-  }
+  user.approvedUsers.push(userToApprove);
 
   // Si el usuario aprobado también nos ha aprobado, se produce un match
-  if (userToApprove.approvedUsers.includes(user)) {
+  if (userToApprove.approvedUsers.map(approvedUser => approvedUser.id).includes(user.id)) {
     user.matchedUsers.push(userToApprove);
     userToApprove.matchedUsers.push(user);
     // Logica de crear chats??
@@ -91,21 +103,24 @@ export const rejectUser = async (req: Request, res: Response) => {
   if (!req.body.userId) {
     return res.status(400).json({ message: 'userId is required' });
   }
+  if (req.session.user === req.body.userId) {
+    return res.status(400).json({ message: 'You cannot reject yourself' });
+  }
 
   const userRepository = AppDataSource.getRepository(User) as UserRepository;
 
-  const user = await userRepository.findOneBy({ id: req.session.user });
+  const user = await userRepository.findOne({
+    where: { id: req.session.user },
+    relations: ["rejectedUsers"],
+  });
   const userToReject = await userRepository.findOneBy({ id: req.body.userId });
 
   if (!userToReject) {
     return res.status(404).json({ message: 'User not found' });
   }
 
-  if (!user.approvedUsers.includes(userToReject)) {
-    user.approvedUsers.push(userToReject);
-  }
-
   user.rejectedUsers.push(userToReject);
+
   userRepository.save(user);
   return res.status(200).json({ message: 'User Rejected' });
 }
@@ -117,7 +132,10 @@ export const getRelationships = async (req: Request, res: Response) => {
 
   const userRepository = AppDataSource.getRepository(User) as UserRepository;
 
-  const user = await userRepository.findOneBy({ id: req.session.user });
+  const user = await userRepository.findOne({
+    where: { id: req.session.user },
+    relations: ["approvedUsers", "rejectedUsers", "matchedUsers"],
+  });
 
   return res.status(200).json(
     {

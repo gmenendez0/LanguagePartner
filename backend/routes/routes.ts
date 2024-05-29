@@ -17,10 +17,10 @@ router.post('/register', sessionController.register);
 // router.delete('/remove-known-language', userController.removeKnownLanguage);
 // router.delete('/remove-wanted-language', userController.removeWantedLanguage);
 
-// router.get('/matchable-user', matchingController.getMatchableUser);
-// router.post('/approve-user', matchingController.approveUser);
-// router.post('/reject-user', matchingController.rejectUser);
-// router.get('/relationships', matchingController.getRelationships);
+router.get('/matchable-user', matchingController.getMatchableUser);
+router.post('/approve-user', matchingController.approveUser);
+router.post('/reject-user', matchingController.rejectUser);
+router.get('/relationships', matchingController.getRelationships);
 
 router.post('/upload-profile-picture', imageController.uploadMiddleware,  imageController.uploadProfilePicture);
 router.delete('/delete-profile-picture', imageController.deleteProfilePicture);
