@@ -17,73 +17,114 @@ export const addKnownLanguage = async (req: Request, res: Response) => {
   }
 
   const userRepository = AppDataSource.getRepository(User) as UserRepository;
-  const user = userRepository.findOneBy({id: req.session.user}).then(user => {
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
+  const user = await userRepository.findOneBy({id: req.session.user})
+  const lang = await AppDataSource.getRepository(Language).findOneBy({name: language})
+  
+  if (!user) {
+    return res.status(404).json({ message: 'User not found' });
+  }
 
-    const lang = AppDataSource.getRepository(Language).findOneBy({name: language}).then(lang => {
-      if (!lang) {
-        return res.status(404).json({ message: 'Language not found' });
-      }
-      user.knownLanguages.push(lang);
-    });
+  if (!lang) {
+    return res.status(404).json({ message: 'Language not found' });
+  }
 
-    userRepository.save(user);
-    res.json(user);
-  });
+  if (user.knownLanguages.includes(lang)) {
+    return res.status(400).json({ message: 'Language already added' });
+  }
+
+  user.knownLanguages.push(lang);
+
+  userRepository.save(user);
+  res.json(user);
 };
-/*
-export const addWantedLanguage = (req: Request, res: Response) => {
+
+export const addWantedLanguage = async (req: Request, res: Response) => {
   const { language } = req.body;
+
+  if (!req.session.user) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
 
   if (!language) {
     return res.status(400).json({ message: 'Language is required' });
   }
 
-  const user = req.session.user;
-
+  const userRepository = AppDataSource.getRepository(User) as UserRepository;
+  const user = await userRepository.findOneBy({id: req.session.user})
+  const lang = await AppDataSource.getRepository(Language).findOneBy({name: language})
+  
   if (!user) {
-    return res.status(401).json({ message: 'Unauthorized' });
+    return res.status(404).json({ message: 'User not found' });
   }
 
-  user.wanted_languages.push(language);
-  userRepository.saveUser(user);
+  if (!lang) {
+    return res.status(404).json({ message: 'Language not found' });
+  }
+
+  if (user.wantToKnowLanguages.includes(lang)) {
+    return res.status(400).json({ message: 'Language already added' });
+  }
+
+  user.wantToKnowLanguages.push(lang);
+
+  userRepository.save(user);
   res.json(user);
 };
 
-export const removeKnownLanguage = (req: Request, res: Response) => {
+export const removeKnownLanguage = async (req: Request, res: Response) => {
   const { language } = req.body;
+
+  if (!req.session.user) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
 
   if (!language) {
     return res.status(400).json({ message: 'Language is required' });
   }
 
-  const user = req.session.user;
-
+  const userRepository = AppDataSource.getRepository(User) as UserRepository;
+  const user = await userRepository.findOneBy({id: req.session.user})
+  const lang = await AppDataSource.getRepository(Language).findOneBy({name: language})
+  
   if (!user) {
-    return res.status(401).json({ message: 'Unauthorized' });
+    return res.status(404).json({ message: 'User not found' });
   }
 
-  user.known_languages = user.known_languages.filter(l => l !== language);
-  userRepository.saveUser(user);
+  if (!lang) {
+    return res.status(404).json({ message: 'Language not found' });
+  }
+
+  user.knownLanguages = user.knownLanguages.filter(l => l !== lang);
+
+  userRepository.save(user);
   res.json(user);
 };
 
-export const removeWantedLanguage = (req: Request, res: Response) => {
+export const removeWantedLanguage = async (req: Request, res: Response) => {
   const { language } = req.body;
+
+  if (!req.session.user) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
 
   if (!language) {
     return res.status(400).json({ message: 'Language is required' });
   }
 
-  const user = req.session.user;
-
+  const userRepository = AppDataSource.getRepository(User) as UserRepository;
+  const user = await userRepository.findOneBy({id: req.session.user})
+  const lang = await AppDataSource.getRepository(Language).findOneBy({name: language})
+  
   if (!user) {
-    return res.status(401).json({ message: 'Unauthorized' });
+    return res.status(404).json({ message: 'User not found' });
   }
 
-  user.wanted_languages = user.wanted_languages.filter(l => l !== language);
-  userRepository.saveUser(user);
+  if (!lang) {
+    return res.status(404).json({ message: 'Language not found' });
+  }
+
+  user.wantToKnowLanguages = user.wantToKnowLanguages.filter(l => l !== lang);
+
+  userRepository.save(user);
   res.json(user);
-};*/
+};

@@ -19,12 +19,32 @@ export class User {
   city: string;
 
   @ManyToMany(() => User)
-  @JoinTable()
-  approvedUsers: User[];
+    @JoinTable({
+        name: 'user_approved_users', // Name of the join table
+        joinColumn: {
+            name: 'user_id',
+            referencedColumnName: 'id',
+        },
+        inverseJoinColumn: {
+            name: 'approved_user_id',
+            referencedColumnName: 'id',
+        },
+    })
+    approvedUsers: User[];
 
-  @ManyToMany(() => User)
-  @JoinTable()
-  rejectedUsers: User[];
+    @ManyToMany(() => User)
+    @JoinTable({
+        name: 'user_rejected_users', // Name of the join table
+        joinColumn: {
+            name: 'user_id',
+            referencedColumnName: 'id',
+        },
+        inverseJoinColumn: {
+            name: 'rejected_user_id',
+            referencedColumnName: 'id',
+        },
+    })
+    rejectedUsers: User[];
 
   @ManyToMany(() => User)
   @JoinTable()
@@ -38,6 +58,6 @@ export class User {
   @JoinTable()
   wantToKnowLanguages: Language[];
 
-  @Column()
+  @Column({ nullable: true })
   profilePicHash: string;
 }
