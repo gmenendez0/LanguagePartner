@@ -17,7 +17,10 @@ export const addKnownLanguage = async (req: Request, res: Response) => {
   }
 
   const userRepository = AppDataSource.getRepository(User) as UserRepository;
-  const user = await userRepository.findOneBy({id: req.session.user})
+  const user = await userRepository.findOne({
+    where: { id: req.session.user },
+    relations: ["knownLanguages", "wantToKnowLanguages"],
+  });
   const lang = await AppDataSource.getRepository(Language).findOneBy({name: language})
   
   if (!user) {
@@ -50,7 +53,10 @@ export const addWantedLanguage = async (req: Request, res: Response) => {
   }
 
   const userRepository = AppDataSource.getRepository(User) as UserRepository;
-  const user = await userRepository.findOneBy({id: req.session.user})
+  const user = await userRepository.findOne({
+    where: { id: req.session.user },
+    relations: ["knownLanguages", "wantToKnowLanguages"],
+  });
   const lang = await AppDataSource.getRepository(Language).findOneBy({name: language})
   
   if (!user) {
@@ -83,7 +89,10 @@ export const removeKnownLanguage = async (req: Request, res: Response) => {
   }
 
   const userRepository = AppDataSource.getRepository(User) as UserRepository;
-  const user = await userRepository.findOneBy({id: req.session.user})
+  const user = await userRepository.findOne({
+    where: { id: req.session.user },
+    relations: ["knownLanguages", "wantToKnowLanguages"],
+  });
   const lang = await AppDataSource.getRepository(Language).findOneBy({name: language})
   
   if (!user) {
@@ -94,7 +103,7 @@ export const removeKnownLanguage = async (req: Request, res: Response) => {
     return res.status(404).json({ message: 'Language not found' });
   }
 
-  user.knownLanguages = user.knownLanguages.filter(l => l !== lang);
+  user.knownLanguages = user.knownLanguages.filter(l => l.id !== lang.id);
 
   userRepository.save(user);
   res.json(user);
@@ -112,7 +121,10 @@ export const removeWantedLanguage = async (req: Request, res: Response) => {
   }
 
   const userRepository = AppDataSource.getRepository(User) as UserRepository;
-  const user = await userRepository.findOneBy({id: req.session.user})
+  const user = await userRepository.findOne({
+    where: { id: req.session.user },
+    relations: ["knownLanguages", "wantToKnowLanguages"],
+  });
   const lang = await AppDataSource.getRepository(Language).findOneBy({name: language})
   
   if (!user) {
@@ -123,8 +135,29 @@ export const removeWantedLanguage = async (req: Request, res: Response) => {
     return res.status(404).json({ message: 'Language not found' });
   }
 
-  user.wantToKnowLanguages = user.wantToKnowLanguages.filter(l => l !== lang);
+  user.wantToKnowLanguages = user.wantToKnowLanguages.filter(l => l.id !== lang.id);
 
   userRepository.save(user);
   res.json(user);
 };
+
+export const myLanguages = async (req: Request, res: Response) => {
+  if (!req.session.user) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
+
+  const userRepository = AppDataSource.getRepository(User) as UserRepository;
+  const user = await userRepository.findOne({
+    where: { id: req.session.user },
+    relations: ["knownLanguages", "wantToKnowLanguages"],
+  });
+
+  if (!user) {
+    return res.status(404).json({ message: 'User not found' });
+  }
+
+  res.json({
+    knownLanguages: user.knownLanguages,
+    wantToKnowLanguages: user.wantToKnowLanguages,
+  });
+}
