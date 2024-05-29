@@ -12,7 +12,7 @@ router.post('/logout', sessionController.logout);
 router.get('/current-user', sessionController.me);
 router.post('/register', sessionController.register);
 
-router.post('/add-known-language', userController.addKnownLanguage);
+// router.post('/add-known-language', userController.addKnownLanguage);
 // router.post('/add-wanted-language', userController.addWantedLanguage);
 // router.delete('/remove-known-language', userController.removeKnownLanguage);
 // router.delete('/remove-wanted-language', userController.removeWantedLanguage);
@@ -20,6 +20,7 @@ router.post('/add-known-language', userController.addKnownLanguage);
 // router.get('/matchable-user', matchingController.getMatchableUser);
 // router.post('/approve-user', matchingController.approveUser);
 // router.post('/reject-user', matchingController.rejectUser);
+// router.get('/relationships', matchingController.getRelationships);
 
 router.post('/upload-profile-picture', imageController.uploadMiddleware,  imageController.uploadProfilePicture);
 router.delete('/delete-profile-picture', imageController.deleteProfilePicture);

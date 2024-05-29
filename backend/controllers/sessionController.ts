@@ -16,11 +16,16 @@ export const register = (req: Request, res: Response) => {
   newUser.name = name;
   newUser.email = email;
   newUser.password = password;
+  newUser.profilePicHash = null;
+  newUser.approvedUsers = [];
+  newUser.rejectedUsers = [];
+  newUser.matchedUsers = [];
+  newUser.knownLanguages = [];
+  newUser.wantToKnowLanguages = [];
 
   const userRepository = AppDataSource.getRepository(User) as UserRepository;
 
   userRepository.save(newUser);
-  req.session.user = newUser.id;
   res.status(201).json(newUser);
 };
   
@@ -42,15 +47,18 @@ export const login = (req: Request, res: Response) => {
   });
 };
 
-export const me = (req: Request, res: Response) => {
-  const userRepository = AppDataSource.getRepository(User) as UserRepository;
-  const user = userRepository.findOneBy({ id: req.session.user }).then(user => {
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
+export const me = async (req: Request, res: Response) => {
+  
+  if (!req.session.user) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
 
-    res.json(user);
-  });
+  const userRepository = AppDataSource.getRepository(User) as UserRepository;
+  const user = await userRepository.findOneBy({ id: req.session.user })
+  if (!user) {
+    return res.status(404).json({ message: 'User not found' });
+  }
+  res.json(user);
 };
 
 export const logout = (req: Request, res: Response) => {
