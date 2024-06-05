@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import languageService from "../service/LanguageService";
+import languageService from "../controllers/LanguageController";
 
 const languageRouter = Router();
 

@@ -1,28 +1,27 @@
-import {Service} from "./Service";
-import {Request, Response} from "express";
-import {LanguageController} from "../controllers/languageController";
-import {InvalidRequestFormatError} from "../errors/InvalidRequestFormatError";
+import { Language } from '../src/entity/Language';
+import '../app'
+import { AppDataSource } from '../src/data-source';
+import {Repository} from "typeorm";
+import {PersistanceError} from "../errors/PersistanceError";
+import {InvalidArgumentsError} from "../errors/InvalidArgumentsError";
 
-class LanguageService extends Service {
-    private controller: LanguageController;
+export class LanguageService {
+    private languageRepository: Repository<Language>;
 
     constructor() {
-        super();
-        this.controller = new LanguageController();
+        this.languageRepository = AppDataSource.getRepository(Language);
     }
 
-    //Pre: Request body must contain a languageName field.
-    //Post: Creates a new Language with the given name.
-    public async createLanguage(req: Request, res: Response) {
-        try {
-            if (!req.body.languageName) throw new InvalidRequestFormatError('Language name field is missing.');
-            await this.controller.createLanguage(req.body.languageName);
-        } catch (error) {
-            this.handleError(error, res);
-        }
+    //Pre: languageName must not be empty.
+    //Post: Creates a new Language with given name and saves it in repository.
+    public async createLanguage(languageName: string) {
+        if (!languageName) throw new InvalidArgumentsError('Language name cannot be empty.');
+        const newLanguage = new Language(languageName);
 
-        this.createdResponse(res, 'Language created successfully.');
+        try {
+            await this.languageRepository.save(newLanguage);
+        } catch (error) {
+            throw new PersistanceError();
+        }
     }
 }
-
-export default new LanguageService();
