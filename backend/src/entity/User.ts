@@ -4,19 +4,46 @@ import { Language } from './Language';
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
-  id: number;
+  private id: number;
 
   @Column()
-  name: string;
+  private name: string;
 
   @Column()
-  email: string;
+  private email: string;
 
   @Column()
-  password: string;
+  private password: string;
 
   @Column()
-  city: string;
+  private city: string;
+
+  constructor(name: string, email: string, password: string, city: string) {
+    this.name = name;
+    this.email = email;
+    this.password = password;
+    this.city = city;
+  };
+
+    public getId(): number {
+    return this.id;
+    };
+
+    public getName(): string {
+        return this.name;
+    };
+
+    public getEmail(): string {
+        return this.email;
+    };
+
+    public getPassword(): string {
+        return this.password;
+    };
+
+    public getCity(): string {
+        return this.city;
+    };
 
   @ManyToMany(() => User)
   @JoinTable({

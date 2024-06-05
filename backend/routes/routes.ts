@@ -1,18 +1,13 @@
 import { Router } from 'express';
-import * as userController from '../controllers/userController';
-import * as sessionController from '../controllers/sessionController';
+/*import * as userController from '../controllers/userController';
 import * as matchingController from '../controllers/matchingController';
-import * as imageController from '../controllers/imageController';
-import * as languageController from '../controllers/languageController';
+import * as imageController from '../controllers/imageController';*/
+import languageRouter from "./languageRoutes";
+import sessionRouter from "./sessionRoutes";
 
 const router = Router();
 
-router.post('/login', sessionController.login);
-router.post('/logout', sessionController.logout);
-router.get('/current-user', sessionController.me);
-router.post('/register', sessionController.register);
-
-router.post('/add-known-language', userController.addKnownLanguage);
+/*router.post('/add-known-language', userController.addKnownLanguage);
 router.post('/add-wanted-language', userController.addWantedLanguage);
 router.delete('/remove-known-language', userController.removeKnownLanguage);
 router.delete('/remove-wanted-language', userController.removeWantedLanguage);
@@ -25,9 +20,9 @@ router.get('/relationships', matchingController.getRelationships);
 
 router.post('/upload-profile-picture', imageController.uploadMiddleware,  imageController.uploadProfilePicture);
 router.delete('/delete-profile-picture', imageController.deleteProfilePicture);
-router.get('/profile-picture', imageController.getProfilePicture);
+router.get('/profile-picture', imageController.getProfilePicture);*/
 
-router.get('/languages', languageController.getLanguages);
-router.post('/languages', languageController.addLanguages);
+router.use('/v1/session', sessionRouter);
+router.use('/v1/languages', languageRouter);
 
 export default router;
