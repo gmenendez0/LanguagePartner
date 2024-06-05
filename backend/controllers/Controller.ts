@@ -4,8 +4,11 @@ import {PersistanceError} from "../errors/PersistanceError";
 import {InvalidCredentialsError} from "../errors/InvalidCredentialsError";
 import {RepositoryAccessError} from "../errors/RepositoryAccessError";
 import {InvalidRequestFormatError} from "../errors/InvalidRequestFormatError";
+import {HTTPResponseCode} from "./HTTPResponseCode";
 
 export abstract class Controller {
+    //TODO Hacer que las responses reciban json en vez de message
+
     okResponse(res: Response, message: string): void {
         res.status(HTTPResponseCode.OK).json({ message }).send();
     }

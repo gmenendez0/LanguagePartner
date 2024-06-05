@@ -31,7 +31,7 @@ export class SessionService {
 
         let user: User = await this.repository.findByEmail(userEmail);
         if (!user) throw new InvalidCredentialsError('User not found with given credentials.');
-        if (compareHashedString(userPassword, user.getPassword())) throw new InvalidCredentialsError('User not found with given credentials.');
+        if (!compareHashedString(userPassword, user.getPassword())) throw new InvalidCredentialsError('User not found with given credentials.');
 
         return generateJWTForUser(user);
     }

@@ -6,7 +6,11 @@ import {PersistanceError} from "../../errors/PersistanceError";
 export const userRepository = AppDataSource.getRepository(User).extend({
     findByEmail(email: string) {
         try {
-            return this.findOne(email);
+            return this.findOne({
+                where: {
+                    email: email,
+                }
+            });
         } catch (error) {
             throw new RepositoryAccessError();
         }
@@ -20,7 +24,11 @@ export const userRepository = AppDataSource.getRepository(User).extend({
     },
     findById(id: number) {
         try {
-            return this.findOne(id);
+            return this.findOne({
+                where: {
+                    id: id,
+                }
+            });
         } catch (error) {
             throw new RepositoryAccessError();
         }

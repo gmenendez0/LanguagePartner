@@ -1,7 +1,6 @@
-const ERROR_MESSAGE = "Error persisting data.";
-
 export class PersistanceError extends Error {
     constructor() {
-        super(ERROR_MESSAGE);
+        super("Error persisting data.");
+        Object.setPrototypeOf(this, PersistanceError.prototype)
     }
 }
