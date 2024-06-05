@@ -18,4 +18,11 @@ export const userRepository = AppDataSource.getRepository(User).extend({
             throw new PersistanceError();
         }
     },
+    findById(id: number) {
+        try {
+            return this.findOne(id);
+        } catch (error) {
+            throw new RepositoryAccessError();
+        }
+    }
 })

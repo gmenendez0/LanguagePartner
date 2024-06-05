@@ -25,9 +25,9 @@ export class User {
     this.city = city;
   };
 
-  public getId(): number {
+    public getId(): number {
     return this.id;
-  };
+    };
 
     public getName(): string {
         return this.name;

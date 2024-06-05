@@ -21,7 +21,6 @@ class SessionController extends Controller {
             this.handleError(error, res)
         }
     }
-
     public login = async (req: Request, res: Response) => {
         try {
             const {email, password} = req.body;

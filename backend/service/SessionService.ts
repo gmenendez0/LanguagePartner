@@ -5,7 +5,6 @@ import {InvalidCredentialsError} from "../errors/InvalidCredentialsError";
 import {userRepository} from "../src/repository/UserRepository";
 import { hashString, compareHashedString, generateJWTForUser } from '../src/helpers/helpers';
 
-
 export class SessionService {
     private repository: Repository<User> & { findByEmail(email: string): Promise<User>; saveUser(user: User): Promise<User>; };
 
@@ -35,10 +34,6 @@ export class SessionService {
         if (compareHashedString(userPassword, user.getPassword())) throw new InvalidCredentialsError('User not found with given credentials.');
 
         return generateJWTForUser(user);
-    }
-
-    public authenticate = () => {
-        // code here
     }
 
     public logout = (req, res) => {
