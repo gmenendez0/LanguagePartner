@@ -10,7 +10,6 @@ class SessionController extends Controller {
         super();
         this.service = new SessionService();
     }
-
     public register = async (req: Request, res: Response) => {
         const { city, name, email, password } = req.body;
 
@@ -25,7 +24,16 @@ class SessionController extends Controller {
     }
 
     public login = (req: Request, res: Response) => {
-        // code here
+        const { email, password } = req.body;
+
+        try {
+            if (!email || !password) throw new InvalidRequestFormatError('Both email and password are required not empty.');
+            const token = this.service.login(email, password);
+
+            this.okResponse(res, token);
+        } catch (error) {
+            this.handleError(error, res)
+        }
     }
 
     public logout = (req: Request, res: Response) => {

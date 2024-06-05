@@ -25,6 +25,26 @@ export class User {
     this.city = city;
   };
 
+  public getId(): number {
+    return this.id;
+  };
+
+    public getName(): string {
+        return this.name;
+    };
+
+    public getEmail(): string {
+        return this.email;
+    };
+
+    public getPassword(): string {
+        return this.password;
+    };
+
+    public getCity(): string {
+        return this.city;
+    };
+
   @ManyToMany(() => User)
   @JoinTable({
       name: 'user_approved_users', // Name of the join table
