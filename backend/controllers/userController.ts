@@ -1,3 +1,5 @@
+/*
+
 import { Request, Response } from 'express';
 import { UserRepository } from '../src/repository/UserRepository';
 import { User } from '../src/entity/User';
@@ -161,3 +163,4 @@ export const myLanguages = async (req: Request, res: Response) => {
     wantToKnowLanguages: user.wantToKnowLanguages,
   });
 }
+*/

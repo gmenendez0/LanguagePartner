@@ -39,8 +39,4 @@ class SessionController extends Controller {
     public logout = (req: Request, res: Response) => {
         // code here
     }
-
-    public me = (req: Request, res: Response) => {
-        // code here
-    }
 }

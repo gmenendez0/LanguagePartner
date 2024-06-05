@@ -1,3 +1,5 @@
+/*
+
 import { Request, Response } from 'express';
 import { User } from '../src/entity/User';
 import '../app'
@@ -65,3 +67,5 @@ export const logout = (req: Request, res: Response) => {
   req.session.user = null;
   res.json({ message: 'Logged out successfully' });
 };
+
+*/

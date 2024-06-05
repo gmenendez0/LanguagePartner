@@ -1,19 +1,19 @@
-import {User} from "../entity/User";
 import {AppDataSource} from "../data-source";
 import {RepositoryAccessError} from "../../errors/RepositoryAccessError";
 import {PersistanceError} from "../../errors/PersistanceError";
+import {Language} from "../entity/Language";
 
-export const userRepository = AppDataSource.getRepository(User).extend({
-    findByEmail(email: string) {
+export const languageRepository = AppDataSource.getRepository(Language).extend({
+    findByName(name: string): Promise<Language> {
         try {
-            return this.findOne(email);
+            return this.findOne(name);
         } catch (error) {
             throw new RepositoryAccessError();
         }
     },
-    saveUser(user: User) {
+    saveLanguage(language: Language): Promise<Language> {
         try {
-            return this.save(user);
+            return this.save(language);
         } catch (error) {
             throw new PersistanceError();
         }
