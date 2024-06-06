@@ -12,43 +12,42 @@ export abstract class Controller {
     //Pre: Must receive an object that can be converted to standard body media type.
     //Pre: body must be in standard body media type format.
     protected okResponse<T>(res: Response, object: T): void {
-        this.setResponseBody(res, object);
-        this.sendResponseWithStatusCode(res, HTTPResponseCode.OK);
+        this.setUpAndSendResponse(res, object, HTTPResponseCode.OK);
     }
 
     //Pre: Must receive an object that can be converted to standard body media type.
     //Pre: body must be in standard body media type format.
     protected createdResponse<T>(res: Response, object: T): void {
-        this.setResponseBody(res, object);
-        this.sendResponseWithStatusCode(res, HTTPResponseCode.CREATED);
+        this.setUpAndSendResponse(res, object, HTTPResponseCode.CREATED);
     }
 
     //Pre: Must receive an object that can be converted to standard body media type.
     //Pre: body must be in standard body media type format.
     protected badRequestResponse<T>(res: Response, object: T): void {
-        this.setResponseBody(res, object);
-        this.sendResponseWithStatusCode(res, HTTPResponseCode.BAD_REQUEST);
+        this.setUpAndSendResponse(res, object, HTTPResponseCode.BAD_REQUEST);
     }
 
     //Pre: Must receive an object that can be converted to standard body media type.
     //Pre: body must be in standard body media type format.
     protected unauthorizedResponse<T>(res: Response, object: T): void {
-        this.setResponseBody(res, object);
-        this.sendResponseWithStatusCode(res, HTTPResponseCode.UNAUTHORIZED);
+        this.setUpAndSendResponse(res, object, HTTPResponseCode.UNAUTHORIZED);
     }
 
     //Pre: Must receive an object that can be converted to standard body media type.
     //Pre: body must be in standard body media type format.
     protected notFoundResponse<T>(res: Response, object: T): void {
-        this.setResponseBody(res, object);
-        this.sendResponseWithStatusCode(res, HTTPResponseCode.NOT_FOUND);
+        this.setUpAndSendResponse(res, object, HTTPResponseCode.NOT_FOUND);
     }
 
     //Pre: Must receive an object that can be converted to standard body media type.
     //Pre: body must be in standard body media type format.
     protected internalServerErrorResponse<T>(res: Response, object: T): void {
+        this.setUpAndSendResponse(res, object, HTTPResponseCode.INTERNAL_SERVER_ERROR);
+    }
+
+    private setUpAndSendResponse(res: Response, object: any, statusCode: number): void {
         this.setResponseBody(res, object);
-        this.sendResponseWithStatusCode(res, HTTPResponseCode.INTERNAL_SERVER_ERROR);
+        this.sendResponseWithStatusCode(res, statusCode);
     }
 
     //Pre: Must receive an object that can be converted to standard body media type.
