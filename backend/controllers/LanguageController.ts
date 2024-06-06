@@ -17,7 +17,8 @@ class LanguageController extends Controller {
         try {
             if (!req.body.languageName) throw new InvalidRequestFormatError('Language name field is missing.');
             await this.service.createLanguage(req.body.languageName);
-            this.createdResponse(res, 'Language created successfully.');
+
+            this.createdResponse(res, { message: 'Language created successfully.' });
         } catch (error) {
             this.handleError(error, res);
         }
