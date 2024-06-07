@@ -21,10 +21,4 @@ export class SessionService {
     public login = async (userEmail: string, userPassword: string) => {
         return this.strategy.logIn({userEmail, userPassword}, this.repository);
     }
-
-    //Pre: Receives a token.
-    //Post: Delegates logOut to strategy.
-    public logout = (userToken: string) => {
-        return this.strategy.logOut({token: userToken});
-    }
 }

@@ -2,7 +2,7 @@ import {Controller} from "./Controller";
 import {SessionService} from "../service/SessionService";
 import {NextFunction, Request, Response} from "express";
 import {passportAuthenticate} from "../config/passportConfig";
-import {TokenSessionStrategy} from "../service/sessionStrategy/LP_SessionStrategy";
+import {TokenSessionStrategy} from "../service/sessionStrategy/TokenSessionStrategy";
 
 class SessionController extends Controller {
     private service: SessionService;
@@ -34,10 +34,6 @@ class SessionController extends Controller {
 
     public authenticate = async (req: Request, res: Response, next: NextFunction) => {
         await passportAuthenticate(req, res, next);
-    }
-
-    public logout = (req: Request, res: Response) => {
-        // code here
     }
 }
 

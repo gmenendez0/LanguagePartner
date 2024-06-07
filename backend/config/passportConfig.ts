@@ -5,7 +5,8 @@ import {Request, Response, NextFunction} from "express";
 
 const options: StrategyOptions = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-    secretOrKey: 'your_jwt_secret_key' //TODO Debe reemplezarse
+    secretOrKey: 'your_jwt_secret_key', //TODO Debe reemplezarse
+    ignoreExpiration: false
 };
 
 const jwtVerify = async (payload: any, done: any) => {
