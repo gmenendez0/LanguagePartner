@@ -4,7 +4,8 @@ import {compareHashedString, generateJWTForUser, hashString} from "../../src/hel
 import {UserRepository} from "../../src/repository/UserRepository";
 import {InvalidCredentialsError} from "../../errors/InvalidCredentialsError";
 
-abstract class SessionStrategy {
+//TODO Documentar
+export abstract class LP_SessionStrategy {
 
     public abstract register(registerData: unknown, userRepository: UserRepository): Promise<unknown>;
 
@@ -15,7 +16,7 @@ abstract class SessionStrategy {
     public abstract authenticate(authenticateData: unknown): void;
 }
 
-class TokenSessionStrategy extends SessionStrategy {
+export class TokenSessionStrategy extends LP_SessionStrategy {
     register = async (registerData: { email: string, password: string , name: string, city: string}, userRepository: UserRepository): Promise<void> => {
         const { city, name, email, password } = registerData;
 
@@ -41,13 +42,15 @@ class TokenSessionStrategy extends SessionStrategy {
 
     logOut = (logOutData: { token: string }): void => {
         //TODO
+        const token = logOutData.token;
+
     }
 
     // ! No utilizar!
     authenticate = (authenticateData: { token: string }): void => {
-        // Esta funcion no sera implementada. La aplicacion utiliza el metodo passportAuthenticate de passportConfig.ts.
+        // Esta funcion no sera implementada. La aplicacion utiliza el metodo passportAuthenticate de passportConfig.ts para la autenticacion.
         // Se evita llamar a passport desde el servicio para evitar acoplar el servicio a express (passport y express van acoplados) y por lo tanto a un uso exclusivo de API.
-        // Para eso, como esta clase esta pensada para utilizarse desde la capa de servicio, tambien se evita llamar a passport desde aqui.
+        // Es por eso que, como esta clase esta pensada para utilizarse desde la capa de servicio, tambien se evita llamar a passport desde aqui.
         // Se delega la responsabilidad de autenticar al controlador.
     }
 }

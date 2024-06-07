@@ -2,13 +2,14 @@ import {Controller} from "./Controller";
 import {SessionService} from "../service/SessionService";
 import {NextFunction, Request, Response} from "express";
 import {passportAuthenticate} from "../config/passportConfig";
+import {TokenSessionStrategy} from "../service/sessionStrategy/LP_SessionStrategy";
 
 class SessionController extends Controller {
     private service: SessionService;
 
     constructor() {
         super();
-        this.service = new SessionService();
+        this.service = new SessionService(new TokenSessionStrategy());
     }
     public register = async (req: Request, res: Response) => {
         try {
