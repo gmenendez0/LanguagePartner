@@ -3,6 +3,7 @@ import { View, Text, Image, StyleSheet } from 'react-native';
 import Swiper from 'react-native-deck-swiper';
 
 export interface Profile {
+  id: number
   name: string;
   city: string;
   age: number;
@@ -39,14 +40,16 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     shadowOffset: { width: 0, height: 0 },
     elevation: 5,
+    height: '80%',
   },
   image: {
     width: '100%',
-    height: 200,
+    minHeight: 300,
+    maxHeight: '100%',
     borderRadius: 10,
   },
   name: {
-    fontSize: 20,
+    fontSize: 40,
     fontWeight: 'bold',
     marginTop: 10,
   },

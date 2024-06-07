@@ -8,8 +8,9 @@ import { Text, View } from '@/components/Themed';
 
 export default function MatchngScreen() {
 
-  const profiles: Profile[] = [
+  const defaultprofiles: Profile[] = [
     {
+      id: 1,
       name: 'John Doe',
       age: 30,
       city: 'New York',
@@ -18,7 +19,8 @@ export default function MatchngScreen() {
       knownLanguages: ['English', 'Spanish'],
       wantToKnowLanguages: ['French'],
     },
-    {
+    { 
+      id: 2,
       name: 'Jane Smith',
       age: 25,
       city: 'San Francisco',
@@ -27,7 +29,8 @@ export default function MatchngScreen() {
       knownLanguages: ['English', 'French'],
       wantToKnowLanguages: ['Spanish'],
     },
-    {
+    { 
+      id: 3,
       name: 'Alice Johnson',
       age: 35,
       city: 'Los Angeles',
@@ -37,6 +40,7 @@ export default function MatchngScreen() {
       wantToKnowLanguages: ['Japanese'],
     },
     {
+      id: 4,
       name: 'Bob Brown',
       age: 28,
       city: 'Chicago',
@@ -48,41 +52,48 @@ export default function MatchngScreen() {
   ];
   
   const getNewProfile = (): Profile => {
-    return profiles[Math.floor(Math.random() * profiles.length)];
+    return defaultprofiles[Math.floor(Math.random() * defaultprofiles.length)];
     //LLAMADA A API
   };
 
 
-  const [currentProfile, setCurrentProfile] = useState<Profile | null>(null);
+  const [profiles, setProfiles] = useState<Profile[]>([getNewProfile(), getNewProfile()]);
+
 
   useEffect(() => {
-    setCurrentProfile(getNewProfile());
+    setProfiles([getNewProfile(), getNewProfile()]);
   }, []);
 
   const handleSwiped = () => {
-    setCurrentProfile(getNewProfile());
+    setProfiles(prevProfiles => {
+      const newProfile = getNewProfile();
+      return [...prevProfiles, newProfile];
+    });
   };
 
   const handleSwipedLeft = () => {
     console.log('Swiped left');
     handleSwiped();
+    //LLAMADA A API
   };
 
   const handleSwipedRight = () => {
     console.log('Swiped right');
     handleSwiped();
+    //LLAMADA A API
   };
 
   return (
     <View style={styles.container}>
-      {currentProfile && (
+      {profiles.length > 0 && (
         <Swiper
-        cards={[currentProfile]}
+        cards={profiles}
         renderCard={(profile: Profile) => <ProfileCard profile={profile} />}
         onSwipedLeft={handleSwipedLeft}
         onSwipedRight={handleSwipedRight}
         backgroundColor={'#f0f0f0'}
-        stackSize={1}
+        stackSize={2}
+        cardIndex={0}
       />
       )}
     </View>
