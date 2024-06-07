@@ -5,12 +5,13 @@ import {Request, Response, NextFunction} from "express";
 
 const options: StrategyOptions = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-    secretOrKey: 'your_jwt_secret_key' //TODO Debe reemplezarse
+    secretOrKey: 'your_jwt_secret_key', //TODO Debe reemplezarse
+    ignoreExpiration: false
 };
 
 const jwtVerify = async (payload: any, done: any) => {
     try {
-        const user = await userRepository.findById(payload.sub)
+        const user = await userRepository.findById(payload.sub) //TODO Revisar el acoplamiento con userRepository.
 
         if (!user) return done(null, false);
         return done(null, user);
@@ -23,7 +24,7 @@ const tokenStrategy = new JwtStrategy(options, jwtVerify);
 passport.use(tokenStrategy);
 
 export const passportAuthenticate = async (req: Request, res: Response, next: NextFunction) => {
-    await passport.authenticate("jwt", {session: false},)(req, res, next);
+    await passport.authenticate("jwt", {session: false})(req, res, next);
 }
 
 export default passport;
