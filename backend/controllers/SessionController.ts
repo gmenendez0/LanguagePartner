@@ -37,8 +37,7 @@ class SessionController extends Controller {
     }
 
     public authenticate = async (req: Request, res: Response, next: NextFunction) => {
-        passportAuthenticate(req, res, next);
-        next();
+        await passportAuthenticate(req, res, next);
     }
 
     public logout = (req: Request, res: Response) => {

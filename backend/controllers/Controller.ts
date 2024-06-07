@@ -5,6 +5,7 @@ import {InvalidCredentialsError} from "../errors/InvalidCredentialsError";
 import {RepositoryAccessError} from "../errors/RepositoryAccessError";
 import {InvalidRequestFormatError} from "../errors/InvalidRequestFormatError";
 import {HTTPResponseCode} from "./HTTPResponseCode";
+import {AuthenticationError} from "../errors/AuthenticationError";
 
 const UNHANDLED_ERROR_OBJECT = { error: "Internal server error." };
 
@@ -69,6 +70,7 @@ export abstract class Controller {
         if (err instanceof InvalidCredentialsError)   return this.unauthorizedResponse(res, { error: err.message });
         if (err instanceof RepositoryAccessError)     return this.internalServerErrorResponse(res, { error: err.message });
         if (err instanceof InvalidRequestFormatError) return this.badRequestResponse(res, { error: err.message });
+        if (err instanceof AuthenticationError)       return this.internalServerErrorResponse(res, { error: err.message })
 
         this.internalServerErrorResponse(res, UNHANDLED_ERROR_OBJECT);
     }
