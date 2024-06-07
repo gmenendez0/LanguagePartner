@@ -1,8 +1,9 @@
 import { Router } from 'express';
-import languageService from "../controllers/LanguageController";
+import languageController from "../controllers/LanguageController";
+import sessionController from "../controllers/SessionController";
 
 const languageRouter = Router();
 
-languageRouter.post('/language', languageService.createLanguage);
+languageRouter.post('', sessionController.authenticate, languageController.createLanguage);
 
 export default languageRouter;
