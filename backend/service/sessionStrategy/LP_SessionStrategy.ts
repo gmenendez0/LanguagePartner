@@ -1,5 +1,6 @@
 import {UserRepository} from "../../src/repository/UserRepository";
 
+//Se agrega LP_ al nombre de la interfaz para indicar que es una interfaz nativa de LanguagePartner y evitar chocar con otras entidades de otras librerias.
 export interface LP_SessionStrategy {
 
     //registerData schema must be defined by the subclass that implements this method.
