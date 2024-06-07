@@ -1,7 +1,6 @@
 import {Controller} from "./Controller";
 import {Request, Response} from "express";
 import {LanguageService} from "../service/LanguageService";
-import {InvalidRequestFormatError} from "../errors/InvalidRequestFormatError";
 
 class LanguageController extends Controller {
     private service: LanguageService;
@@ -14,10 +13,7 @@ class LanguageController extends Controller {
     //Pre: Request body must contain a languageName field.
     //Post: Creates a new Language with the given name.
     public createLanguage = async (req: Request, res: Response) => {
-        console.log('createLanguage');
-
         try {
-            if (!req.body.languageName) throw new InvalidRequestFormatError('Language name field is missing.');
             await this.service.createLanguage(req.body.languageName);
 
             this.createdResponse(res, { message: 'Language created successfully.' });

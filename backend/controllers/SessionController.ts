@@ -1,6 +1,5 @@
 import {Controller} from "./Controller";
 import {SessionService} from "../service/SessionService";
-import {InvalidRequestFormatError} from "../errors/InvalidRequestFormatError";
 import {NextFunction, Request, Response} from "express";
 import {passportAuthenticate} from "../config/passportConfig";
 
@@ -14,8 +13,6 @@ class SessionController extends Controller {
     public register = async (req: Request, res: Response) => {
         try {
             const { city, name, email, password } = req.body;
-            if(!city || !name || !email || !password) throw new InvalidRequestFormatError('All fields (city, name, email and password) are required not empty.');
-
             await this.service.register(name, email, password, city);
 
             this.createdResponse(res, { message: 'User registered successfully.' });
@@ -26,8 +23,6 @@ class SessionController extends Controller {
     public login = async (req: Request, res: Response) => {
         try {
             const {email, password} = req.body;
-            if (!email || !password) throw new InvalidRequestFormatError('Both email and password are required not empty.');
-
             const userToken = await this.service.login(email, password);
 
             this.okResponse(res, { token: userToken });

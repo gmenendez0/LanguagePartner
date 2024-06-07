@@ -2,11 +2,12 @@ import {Repository} from "typeorm";
 import {User} from "../src/entity/User";
 import {InvalidArgumentsError} from "../errors/InvalidArgumentsError";
 import {InvalidCredentialsError} from "../errors/InvalidCredentialsError";
-import {userRepository} from "../src/repository/UserRepository";
+import {UserRepository, userRepository} from "../src/repository/UserRepository";
 import { hashString, compareHashedString, generateJWTForUser } from '../src/helpers/helpers';
 
+
 export class SessionService {
-    private repository: Repository<User> & { findByEmail(email: string): Promise<User>; saveUser(user: User): Promise<User>; };
+    private repository: UserRepository;
 
     constructor() {
         this.repository = userRepository;
@@ -16,11 +17,11 @@ export class SessionService {
     //Post: If the email is not already in use, registers the user in the database.
     public register = async (name: string, email: string, password: string, city: string) => {
         if (!city || !name || !email || !password) throw new InvalidArgumentsError('All fields (city, name, email and password) are required not empty.');
+        if (await this.repository.findByEmail(email)) throw new InvalidCredentialsError('Email already in use.');
 
         const hashedPassword = hashString(password);
         const newUser = new User(name, email, hashedPassword, city);
 
-        if (await this.repository.findByEmail(email)) throw new InvalidCredentialsError('Email already in use.');
         await this.repository.saveUser(newUser);
     }
 
