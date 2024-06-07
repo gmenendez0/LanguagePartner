@@ -3,6 +3,6 @@ import languageController from "../controllers/LanguageController";
 
 const languageRouter = Router();
 
-languageRouter.post('/language', languageController.createLanguage);
+languageRouter.post('', languageController.createLanguage);
 
 export default languageRouter;

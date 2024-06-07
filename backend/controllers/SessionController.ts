@@ -1,7 +1,8 @@
 import {Controller} from "./Controller";
 import {SessionService} from "../service/SessionService";
 import {InvalidRequestFormatError} from "../errors/InvalidRequestFormatError";
-import {Request, Response} from "express";
+import {NextFunction, Request, Response} from "express";
+import {passportAuthenticate} from "../config/passportConfig";
 
 class SessionController extends Controller {
     private service: SessionService;
@@ -33,6 +34,11 @@ class SessionController extends Controller {
         } catch (error) {
             this.handleError(error, res)
         }
+    }
+
+    public authenticate = async (req: Request, res: Response, next: NextFunction) => {
+        passportAuthenticate(req, res, next);
+        next();
     }
 
     public logout = (req: Request, res: Response) => {

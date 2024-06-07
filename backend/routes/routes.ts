@@ -23,6 +23,6 @@ router.delete('/delete-profile-picture', imageController.deleteProfilePicture);
 router.get('/profile-picture', imageController.getProfilePicture);*/
 
 router.use('/v1/session', sessionRouter);
-router.use('/v1/languages', languageRouter);
+router.use('/v1/language', languageRouter);
 
 export default router;

@@ -13,7 +13,7 @@ class LanguageController extends Controller {
 
     //Pre: Request body must contain a languageName field.
     //Post: Creates a new Language with the given name.
-    public async createLanguage(req: Request, res: Response) {
+    public createLanguage = async (req: Request, res: Response) => {
         try {
             if (!req.body.languageName) throw new InvalidRequestFormatError('Language name field is missing.');
             await this.service.createLanguage(req.body.languageName);

@@ -13,11 +13,11 @@ export class LanguageService {
 
     //Pre: languageName must not be empty.
     //Post: Creates a new Language with given name and saves it in repository.
-    public async createLanguage(languageName: string) {
+    public createLanguage = async (languageName: string) => {
         if (!languageName) throw new InvalidArgumentsError('Language name cannot be empty.');
-        if (this.languageRepository.findByName(languageName)) throw new InvalidArgumentsError('Language already exists.');
+        if (await this.languageRepository.findByName(languageName)) throw new InvalidArgumentsError('Language already exists.');
 
         const newLanguage = new Language(languageName);
-        this.languageRepository.saveLanguage(newLanguage);
+        await this.languageRepository.saveLanguage(newLanguage);
     }
 }
