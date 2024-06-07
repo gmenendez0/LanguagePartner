@@ -94,6 +94,7 @@ export default function MatchngScreen() {
         backgroundColor={'#f0f0f0'}
         stackSize={2}
         cardIndex={0}
+        verticalSwipe={false}
       />
       )}
     </View>

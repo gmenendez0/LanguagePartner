@@ -21,9 +21,9 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({ profile }) => {
   return (
     <View style={styles.card}>
       <Image source={{ uri: profile.image }} style={styles.image} />
-      <Text style={styles.name}>{profile.name}, {profile.age}</Text>
-      <Text style={styles.description}>{profile.description}</Text>
-      <Text style={styles.interests}>
+      <Text selectable={false} style={styles.name}>{profile.name}, {profile.age}</Text>
+      <Text selectable={false} style={styles.description}>{profile.description}</Text>
+      <Text selectable={false} style={styles.interests}>
         Speaks {profile.knownLanguages.join(', ')} and wants to learn {profile.wantToKnowLanguages.join(', ')}.
       </Text>
     </View>
