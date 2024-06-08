@@ -4,11 +4,13 @@ import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
 import { SafeAreaView } from 'react-native';
 import RegistrationForm from '../../components/RegistrationForm';
+import LoginForm from '../../components/LoginForm';
 
 export default function TabOneScreen() {
   return (
       <SafeAreaView style={styles.container}>
         <RegistrationForm />
+        <LoginForm />
       </SafeAreaView>
   );
 }
