@@ -5,12 +5,30 @@ import { AppDataSource } from "./src/data-source"
 import passport from './config/passportConfig';
 import swaggerUi from 'swagger-ui-express';
 import * as swaggerDocument from './swagger_output.json';
+import cors from 'cors';
 
 const app = express();
+
+// TODO move this client url somewhere else
+const whitelist = ['http://localhost:8081'];
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      console.log('CORS ALLOWED ORIGIN: ', origin)
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  }
+}
+
+// Enable CORS for whitelisted origins
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use('/', myRouter);
 app.use(passport.initialize());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 
 const PORT = process.env.PORT || 3000;
 AppDataSource.initialize().then(async () => {

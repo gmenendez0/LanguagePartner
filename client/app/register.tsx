@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState, useEffect} from 'react';
 import {SafeAreaView, TextInput, Button, Text, StyleSheet, Alert, TouchableOpacity} from 'react-native';
 
 interface Errors {
@@ -7,11 +7,57 @@ interface Errors {
     password?: string;
 }
 
+//TODO move this to a helper or utils file
+interface RegisterUserData {
+    city: string,
+    name: string,
+    email: string,
+    password: string
+}
+
+interface PostResponse {
+    success: boolean;
+    message: string;
+}
+
 const RegistrationForm: React.FC = () => {
     const [username, setUsername] = useState<string>('');
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [errors, setErrors] = useState<Errors>({});
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
+    useEffect(() => {
+        if (isSubmitting) {
+            const postData: RegisterUserData = {
+                "city": "??",
+                "name": username,
+                "email": email,
+                "password": password
+            };
+
+            // TODO hold the sv url somewhere safe
+            fetch('http://localhost:3000/v1/session/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(postData),
+            })
+                .then(response => response.json())
+                .then((data: PostResponse) => {
+                    console.log(data);
+                    // Handle the response data
+                    // TODO show an error
+                })
+                .catch(error => {
+                    console.error('Error sending data:', error);
+                })
+                .finally(() => {
+                    setIsSubmitting(false);
+                });
+        }
+    }, [isSubmitting]);
 
     const validateField = (field: string, value: string): string | undefined => {
         switch (field) {
@@ -46,7 +92,7 @@ const RegistrationForm: React.FC = () => {
         }
 
         const error = validateField(field, value);
-        setErrors((prevErrors) => ({ ...prevErrors, [field]: error }));
+        setErrors((prevErrors) => ({...prevErrors, [field]: error}));
     };
 
     const handleRegistration = () => {
@@ -59,8 +105,7 @@ const RegistrationForm: React.FC = () => {
         console.log('Validation Errors:', newErrors);
 
         if (!newErrors.username && !newErrors.email && !newErrors.password) {
-            console.log('Form is valid. Showing alert.');
-            // TODO add registration com to server
+            setIsSubmitting(true);
         } else {
             setErrors(newErrors);
         }
@@ -133,7 +178,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         marginVertical: 5,
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
+        shadowOffset: {width: 0, height: 2},
         shadowOpacity: 0.8,
         shadowRadius: 2,
         elevation: 5,
