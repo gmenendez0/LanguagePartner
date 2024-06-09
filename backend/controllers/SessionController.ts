@@ -14,9 +14,9 @@ class SessionController extends Controller {
     public register = async (req: Request, res: Response) => {
         try {
             const { city, name, email, password } = req.body;
-            await this.service.register(name, email, password, city);
+            let user = await this.service.register(name, email, password, city);
 
-            this.createdResponse(res, { message: 'User registered successfully.' });
+            this.createdResponse(res, user);
         } catch (error) {
             this.handleError(error, res)
         }

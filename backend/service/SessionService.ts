@@ -13,7 +13,7 @@ export class SessionService {
     //Pre: Receives the name, email, password and city of the user, all not empty.
     //Post: Delegates register to strategy.
     public register = async (name: string, email: string, password: string, city: string) => {
-        await this.strategy.register({name, email, password, city}, this.repository);
+        return await this.strategy.register({name, email, password, city}, this.repository);
     }
 
     //Pre: Receives the email and password of the user, both not empty.
