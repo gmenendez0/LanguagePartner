@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {View, TextInput, Button, Text, StyleSheet, Alert, TouchableOpacity} from 'react-native';
+import {SafeAreaView, TextInput, Button, Text, StyleSheet, Alert, TouchableOpacity} from 'react-native';
 
 interface Errors {
     username?: string;
@@ -68,7 +68,7 @@ const RegistrationForm: React.FC = () => {
 
     return (
 
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <TextInput
                 style={styles.input}
                 placeholder="Username"
@@ -101,7 +101,7 @@ const RegistrationForm: React.FC = () => {
             }}>
                 <Text style={styles.buttonText}>Register</Text>
             </TouchableOpacity>
-        </View>
+        </SafeAreaView>
     );
 };
 
@@ -111,6 +111,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         padding: 16,
+        backgroundColor: '#222',
     },
     input: {
         height: 40,
@@ -118,6 +119,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         marginBottom: 12,
         paddingLeft: 8,
+        color: '#FFF',
     },
     errorText: {
         color: 'red',
@@ -125,7 +127,7 @@ const styles = StyleSheet.create({
         marginBottom: 8,
     },
     button: {
-        backgroundColor: '#007BFF',
+        backgroundColor: '#9c7dff',
         paddingVertical: 10,
         paddingHorizontal: 20,
         borderRadius: 5,
