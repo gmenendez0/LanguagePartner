@@ -65,12 +65,18 @@ function RootLayoutNav() {
               header: () => <Header />,
             }}
         />
-        <Stack.Screen
-            name="register"
-            options={{
-              header: () => <Header />,
-            }}
-        />
+          <Stack.Screen
+              name="register"
+              options={{
+                  header: () => <Header />,
+              }}
+          />
+          <Stack.Screen
+              name="matching"
+              options={{
+                  header: () => <Header />,
+              }}
+          />
       </Stack>
     </ThemeProvider>
   );

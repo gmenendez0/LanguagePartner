@@ -1,12 +1,12 @@
 import React, { useState, useCallback } from 'react';
 import { TouchableOpacity, Text, View, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Link } from 'expo-router';
+import {Link, useRouter} from 'expo-router';
 import { useFocusEffect } from '@react-navigation/native';
 
 const Header = () => {
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-
+    const router = useRouter();
     useFocusEffect(() => {
         const checkLoginStatus = async () => {
             const token = await AsyncStorage.getItem('session_token');
@@ -19,6 +19,7 @@ const Header = () => {
     const handleLogout = async () => {
         await AsyncStorage.removeItem('session_token');
         setIsLoggedIn(false);
+        router.push('/'); // navigate to home screen
     };
 
     return (
