@@ -1,4 +1,6 @@
 import React, {useEffect, useState} from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useRouter } from 'expo-router';
 import { SafeAreaView, TextInput, TouchableOpacity, Text, StyleSheet, Alert } from 'react-native';
 
 interface Errors {
@@ -16,6 +18,7 @@ interface LoginUserData {
 interface PostResponse {
     success: boolean;
     message: string;
+    token: string;
 }
 
 const LoginForm: React.FC = () => {
@@ -23,7 +26,7 @@ const LoginForm: React.FC = () => {
     const [password, setPassword] = useState<string>('');
     const [errors, setErrors] = useState<Errors>({});
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-
+    const router = useRouter();
     useEffect(() => {
         if (isSubmitting) {
             const postData: LoginUserData = {
@@ -43,7 +46,21 @@ const LoginForm: React.FC = () => {
                 .then((data: PostResponse) => {
                     console.log(data);
                     // Handle the response data
-                    // TODO save the session token
+                    if (data.success) {
+                        const token = data.token;
+                        AsyncStorage.setItem('session_token', token)
+                            .then(() => {
+                                console.log('Session token saved');
+                                setEmail('');
+                                setPassword('');
+                                router.push('/'); // navigate to home screen
+                            })
+                            .catch(error => {
+                                console.error('Error saving session token:', error);
+                            });
+                    } else {
+                        console.log("Error login in");
+                    }
                 })
                 .catch(error => {
                     console.error('Error sending data:', error);

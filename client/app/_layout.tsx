@@ -8,6 +8,7 @@ import 'react-native-reanimated';
 
 import { useColorScheme } from '@/components/useColorScheme';
 import Header from '@/components/Header';
+import HomeScreen from "@/app/index";
 
 export {
   // Catch any errors thrown by the Layout component.
