@@ -7,7 +7,7 @@ import bcrypt from "bcrypt";
 import * as jwt from "jsonwebtoken";
 
 export class TokenSessionStrategy implements LP_SessionStrategy {
-    public register = async (registerData: { email: string, password: string , name: string, city: string}, userRepository: UserRepository): Promise<void> => {
+    public register = async (registerData: { email: string, password: string , name: string, city: string}, userRepository: UserRepository): Promise<User> => {
         const { city, name, email, password } = registerData;
 
         if (!city || !name || !email || !password) throw new InvalidArgumentsError('All fields (city, name, email and password) are required not empty.');
@@ -16,7 +16,7 @@ export class TokenSessionStrategy implements LP_SessionStrategy {
         const hashedPassword = this.hashString(password);
         const newUser = new User(name, email, hashedPassword, city);
 
-        await userRepository.saveUser(newUser);
+        return await userRepository.saveUser(newUser);
     }
 
     public logIn = async (logInData: { userEmail: string, userPassword: string }, userRepository: UserRepository): Promise<String> => {
