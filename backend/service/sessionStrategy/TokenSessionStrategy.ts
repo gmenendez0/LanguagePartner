@@ -30,16 +30,18 @@ export class TokenSessionStrategy implements LP_SessionStrategy {
         return this.generateJWTForUser(user);
     }
 
-    public logOut = (_logOutData: { token: string }): void => {
+    public logOut = (_logOutData: { token: string }): Promise<null> => {
         // Esta funcion no sera implementada. El logOut no se implementa server-side en una aplicacion de API REST con JWT.
+        return null;
     }
 
     // ! No utilizar!
-    public authenticate = (_authenticateData: { token: string }): void => {
+    public authenticate = (_authenticateData: { token: string }): Promise<null> => {
         // Esta funcion no sera implementada. La aplicacion utiliza el metodo passportAuthenticate de passportConfig.ts para la autenticacion.
         // Se evita llamar a passport desde el servicio para evitar acoplar el servicio a express (passport y express van acoplados) y por lo tanto a un uso exclusivo de API.
         // Es por eso que, como esta clase esta pensada para utilizarse desde la capa de servicio, tambien se evita llamar a passport desde aqui.
         // Se delega la responsabilidad de autenticar al controlador.
+        return null;
     }
 
     //Post: Returns the hashed string.

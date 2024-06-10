@@ -16,10 +16,10 @@ export interface LP_SessionStrategy {
     //registerData schema must be defined by the subclass that implements this method.
     //Pre: Receives the data of the user to logOut. Data must match the schema set by the subclass that implements this method.
     //Post: Logs the user out.
-    logOut(logOutData: unknown): void;
+    logOut(logOutData: unknown): Promise<unknown>;
 
     //registerData schema must be defined by the subclass that implements this method.
     //Pre: Receives the data of the user to authenticate. Data must match the schema set by the subclass that implements this method.
     //Post: Authenticates the user.
-    authenticate(authenticateData: unknown): void;
+    authenticate(authenticateData: unknown): Promise<unknown>;
 }
