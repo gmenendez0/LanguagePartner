@@ -95,7 +95,7 @@ export default function MatchngScreen() {
         stackSize={2}
         cardIndex={0}
         verticalSwipe={false}
-      />
+        />
       )}
     </View>
   );
