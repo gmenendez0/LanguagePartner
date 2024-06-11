@@ -1,6 +1,6 @@
 import {InvalidArgumentsError} from "../../errors/InvalidArgumentsError";
 import {InvalidCredentialsError} from "../../errors/InvalidCredentialsError";
-import {User} from "../../src/entity/User/User";
+import {LP_User} from "../../src/entity/User/LP_User";
 import {LP_SessionStrategy} from "./LP_SessionStrategy";
 import * as jwt from "jsonwebtoken";
 import {UserService} from "../UserService";
@@ -17,7 +17,7 @@ export class TokenSessionStrategy implements LP_SessionStrategy {
         const { userEmail, userPassword } = logInData;
         if (!userEmail || !userPassword) throw new InvalidArgumentsError('Both email and password are required not empty.');
 
-        let user: User = await userService.getUserByEmail(userEmail);
+        let user: LP_User = await userService.getUserByEmail(userEmail);
         if (!user) throw new InvalidCredentialsError('User not found with given credentials.');
         if (!user.stringMatchesPassword(userPassword)) throw new InvalidCredentialsError('User not found with given credentials.');
 
@@ -39,7 +39,7 @@ export class TokenSessionStrategy implements LP_SessionStrategy {
     }
 
     //Post: Returns a unique JWT token for the user.
-    private generateJWTForUser = (user: User) => {
+    private generateJWTForUser = (user: LP_User) => {
         return jwt.sign({id: user.getId}, "your_jwt_secret_key", {expiresIn: "1h"}); //TODO Reemplazar secretKey por una variable de entorno, expiresIn debe ser CONST.
     }
 }

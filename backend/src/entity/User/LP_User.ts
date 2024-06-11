@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 import {userApprovedUsersTableOptionsTableOptions, userMatchedUsersTableOptions, userKnownLanguagesTableOptions, userWantToKnowLanguagesTableOptions, userRejectedUsersTableOptionsTableOptions} from "./UserTableOptions";
 
 @Entity()
-export class User {
+export class LP_User {
     @PrimaryGeneratedColumn()
     private id: number;
 
@@ -20,17 +20,17 @@ export class User {
     @Column()
     private readonly city: string;
 
-    @ManyToMany(() => User)
+    @ManyToMany(() => LP_User)
     @JoinTable(userApprovedUsersTableOptionsTableOptions)
-    private approvedUsers: User[];
+    private approvedUsers: LP_User[];
 
-    @ManyToMany(() => User)
+    @ManyToMany(() => LP_User)
     @JoinTable(userRejectedUsersTableOptionsTableOptions)
-    private rejectedUsers: User[];
+    private rejectedUsers: LP_User[];
 
-    @ManyToMany(() => User)
+    @ManyToMany(() => LP_User)
     @JoinTable(userMatchedUsersTableOptions)
-    private matchedUsers: User[];
+    private matchedUsers: LP_User[];
 
     @ManyToMany(() => Language)
     @JoinTable(userKnownLanguagesTableOptions)
@@ -60,11 +60,11 @@ export class User {
 
     public getCity = (): string => this.city;
 
-    public getApprovedUsers = (): User[] => this.approvedUsers;
+    public getApprovedUsers = (): LP_User[] => this.approvedUsers;
 
-    public getRejectedUsers = (): User[] => this.rejectedUsers;
+    public getRejectedUsers = (): LP_User[] => this.rejectedUsers;
 
-    public getMatchedUsers = (): User[] => this.matchedUsers;
+    public getMatchedUsers = (): LP_User[] => this.matchedUsers;
 
     public getKnownLanguages = (): Language[] => this.knownLanguages;
 
@@ -72,15 +72,15 @@ export class User {
 
     public getProfilePicHash = (): string => this.profilePicHash;
 
-    public addApprovedUser = (user: User): void => {
+    public addApprovedUser = (user: LP_User): void => {
         this.approvedUsers.push(user);
     };
 
-    public addRejectedUser = (user: User): void => {
+    public addRejectedUser = (user: LP_User): void => {
         this.rejectedUsers.push(user);
     };
 
-    public addMatchedUser = (user: User): void => {
+    public addMatchedUser = (user: LP_User): void => {
         this.matchedUsers.push(user);
     };
 
@@ -92,15 +92,15 @@ export class User {
         this.wantToKnowLanguages.push(language);
     };
 
-    public removeApprovedUser = (user: User): void => {
+    public removeApprovedUser = (user: LP_User): void => {
         this.approvedUsers = this.approvedUsers.filter(approvedUser => approvedUser !== user);
     };
 
-    public removeRejectedUser = (user: User): void => {
+    public removeRejectedUser = (user: LP_User): void => {
         this.rejectedUsers = this.rejectedUsers.filter(rejectedUser => rejectedUser !== user);
     };
 
-    public removeMatchedUser = (user: User): void => {
+    public removeMatchedUser = (user: LP_User): void => {
         this.matchedUsers = this.matchedUsers.filter(matchedUser => matchedUser !== user);
     };
 

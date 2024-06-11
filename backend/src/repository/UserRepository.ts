@@ -1,12 +1,12 @@
-import {User} from "../entity/User/User";
+import {LP_User} from "../entity/User/LP_User";
 import {AppDataSource} from "../data-source";
 import {RepositoryAccessError} from "../../errors/RepositoryAccessError";
 import {PersistanceError} from "../../errors/PersistanceError";
 import {Repository} from "typeorm";
 
-export type UserRepository = Repository<User> & { findByEmail(email: string): Promise<User>; saveUser(user: User): Promise<User>; findById(id: number): Promise<User>; };
+export type UserRepository = Repository<LP_User> & { findByEmail(email: string): Promise<LP_User>; saveUser(user: LP_User): Promise<LP_User>; findById(id: number): Promise<LP_User>; };
 
-export const userRepository = AppDataSource.getRepository(User).extend({
+export const userRepository = AppDataSource.getRepository(LP_User).extend({
     findByEmail(email: string) {
         try {
             return this.findOne({
@@ -18,7 +18,7 @@ export const userRepository = AppDataSource.getRepository(User).extend({
             throw new RepositoryAccessError();
         }
     },
-    saveUser(user: User) {
+    saveUser(user: LP_User) {
         try {
             return this.save(user);
         } catch (error) {
