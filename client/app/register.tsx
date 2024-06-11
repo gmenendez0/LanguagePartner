@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {SafeAreaView, TextInput, Button, Text, StyleSheet, Alert, TouchableOpacity} from 'react-native';
+import {useRouter} from "expo-router";
 
 interface Errors {
     username?: string;
@@ -18,6 +19,7 @@ interface RegisterUserData {
 interface PostResponse {
     success: boolean;
     message: string;
+    error: string;
 }
 
 const RegistrationForm: React.FC = () => {
@@ -26,6 +28,8 @@ const RegistrationForm: React.FC = () => {
     const [password, setPassword] = useState<string>('');
     const [errors, setErrors] = useState<Errors>({});
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const router = useRouter();
 
     useEffect(() => {
         if (isSubmitting) {
@@ -47,8 +51,16 @@ const RegistrationForm: React.FC = () => {
                 .then(response => response.json())
                 .then((data: PostResponse) => {
                     console.log(data);
-                    // Handle the response data
-                    // TODO show an error
+                    if (!data.error) {
+                        console.log('Registration successful');
+                        setUsername('');
+                        setEmail('');
+                        setPassword('');
+                        router.push('/'); // navigate to home screen
+                    } else {
+                        console.log("Registration Failed");
+                        setErrorMessage(data.error);
+                    }
                 })
                 .catch(error => {
                     console.error('Error sending data:', error);
@@ -77,6 +89,9 @@ const RegistrationForm: React.FC = () => {
     };
 
     const handleChange = (field: string, value: string) => {
+        if (errorMessage) {
+            setErrorMessage(null);
+        }
         switch (field) {
             case 'username':
                 setUsername(value);
@@ -146,6 +161,7 @@ const RegistrationForm: React.FC = () => {
             }}>
                 <Text style={styles.buttonText}>Register</Text>
             </TouchableOpacity>
+            {errorMessage && <Text style={styles.errorText}>{errorMessage}</Text>}
         </SafeAreaView>
     );
 };
