@@ -1,5 +1,6 @@
 import {LP_SessionStrategy} from "./sessionStrategy/LP_SessionStrategy";
 import {userService, UserService} from "./UserService";
+import {TokenSessionStrategy} from "./sessionStrategy/TokenSessionStrategy";
 
 export class SessionService {
     private readonly service: UserService;
@@ -22,3 +23,5 @@ export class SessionService {
         return this.strategy.logIn({userEmail, userPassword}, this.service);
     }
 }
+
+export const sessionService = new SessionService(new TokenSessionStrategy());

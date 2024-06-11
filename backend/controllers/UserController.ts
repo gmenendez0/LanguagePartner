@@ -1,5 +1,5 @@
 import {Controller} from "./Controller";
-import {UserService} from "../service/UserService";
+import {userService, UserService} from "../service/UserService";
 import {Request, Response} from "express";
 import {languageService} from "../service/LanguageService";
 
@@ -8,7 +8,7 @@ export class UserController extends Controller {
 
     constructor() {
         super();
-        this.service = new UserService();
+        this.service = userService;
     }
 
     private getUser = async (req: Request, res: Response) => {
