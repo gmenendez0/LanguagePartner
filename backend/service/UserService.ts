@@ -1,9 +1,9 @@
 import {UserRepository} from "../src/repository/UserRepository";
 import {userRepository} from "../src/repository/UserRepository";
-import {Language} from "../src/entity/Language";
+import {Language} from "../src/entity/Language/Language";
 import {InvalidArgumentsError} from "../errors/InvalidArgumentsError";
 import {InvalidCredentialsError} from "../errors/InvalidCredentialsError";
-import {User} from "../src/entity/User";
+import {User} from "../src/entity/User/User";
 
 export class UserService {
     private userRepository: UserRepository;
@@ -25,40 +25,39 @@ export class UserService {
         if (await userRepository.findByEmail(email)) throw new InvalidCredentialsError('Email already in use.');
 
         const newUser = new User(name, email, password, city);
+        newUser.hashPassword();
 
         await userRepository.saveUser(newUser);
     }
 
     addKnownLanguageToUser = async (userId: number, language: Language) => {
-        //Deberia agregar un lenguaje al usuario
+        const user = await this.getUserById(userId);
+        user.addKnownLanguage(language);
     }
 
-    addLearningLanguageToUser = async (userId: number, language: Language) => {
-        //Deberia agregar un lenguaje al usuario
+    addWantToKnowLanguageToUser = async (userId: number, language: Language) => {
+        const user = await this.getUserById(userId);
+        user.addWantToKnowLanguage(language);
     }
 
     removeKnownLanguageFromUser = async (userId: number, language: Language) => {
-        //Deberia remover un lenguaje al usuario
+        const user = await this.getUserById(userId);
+        user.removeKnownLanguage(language);
     }
 
-    removeLearningLanguageFromUser = async (userId: number, language: Language) => {
-        //Deberia remover un lenguaje al usuario
+    removeWantToKnowLanguageFromUser = async (userId: number, language: Language) => {
+        const user = await this.getUserById(userId);
+        user.removeWantToKnowLanguage(language);
     }
 
     getKnownLanguagesFromUser = async (userId: number) => {
-        //Deberia devolver los lenguajes conocidos del usuario
+        const user = await this.getUserById(userId);
+        return user.getKnownLanguages();
     }
 
-    getLearningLanguagesFromUser = async (userId: number) => {
-        //Deberia devolver los lenguajes que esta aprendiendo el usuario
-    }
-
-    getLikedUsersFromUser = async (userId: number) => {
-        //Deberia devolver los usuarios que le gustan al usuario
-    }
-
-    getDislikedUsersFromUser = async (userId: number) => {
-        //Deberia devolver los usuarios que no le gustan al usuario
+    getWantToKnowLanguagesFromUser = async (userId: number) => {
+        const user = await this.getUserById(userId);
+        return user.getWantToKnowLanguages();
     }
 }
 

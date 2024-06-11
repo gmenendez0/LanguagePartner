@@ -1,4 +1,4 @@
-import { Language } from '../src/entity/Language';
+import { Language } from '../src/entity/Language/Language';
 import '../app'
 import {InvalidArgumentsError} from "../errors/InvalidArgumentsError";
 import {LanguageRepository, languageRepository} from "../src/repository/LanguageRepository";

@@ -1,4 +1,4 @@
-import {User} from "../entity/User";
+import {User} from "../entity/User/User";
 import {AppDataSource} from "../data-source";
 import {RepositoryAccessError} from "../../errors/RepositoryAccessError";
 import {PersistanceError} from "../../errors/PersistanceError";

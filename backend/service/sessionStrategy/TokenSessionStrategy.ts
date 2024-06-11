@@ -1,6 +1,6 @@
 import {InvalidArgumentsError} from "../../errors/InvalidArgumentsError";
 import {InvalidCredentialsError} from "../../errors/InvalidCredentialsError";
-import {User} from "../../src/entity/User";
+import {User} from "../../src/entity/User/User";
 import {LP_SessionStrategy} from "./LP_SessionStrategy";
 import * as jwt from "jsonwebtoken";
 import {UserService} from "../UserService";
