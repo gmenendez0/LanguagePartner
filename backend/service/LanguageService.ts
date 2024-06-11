@@ -19,4 +19,10 @@ export class LanguageService {
         const newLanguage = new Language(languageName);
         await this.languageRepository.saveLanguage(newLanguage);
     }
+
+    public getLanguageByName = async (name: string) => {
+        return await this.languageRepository.findByName(name);
+    }
 }
+
+export const languageService = new LanguageService();

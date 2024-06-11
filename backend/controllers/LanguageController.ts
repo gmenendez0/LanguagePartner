@@ -1,13 +1,13 @@
 import {Controller} from "./Controller";
 import {Request, Response} from "express";
-import {LanguageService} from "../service/LanguageService";
+import {languageService, LanguageService} from "../service/LanguageService";
 
 class LanguageController extends Controller {
     private service: LanguageService;
 
     constructor() {
         super();
-        this.service = new LanguageService();
+        this.service = languageService;
     }
 
     //Pre: Request body must contain a languageName field.

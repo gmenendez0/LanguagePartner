@@ -1,7 +1,7 @@
 import {Controller} from "./Controller";
 import {UserService} from "../service/UserService";
 import {Request, Response} from "express";
-import {Language} from "../src/entity/Language/Language";
+import {languageService} from "../service/LanguageService";
 
 export class UserController extends Controller {
     private service: UserService;
@@ -51,7 +51,7 @@ export class UserController extends Controller {
         try {
             const id = Number(req.params.id);
 
-            const language = new Language(""); //TODO Deberia obtener el lenguaje del languageService y no crearlo aca.
+            const language = await this.getLanguageByName(req.body.languageName);
             await this.service.addKnownLanguageToUser(id, language);
 
             this.okResponse(res, 'Language added successfully');
@@ -64,7 +64,7 @@ export class UserController extends Controller {
         try {
             const id = Number(req.params.id);
 
-            const language = new Language(""); //TODO Deberia obtener el lenguaje del languageService y no crearlo aca.
+            const language = await this.getLanguageByName(req.body.languageName);
             await this.service.addWantToKnowLanguageToUser(id, language);
 
             this.okResponse(res, 'Language added successfully');
@@ -77,7 +77,7 @@ export class UserController extends Controller {
         try {
             const id = Number(req.params.id);
 
-            const language = new Language(""); //TODO Deberia obtener el lenguaje del languageService y no crearlo aca.
+            const language = await this.getLanguageByName(req.body.languageName);
             await this.service.removeKnownLanguageFromUser(id, language);
 
             this.okResponse(res, 'Language removed successfully');
@@ -90,13 +90,17 @@ export class UserController extends Controller {
         try {
             const id = Number(req.params.id);
 
-            const language = new Language(""); //TODO Deberia obtener el lenguaje del languageService y no crearlo aca.
+            const language = await this.getLanguageByName(req.body.languageName);
             await this.service.removeWantToKnowLanguageFromUser(id, language);
 
             this.okResponse(res, 'Language removed successfully');
         } catch (error) {
             this.handleError(error, res);
         }
+    }
+
+    private getLanguageByName = async (languageName: string) => {
+        return await languageService.getLanguageByName(languageName);
     }
 }
 
