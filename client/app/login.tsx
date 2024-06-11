@@ -19,6 +19,7 @@ interface PostResponse {
     success: boolean;
     message: string;
     token: string;
+    error: string;
 }
 
 const LoginForm: React.FC = () => {
@@ -26,6 +27,7 @@ const LoginForm: React.FC = () => {
     const [password, setPassword] = useState<string>('');
     const [errors, setErrors] = useState<Errors>({});
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const router = useRouter();
     useEffect(() => {
         if (isSubmitting) {
@@ -59,11 +61,13 @@ const LoginForm: React.FC = () => {
                                 console.error('Error saving session token:', error);
                             });
                     } else {
-                        console.log("Error login in");
+                        console.log("Login Failed");
+                        setErrorMessage(data.error);
                     }
                 })
                 .catch(error => {
                     console.error('Error sending data:', error);
+                    setErrorMessage("An error occurred while trying to log in.");
                 })
                 .finally(() => {
                     setIsSubmitting(false);
@@ -86,6 +90,9 @@ const LoginForm: React.FC = () => {
     };
 
     const handleChange = (field: string, value: string) => {
+        if (errorMessage) {
+            setErrorMessage(null);
+        }
         switch (field) {
             case 'email':
                 setEmail(value);
@@ -141,6 +148,7 @@ const LoginForm: React.FC = () => {
             }}>
                 <Text style={styles.buttonText}>Login</Text>
             </TouchableOpacity>
+            {errorMessage && <Text style={styles.errorText}>{errorMessage}</Text>}
         </SafeAreaView>
     );
 };
