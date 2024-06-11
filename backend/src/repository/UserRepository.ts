@@ -4,7 +4,7 @@ import {RepositoryAccessError} from "../../errors/RepositoryAccessError";
 import {PersistanceError} from "../../errors/PersistanceError";
 import {Repository} from "typeorm";
 
-export type UserRepository = Repository<User> & { findByEmail(email: string): Promise<User>; saveUser(user: User): Promise<User>; };
+export type UserRepository = Repository<User> & { findByEmail(email: string): Promise<User>; saveUser(user: User): Promise<User>; findById(id: number): Promise<User>; };
 
 export const userRepository = AppDataSource.getRepository(User).extend({
     findByEmail(email: string) {

@@ -1,17 +1,16 @@
 import passport from 'passport';
 import { Strategy as JwtStrategy, ExtractJwt, StrategyOptions } from 'passport-jwt';
-import {userRepository} from "../src/repository/UserRepository";
 import {Request, Response, NextFunction} from "express";
+import {userService} from "../service/UserService";
 
 const options: StrategyOptions = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     secretOrKey: 'your_jwt_secret_key', //TODO Debe reemplezarse
     ignoreExpiration: false
 };
-
 const jwtVerify = async (payload: any, done: any) => {
     try {
-        const user = await userRepository.findById(payload.sub) //TODO Revisar el acoplamiento con userRepository.
+        const user = await userService.getUserById(payload.sub);
 
         if (!user) return done(null, false);
         return done(null, user);

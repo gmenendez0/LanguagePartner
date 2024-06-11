@@ -2,6 +2,9 @@ import {AppDataSource} from "../data-source";
 import {RepositoryAccessError} from "../../errors/RepositoryAccessError";
 import {PersistanceError} from "../../errors/PersistanceError";
 import {Language} from "../entity/Language";
+import {Repository} from "typeorm";
+
+export type LanguageRepository = Repository<Language> & { findByName(name: string): Promise<Language>; saveLanguage(language: Language): Promise<Language>; };
 
 export const languageRepository = AppDataSource.getRepository(Language).extend({
     findByName(name: string): Promise<Language> {

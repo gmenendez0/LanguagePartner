@@ -1,11 +1,10 @@
 import { Language } from '../src/entity/Language';
 import '../app'
-import {Repository} from "typeorm";
 import {InvalidArgumentsError} from "../errors/InvalidArgumentsError";
-import {languageRepository} from "../src/repository/LanguageRepository";
+import {LanguageRepository, languageRepository} from "../src/repository/LanguageRepository";
 
 export class LanguageService {
-    private languageRepository: Repository<Language> & { findByName(name: string): any; saveLanguage(language: Language): any; };
+    private languageRepository: LanguageRepository;
 
     constructor() {
         this.languageRepository = languageRepository;

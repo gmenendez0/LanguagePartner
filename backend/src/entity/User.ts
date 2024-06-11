@@ -1,29 +1,30 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable } from 'typeorm';
 import { Language } from './Language';
+import bcrypt from "bcrypt";
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn()
-  private id: number;
+    @PrimaryGeneratedColumn()
+    private id: number;
 
-  @Column()
-  private name: string;
+    @Column()
+    private readonly name: string;
 
-  @Column()
-  private email: string;
+    @Column()
+    private readonly email: string;
 
-  @Column()
-  private password: string;
+    @Column()
+    private readonly password: string;
 
-  @Column()
-  private city: string;
+    @Column()
+    private readonly city: string;
 
-  constructor(name: string, email: string, password: string, city: string) {
+    constructor(name: string, email: string, password: string, city: string) {
     this.name = name;
     this.email = email;
-    this.password = password;
+    this.password = this.hashString(password);
     this.city = city;
-  };
+    };
 
     public getId(): number {
     return this.id;
@@ -44,6 +45,24 @@ export class User {
     public getCity(): string {
         return this.city;
     };
+
+    public stringMatchesPassword(string: string): boolean {
+        return bcrypt.compareSync(string, this.password);
+    }
+
+    //Post: Returns the hashed string.
+    private hashString = (string: string) => {
+        return bcrypt.hashSync(string, 10); //TODO Reemplazar 10 por una variable de entorno.
+    }
+
+
+
+
+
+
+
+
+
 
   @ManyToMany(() => User)
   @JoinTable({
