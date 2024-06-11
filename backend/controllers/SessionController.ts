@@ -10,6 +10,12 @@ class SessionController extends Controller {
         super();
         this.service = sessionService;
     }
+
+    /**
+     * Delegates the request to the service to register a new user.
+     * @param req - The Request object containing the user's information in the request body.
+     * @param res - The Response object to send.
+     */
     public register = async (req: Request, res: Response) => {
         try {
             const { city, name, email, password } = req.body;
@@ -20,6 +26,12 @@ class SessionController extends Controller {
             this.handleError(error, res)
         }
     }
+
+    /**
+     * Delegates the request to the service to log in.
+     * @param req - The Request object containing the user's email and password in the request body.
+     * @param res - The Response object to send.
+     */
     public login = async (req: Request, res: Response) => {
         try {
             const {email, password} = req.body;
@@ -31,6 +43,12 @@ class SessionController extends Controller {
         }
     }
 
+    /**
+     * Delegates the request directly to the passportAuthenticate function to authenticate the user.
+     * @param req - The Request object to authenticate.
+     * @param res - The Response object to send.
+     * @param next - The NextFunction to pass control to the next middleware.
+     */
     public authenticate = async (req: Request, res: Response, next: NextFunction) => {
         await passportAuthenticate(req, res, next);
     }

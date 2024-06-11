@@ -10,8 +10,12 @@ class LanguageController extends Controller {
         this.service = languageService;
     }
 
-    //Pre: Request body must contain a languageName field.
-    //Post: Creates a new Language with the given name.
+    /**
+     * Creates a new Language with the given name.
+     * @param req - The Request object containing the request body.
+     * @param res - The Response object to send.
+     * @throws {Error} If the request body does not contain a languageName field.
+     */
     public createLanguage = async (req: Request, res: Response) => {
         try {
             await this.service.createLanguage(req.body.languageName);

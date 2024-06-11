@@ -11,14 +11,25 @@ export class SessionService {
         this.strategy = strategy;
     }
 
-    //Pre: Receives the name, email, password and city of the user, all not empty.
-    //Post: Delegates register to strategy.
+    /**
+     * Delegates user registration to the authentication strategy.
+     * @param name - The name of the user.
+     * @param email - The email address of the user.
+     * @param password - The password of the user.
+     * @param city - The city where the user resides.
+     * @throws {Error} If any of the parameters (name, email, password, city) are empty.
+     */
     public register = async (name: string, email: string, password: string, city: string) => {
         await this.strategy.register({name, email, password, city}, this.service);
     }
 
-    //Pre: Receives the email and password of the user, both not empty.
-    //Post: Delegates logIn to strategy.
+    /**
+     * Delegates user login to the authentication strategy.
+     * @param userEmail - The email address of the user.
+     * @param userPassword - The password of the user.
+     * @returns A promise that resolves with the result of the login operation.
+     * @throws {Error} If either userEmail or userPassword is empty.
+     */
     public login = async (userEmail: string, userPassword: string) => {
         return this.strategy.logIn({userEmail, userPassword}, this.service);
     }

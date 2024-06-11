@@ -112,15 +112,28 @@ export class LP_User {
         this.wantToKnowLanguages = this.wantToKnowLanguages.filter(wantToKnowLanguage => wantToKnowLanguage !== language);
     };
 
+    /**
+     * Checks if the provided string matches the hashed password stored in the object.
+     * @param string - The string to compare with the hashed password.
+     * @returns true if the provided string matches the hashed password, otherwise false.
+     */
     public stringMatchesPassword = (string: string): boolean => {
         return bcrypt.compareSync(string, this.password);
     };
 
+    /**
+     * Hashes the password stored in the object.
+     */
     public hashPassword = (): void => {
         this.password = this.hashString(this.password);
     }
 
-    //Post: Returns the hashed string.
+
+    /**
+     * Returns the hashed string.
+     * @param string - The string to hash.
+     * @returns  string as a hash.
+     */
     private hashString = (string: string): string => {
         return bcrypt.hashSync(string, 10); //TODO Reemplazar 10 por una variable de entorno.
     };
