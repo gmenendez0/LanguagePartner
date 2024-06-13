@@ -10,60 +10,102 @@ import {AuthenticationError} from "../errors/AuthenticationError";
 const UNHANDLED_ERROR_OBJECT = { error: "Internal server error." };
 
 export abstract class Controller {
-    //Pre: Must receive an object that can be converted to standard body media type.
-    //Post: Sets the object as response body and sends the response with status code 200.
+    /**
+     * Sets the provided object as the response body and sends the response with status code 200.
+     * @param res - The Response object to send.
+     * @param object - The object to set as the response body.
+     * @throws {Error} If the provided object cannot be converted to the standard body media type.
+     */
     protected okResponse = <T>(res: Response, object: T): void => {
         this.setUpAndSendResponse(res, object, HTTPResponseCode.OK);
     }
 
-    //Pre: Must receive an object that can be converted to standard body media type.
-    //Post: Sets the object as response body and sends the response with status code 201.
+    /**
+     * Sets the provided object as the response body and sends the response with status code 201.
+     * @param res - The Response object to send.
+     * @param object - The object to set as the response body.
+     * @throws {Error} If the provided object cannot be converted to the standard body media type.
+     */
     protected createdResponse = <T>(res: Response, object: T): void => {
         this.setUpAndSendResponse(res, object, HTTPResponseCode.CREATED);
     }
 
-    //Pre: Must receive an object that can be converted to standard body media type.
-    //Post: Sets the object as response body and sends the response with status code 400.
+    /**
+     * Sets the provided object as the response body and sends the response with status code .
+     * @param res - The Response object to send.
+     * @param object - The object to set as the response body.
+     * @throws {Error} If the provided object cannot be converted to the standard body media type.
+     */
     protected badRequestResponse = <T>(res: Response, object: T): void => {
         this.setUpAndSendResponse(res, object, HTTPResponseCode.BAD_REQUEST);
     }
 
-    //Pre: Must receive an object that can be converted to standard body media type.
-    //Post: Sets the object as response body and sends the response with status code 401.
+    /**
+     * Sets the provided object as the response body and sends the response with status code 401.
+     * @param res - The Response object to send.
+     * @param object - The object to set as the response body.
+     * @throws {Error} If the provided object cannot be converted to the standard body media type.
+     */
     protected unauthorizedResponse = <T>(res: Response, object: T): void => {
         this.setUpAndSendResponse(res, object, HTTPResponseCode.UNAUTHORIZED);
     }
 
-    //Pre: Must receive an object that can be converted to standard body media type.
-    //Post: Sets the object as response body and sends the response with status code 404.
+    /**
+     * Sets the provided object as the response body and sends the response with status code 404.
+     * @param res - The Response object to send.
+     * @param object - The object to set as the response body.
+     * @throws {Error} If the provided object cannot be converted to the standard body media type.
+     */
     protected notFoundResponse = <T>(res: Response, object: T): void => {
         this.setUpAndSendResponse(res, object, HTTPResponseCode.NOT_FOUND);
     }
 
-    //Pre: Must receive an object that can be converted to standard body media type.
-    //Post: Sets the object as response body and sends the response with status code 500.
+    /**
+     * Sets the provided object as the response body and sends the response with status code 500.
+     * @param res - The Response object to send.
+     * @param object - The object to set as the response body.
+     * @throws {Error} If the provided object cannot be converted to the standard body media type.
+     */
     protected internalServerErrorResponse = <T>(res: Response, object: T): void => {
         this.setUpAndSendResponse(res, object, HTTPResponseCode.INTERNAL_SERVER_ERROR);
     }
 
-    //Pre: Must receive an object that can be converted to standard body media type.
-    //Post: Sets the object as response body and sends the response with the given status code.
+    /**
+     * Sets the provided object as the response body and sends the response with the given status code.
+     * @param res - The Response object to send.
+     * @param object - The object to set as the response body.
+     * @param statusCode - The status code to send with the response.
+     * @throws {Error} If the provided object cannot be converted to the standard body media type.
+     */
     private setUpAndSendResponse = (res: Response, object: any, statusCode: number): void => {
         this.setResponseBody(res, object);
         this.sendResponseWithStatusCode(res, statusCode);
     }
 
-    //Pre: Must receive an object that can be converted to standard body media type.
-    //Post: Converts the object to standard body media type and sets it as response body.
-    //Standard body media type: JSON.
+    /**
+     * Converts the provided object to the standard body media type (JSON) and sets it as the response body.
+     * @param res - The Response object to set the response body.
+     * @param object - The object to convert and set as the response body.
+     * @throws {Error} If the provided object cannot be converted to JSON.
+     */
     private setResponseBody = <T>(res: Response, object: T): void => {
         res.json(object);
     }
 
-    //Post: Sends the response with the given status code.
+    /**
+     * Sends the response with the given status code.
+     * @param res - The Response object to send.
+     * @param statusCode - The status code to send with the response.
+     */
     private sendResponseWithStatusCode = (res: Response, statusCode: number): void => {
         res.status(statusCode).send();
     }
+
+    /**
+     * Sends the correct response with status code and the given error message based on the type of error.
+     * @param err - The error object.
+     * @param res - The Response object to send.
+     */
     protected handleError = (err: Error, res: Response): void => {
         if (err instanceof InvalidArgumentsError)     return this.badRequestResponse(res, { error: err.message });
         if (err instanceof PersistanceError)          return this.internalServerErrorResponse(res, { error: err.message });
