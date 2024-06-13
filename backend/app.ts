@@ -10,11 +10,11 @@ import cors from 'cors';
 const app = express();
 
 // TODO move this client url somewhere else
-const whitelist = ['http://localhost:8081'];
+const whitelist = ['http://localhost:8081', 'http://localhost'];
 const corsOptions = {
   origin: function (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1) {
-      // console.log('CORS ALLOWED ORIGIN: ', origin)
+    console.log('Origin:', origin); // Log the origin of each request
+    if (whitelist.indexOf(origin) !== -1 || origin === undefined) {
       callback(null, true)
     } else {
       callback(new Error('Not allowed by CORS'))

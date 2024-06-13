@@ -24,6 +24,7 @@ interface PostResponse {
 
 const RegistrationForm: React.FC = () => {
     const [username, setUsername] = useState<string>('');
+    const [city, setCity] = useState<string>('');
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [errors, setErrors] = useState<Errors>({});
@@ -54,6 +55,7 @@ const RegistrationForm: React.FC = () => {
                     if (!data.error) {
                         console.log('Registration successful');
                         setUsername('');
+                        setCity('');
                         setEmail('');
                         setPassword('');
                         router.push('/'); // navigate to home screen
@@ -96,6 +98,9 @@ const RegistrationForm: React.FC = () => {
             case 'username':
                 setUsername(value);
                 break;
+            case 'city':
+                setCity(value);
+                break;
             case 'email':
                 setEmail(value);
                 break;
@@ -136,6 +141,13 @@ const RegistrationForm: React.FC = () => {
                 value={username}
             />
             {errors.username && <Text style={styles.errorText}>{errors.username}</Text>}
+
+            <TextInput
+                style={styles.input}
+                placeholder="City"
+                onChangeText={(text) => handleChange('city', text)}
+                value={city}
+            />
 
             <TextInput
                 style={styles.input}
