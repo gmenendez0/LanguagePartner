@@ -9,11 +9,11 @@ export class TokenSessionStrategy implements LP_SessionStrategy {
     /**
      * @inheritdoc
      */
-    public register = async (registerData: { email: string, password: string , name: string, city: string}, userService: UserService): Promise<void> => {
+    public register = async (registerData: { email: string, password: string , name: string, city: string}, userService: UserService): Promise<LP_User> => {
         const { city, name, email, password } = registerData;
         if (!city || !name || !email || !password) throw new InvalidArgumentsError('All fields (city, name, email and password) are required not empty.');
 
-        await userService.createUser(name, email, password, city);
+        return await userService.createUser(name, email, password, city);
     }
 
     /**
