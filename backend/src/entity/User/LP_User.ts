@@ -137,4 +137,16 @@ export class LP_User {
     private hashString = (string: string): string => {
         return bcrypt.hashSync(string, 10); //TODO Reemplazar 10 por una variable de entorno.
     };
+
+    /**
+     * Returns the safe exposable fields of LP_User.
+     * @returns public exposable fields.
+     */
+    public asPublic = () => {
+        return {
+            name: this.name,
+            email: this.email,
+            city: this.city,
+        }
+    }
 }
