@@ -59,7 +59,10 @@ const RegistrationForm: React.FC = () => {
                         setEmail('');
                         setPassword('');
                         //router.push('/'); // navigate to home screen
-                        router.push(`/?message=Registration successful`);
+                        router.push({
+                            pathname: "/",
+                            params: { message: "Registration Successful" }
+                        });
                     } else {
                         console.log("Registration Failed");
                         setErrorMessage(data.error);

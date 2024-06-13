@@ -17,7 +17,6 @@ interface LoginUserData {
 
 interface PostResponse {
     success: boolean;
-    message: string;
     token: string;
     error: string;
 }
