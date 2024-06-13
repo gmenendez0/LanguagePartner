@@ -1,4 +1,4 @@
-import { MigrationInterface, QueryRunner, Table, TableForeignKey } from 'typeorm';
+import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
 export class CreateUserAndLanguageTables1716926274922 implements MigrationInterface {
     public async up(queryRunner: QueryRunner): Promise<void> {
@@ -22,7 +22,7 @@ export class CreateUserAndLanguageTables1716926274922 implements MigrationInterf
 
         // Create the User table
         await queryRunner.createTable(new Table({
-            name: 'user',
+            name: 'lp_user',
             columns: [
                 {
                     name: 'id',
@@ -74,13 +74,13 @@ export class CreateUserAndLanguageTables1716926274922 implements MigrationInterf
             foreignKeys: [
                 {
                     columnNames: ['userId'],
-                    referencedTableName: 'user',
+                    referencedTableName: 'lp_user',
                     referencedColumnNames: ['id'],
                     onDelete: 'CASCADE',
                 },
                 {
                     columnNames: ['approvedUserId'],
-                    referencedTableName: 'user',
+                    referencedTableName: 'lp_user',
                     referencedColumnNames: ['id'],
                     onDelete: 'CASCADE',
                 },
@@ -102,13 +102,13 @@ export class CreateUserAndLanguageTables1716926274922 implements MigrationInterf
             foreignKeys: [
                 {
                     columnNames: ['userId'],
-                    referencedTableName: 'user',
+                    referencedTableName: 'lp_user',
                     referencedColumnNames: ['id'],
                     onDelete: 'CASCADE',
                 },
                 {
                     columnNames: ['rejectedUserId'],
-                    referencedTableName: 'user',
+                    referencedTableName: 'lp_user',
                     referencedColumnNames: ['id'],
                     onDelete: 'CASCADE',
                 },
@@ -130,13 +130,13 @@ export class CreateUserAndLanguageTables1716926274922 implements MigrationInterf
             foreignKeys: [
                 {
                     columnNames: ['userId'],
-                    referencedTableName: 'user',
+                    referencedTableName: 'lp_user',
                     referencedColumnNames: ['id'],
                     onDelete: 'CASCADE',
                 },
                 {
                     columnNames: ['matchedUserId'],
-                    referencedTableName: 'user',
+                    referencedTableName: 'lp_user',
                     referencedColumnNames: ['id'],
                     onDelete: 'CASCADE',
                 },
@@ -159,7 +159,7 @@ export class CreateUserAndLanguageTables1716926274922 implements MigrationInterf
             foreignKeys: [
                 {
                     columnNames: ['userId'],
-                    referencedTableName: 'user',
+                    referencedTableName: 'lp_user',
                     referencedColumnNames: ['id'],
                     onDelete: 'CASCADE',
                 },
@@ -187,7 +187,7 @@ export class CreateUserAndLanguageTables1716926274922 implements MigrationInterf
             foreignKeys: [
                 {
                     columnNames: ['userId'],
-                    referencedTableName: 'user',
+                    referencedTableName: 'lp_user',
                     referencedColumnNames: ['id'],
                     onDelete: 'CASCADE',
                 },
@@ -207,7 +207,7 @@ export class CreateUserAndLanguageTables1716926274922 implements MigrationInterf
         await queryRunner.dropTable('user_matched_users');
         await queryRunner.dropTable('user_rejected_users');
         await queryRunner.dropTable('user_approved_users');
-        await queryRunner.dropTable('user');
+        await queryRunner.dropTable('lp_user');
         await queryRunner.dropTable('language');
     }
 }

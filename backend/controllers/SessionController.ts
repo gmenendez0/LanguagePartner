@@ -2,6 +2,7 @@ import {Controller} from "./Controller";
 import {sessionService, SessionService} from "../service/SessionService";
 import {NextFunction, Request, Response} from "express";
 import {passportAuthenticate} from "../config/passportConfig";
+import {LP_User} from "../src/entity/User/LP_User";
 
 class SessionController extends Controller {
     private service: SessionService;
@@ -19,9 +20,9 @@ class SessionController extends Controller {
     public register = async (req: Request, res: Response) => {
         try {
             const { city, name, email, password } = req.body;
-            let user = await this.service.register(name, email, password, city);
+            let user = await this.service.register(name, email, password, city) as LP_User;
 
-            this.createdResponse(res, user);
+            this.createdResponse(res, user.asPublic());
         } catch (error) {
             this.handleError(error, res)
         }
