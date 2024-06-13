@@ -1,10 +1,13 @@
 import { ImageBackground, SafeAreaView, TouchableOpacity, Text, View, StyleSheet, Dimensions } from 'react-native';
-import { Link } from 'expo-router';
+import {Link, router} from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useState } from 'react';
+import {useRoute} from "@react-navigation/core";
 
 const HomeScreen: React.FC = () => {
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+    const [message, setMessage] = useState<string | null>(null);
+    const route = useRoute();
 
     useEffect(() => {
         const checkLoginStatus = async () => {
@@ -13,9 +16,26 @@ const HomeScreen: React.FC = () => {
         };
 
         checkLoginStatus();
-    });
+        // @ts-ignore
+        const message = route.params?.message;
+        if (message) {
+            console.log('Message from params:', message);
+            setMessage(message);
+        }
+    }, [route]); // Add route to the dependency array
     return (
         <SafeAreaView style={styles.safeArea}>
+            {message && (
+                <View style={styles.successMessageContainer}>
+                    <Text style={styles.successMessage}>{message}</Text>
+                    <TouchableOpacity style={styles.closeButton} onPress={() => {
+                        console.log("Closed notification");
+                        setMessage(null);
+                    }}>
+                        <Text style={styles.closeButtonText}>x</Text>
+                    </TouchableOpacity>
+                </View>
+            )}
             <View style={styles.container}>
                 <View style={styles.imageContainer}>
                     <ImageBackground
@@ -100,6 +120,47 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
         textAlign: 'center',
+    },
+    successMessageContainer: {
+        zIndex: 1,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#E8F5E9', // Light green background
+        borderRadius: 5, // Slight rounding of corners
+        padding: 10, // Add some padding
+        margin: 20, // Add some margin around the message
+        shadowColor: '#000', // Add shadow
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+    },
+    successMessage: {
+        color: '#4CAF50', // A more pleasing shade of green
+        fontSize: 18, // Slightly smaller font size
+        fontWeight: '500', // Medium boldness
+        flex: 1, // Add this line
+    },
+    closeButton: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#4CAF50', // Same color as the text
+        borderRadius: 15, // Make the button circular
+        width: 30, // Fixed width
+        height: 30, // Fixed height
+        marginLeft: 10, // Add some margin to the left of the close button
+        shadowColor: '#000', // Add shadow
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.22,
+        shadowRadius: 2.22,
+        elevation: 3,
+        cursor: 'pointer', // Change the cursor to a pointer when hovering over the button
+    },
+    closeButtonText: {
+        color: '#FFFFFF', // White color for the close button text
+        fontSize: 18, // Same font size as the message
+        fontWeight: '700', // Make the close button text bold
+        padding: 10, // Add padding
     },
 });
 

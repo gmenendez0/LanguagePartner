@@ -13,7 +13,7 @@ const app = express();
 const whitelist = ['http://localhost:8081', 'http://localhost'];
 const corsOptions = {
   origin: function (origin, callback) {
-    console.log('Origin:', origin); // Log the origin of each request
+    //console.log('Origin:', origin); // Log the origin of each request
     if (whitelist.indexOf(origin) !== -1 || origin === undefined) {
       callback(null, true)
     } else {

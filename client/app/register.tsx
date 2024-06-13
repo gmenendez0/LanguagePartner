@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {SafeAreaView, TextInput, Button, Text, StyleSheet, Alert, TouchableOpacity} from 'react-native';
 import {useRouter} from "expo-router";
 
@@ -35,7 +35,7 @@ const RegistrationForm: React.FC = () => {
     useEffect(() => {
         if (isSubmitting) {
             const postData: RegisterUserData = {
-                "city": "??",
+                "city": city,
                 "name": username,
                 "email": email,
                 "password": password
@@ -58,7 +58,8 @@ const RegistrationForm: React.FC = () => {
                         setCity('');
                         setEmail('');
                         setPassword('');
-                        router.push('/'); // navigate to home screen
+                        //router.push('/'); // navigate to home screen
+                        router.push(`/?message=Registration successful`);
                     } else {
                         console.log("Registration Failed");
                         setErrorMessage(data.error);
