@@ -20,7 +20,7 @@ export class SessionService {
      * @throws {Error} If any of the parameters (name, email, password, city) are empty.
      */
     public register = async (name: string, email: string, password: string, city: string) => {
-        await this.strategy.register({name, email, password, city}, this.service);
+        return await this.strategy.register({name, email, password, city}, this.service);
     }
 
     /**

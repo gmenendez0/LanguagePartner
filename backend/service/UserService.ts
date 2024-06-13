@@ -19,7 +19,7 @@ export class UserService {
         const newUser = new LP_User(name, email, password, city);
         newUser.hashPassword();
 
-        await userRepository.saveUser(newUser);
+        return await userRepository.saveUser(newUser);
     }
 
     getUserById = async (id: number) => {
