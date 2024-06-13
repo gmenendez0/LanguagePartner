@@ -72,6 +72,12 @@ function RootLayoutNav() {
               }}
           />
           <Stack.Screen
+              name="update_profile"
+              options={{
+                  header: () => <Header />,
+              }}
+          />
+          <Stack.Screen
               name="matching"
               options={{
                   header: () => <Header />,

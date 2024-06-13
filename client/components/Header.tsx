@@ -27,11 +27,18 @@ const Header = () => {
             <Link href="/" asChild>
                 <Text style={styles.title}>LanguagePartner</Text>
             </Link>
-            {isLoggedIn && (
-                <TouchableOpacity onPress={handleLogout}>
-                    <Text style={styles.logout}>Logout</Text>
-                </TouchableOpacity>
-            )}
+            <View style={styles.buttonsContainer}>
+                {isLoggedIn && <Link href="/update_profile" asChild>
+                    <TouchableOpacity >
+                        <Text style={styles.profile}>Profile</Text>
+                    </TouchableOpacity>
+                </Link>}
+                {isLoggedIn && (
+                    <TouchableOpacity onPress={handleLogout}>
+                        <Text style={styles.logout}>Logout</Text>
+                    </TouchableOpacity>
+                )}
+            </View>
         </View>
     );
 };
@@ -44,6 +51,9 @@ const styles = StyleSheet.create({
         backgroundColor: '#1a1a1a',
         padding: 25,
     },
+    buttonsContainer: {
+        flexDirection: 'row',
+    },
     title: {
         color: '#fff',
         fontSize: 24,
@@ -52,6 +62,19 @@ const styles = StyleSheet.create({
     logout: {
         color: '#FFF',
         fontSize: 16,
+        padding: 10,
+        borderWidth: 1,
+        borderColor: '#FFF',
+        borderRadius: 5,
+    },
+    profile: {
+        color: '#FFF',
+        fontSize: 16,
+        padding: 10,
+        borderWidth: 1,
+        borderColor: '#FFF',
+        borderRadius: 5,
+        marginRight: 10,
     },
 });
 
