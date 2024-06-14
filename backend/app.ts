@@ -10,7 +10,8 @@ import cors from 'cors';
 const app = express();
 
 // TODO move this client url somewhere else
-const whitelist = ['http://localhost:8081', 'http://localhost'];
+// TODO move this client url somewhere else
+const whitelist = ['http://localhost:8081', 'http://localhost', 'http://localhost:3000', 'http://localhost:3001'];
 const corsOptions = {
   origin: function (origin, callback) {
     //console.log('Origin:', origin); // Log the origin of each request
