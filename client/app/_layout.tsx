@@ -83,6 +83,12 @@ function RootLayoutNav() {
                   header: () => <Header />,
               }}
           />
+          <Stack.Screen
+              name="menu"
+              options={{
+                  header: () => <Header />,
+              }}
+          />
       </Stack>
     </ThemeProvider>
   );
