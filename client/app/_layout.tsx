@@ -93,7 +93,7 @@ function TabNavigator() {
             {isLoggedIn && (
                 <Tab.Screen name="chat_view" component={ChatList}
                             options={{
-                                tabBarIcon: ({ color }) => <TabBarIcon name="newspaper-o" color={color} />,
+                                tabBarIcon: ({ color }) => <TabBarIcon name="comments" color={color} />,
                                 tabBarLabel: () => null,
                                 headerShown: false,
                             }}
