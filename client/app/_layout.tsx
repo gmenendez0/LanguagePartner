@@ -90,13 +90,15 @@ function TabNavigator() {
                             headerShown: false,
                         }}
             />
-            <Tab.Screen name="chat_view" component={ChatList}
-                        options={{
-                            tabBarIcon: ({ color }) => <TabBarIcon name="newspaper-o" color={color} />,
-                            tabBarLabel: () => null,
-                            headerShown: false,
-                        }}
-            />
+            {isLoggedIn && (
+                <Tab.Screen name="chat_view" component={ChatList}
+                            options={{
+                                tabBarIcon: ({ color }) => <TabBarIcon name="newspaper-o" color={color} />,
+                                tabBarLabel: () => null,
+                                headerShown: false,
+                            }}
+                />
+            )}
         </Tab.Navigator>
     );
 }
