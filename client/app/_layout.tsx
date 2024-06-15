@@ -20,6 +20,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import LoginForm from "@/app/login";
 import UpdateProfile from "@/app/update_profile";
 import Menu from "@/app/index";
+import Chat from "@/app/chat";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -116,6 +117,7 @@ function RootLayoutNav() {
             <Stack.Screen name="matching" component={Matching} />
             <Stack.Screen name="login" component={LoginForm} />
             <Stack.Screen name="update_profile" component={UpdateProfile} />
+            <Stack.Screen name="chat" component={Chat} />
         </Stack.Navigator>
     );
 }
