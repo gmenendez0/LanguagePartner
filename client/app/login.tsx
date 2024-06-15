@@ -1,7 +1,17 @@
 import React, {useEffect, useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
-import { SafeAreaView, TextInput, TouchableOpacity, Text, StyleSheet, Alert } from 'react-native';
+import {
+    SafeAreaView,
+    TextInput,
+    TouchableOpacity,
+    Text,
+    StyleSheet,
+    Alert,
+    Modal,
+    View,
+    ActivityIndicator
+} from 'react-native';
 
 interface Errors {
     email?: string;
@@ -27,9 +37,13 @@ const LoginForm: React.FC = () => {
     const [errors, setErrors] = useState<Errors>({});
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [loadingMessage, setLoadingMessage] = useState<string>('');
     const router = useRouter();
     useEffect(() => {
         if (isSubmitting) {
+            setIsLoading(true); // Show loading modal
+            setLoadingMessage('Logging in...');
             const postData: LoginUserData = {
                 "email": email,
                 "password": password
@@ -48,24 +62,30 @@ const LoginForm: React.FC = () => {
                     console.log(data);
                     // Handle the response data
                     if (data.success) {
+                        setLoadingMessage('Logged in! Redirecting...');
                         const token = data.token;
                         AsyncStorage.setItem('session_token', token)
                             .then(() => {
                                 console.log('Session token saved');
                                 setEmail('');
                                 setPassword('');
-                                router.push('/'); // navigate to home screen
+                                setTimeout(() => {
+                                    router.push('/'); // navigate to home screen
+                                    setIsLoading(false); // Hide loading modal
+                                }, 2000); // Wait for 2 seconds before redirecting
                             })
                             .catch(error => {
                                 console.error('Error saving session token:', error);
                             });
                     } else {
                         console.log("Login Failed");
+                        setIsLoading(false);
                         setErrorMessage(data.error);
                     }
                 })
                 .catch(error => {
                     console.error('Error sending data:', error);
+                    setIsLoading(false);
                     setErrorMessage("An error occurred while trying to log in.");
                 })
                 .finally(() => {
@@ -124,6 +144,12 @@ const LoginForm: React.FC = () => {
 
     return (
         <SafeAreaView style={styles.container}>
+            <Modal visible={isLoading} transparent>
+                <View style={styles.modalContainer}>
+                    <ActivityIndicator size="large" color="#0000ff" />
+                    <Text style={styles.modalText}>{loadingMessage}</Text>
+                </View>
+            </Modal>
             <TextInput
                 style={styles.input}
                 placeholder="Email"
@@ -190,6 +216,17 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
         textAlign: 'center',
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
+    },
+    modalText: {
+        marginTop: 16,
+        fontSize: 18,
+        color: '#FFF',
     },
 });
 
