@@ -1,14 +1,25 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
+import { createStackNavigator } from '@react-navigation/stack';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/components/useColorScheme';
 import Header from '@/components/Header';
 import HomeScreen from "@/app/index";
+import Matching from "@/app/matching";
+import TabBarIcon from "@/app/helper_functions/helpers";
+import ChatList from "@/app/chat_view";
+import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
+import RegistrationForm from "@/app/register";
+import { NavigationContainer } from '@react-navigation/native';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import LoginForm from "@/app/login";
+import UpdateProfile from "@/app/update_profile";
+import Menu from "@/app/index";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -47,49 +58,62 @@ export default function RootLayout() {
   return <RootLayoutNav />;
 }
 
-function RootLayoutNav() {
-  const colorScheme = useColorScheme();
+function TabNavigator() {
+    const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+    useEffect(() => {
+        const checkLoginStatus = async () => {
+            const token = await AsyncStorage.getItem('session_token');
+            setIsLoggedIn(!!token);
+        };
 
-  return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen
-            name="index"
-            options={{
-              header: () => <Header />,
+        checkLoginStatus();
+    }, []); // Add route to the dependency array
+
+    const Tab = createBottomTabNavigator();
+    return (
+        <Tab.Navigator
+            screenOptions={{
+                tabBarActiveBackgroundColor: '#333',
+                tabBarInactiveBackgroundColor: '#555',
+                tabBarActiveTintColor: '#fff',
+                tabBarInactiveTintColor: '#aaa',
+                tabBarStyle: {
+                    borderTopWidth: 0,
+                },
             }}
-        />
-        <Stack.Screen
-            name="login"
-            options={{
-              header: () => <Header />,
-            }}
-        />
-          <Stack.Screen
-              name="register"
-              options={{
-                  header: () => <Header />,
-              }}
-          />
-          <Stack.Screen
-              name="update_profile"
-              options={{
-                  header: () => <Header />,
-              }}
-          />
-          <Stack.Screen
-              name="matching"
-              options={{
-                  header: () => <Header />,
-              }}
-          />
-          <Stack.Screen
-              name="menu"
-              options={{
-                  header: () => <Header />,
-              }}
-          />
-      </Stack>
-    </ThemeProvider>
-  );
+        >
+            <Tab.Screen name="menu"
+                        component={isLoggedIn ? Matching : Menu}
+                        options={{
+                            tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
+                            tabBarLabel: () => null,
+                            headerShown: false,
+                        }}
+            />
+            <Tab.Screen name="chat_view" component={ChatList}
+                        options={{
+                            tabBarIcon: ({ color }) => <TabBarIcon name="newspaper-o" color={color} />,
+                            tabBarLabel: () => null,
+                            headerShown: false,
+                        }}
+            />
+        </Tab.Navigator>
+    );
+}
+
+function RootLayoutNav() {
+    const Stack = createStackNavigator();
+
+    return (
+        <Stack.Navigator screenOptions={{
+            headerShown: true,
+            header: () => <Header /> // Use your custom header
+        }}>
+            <Stack.Screen name="index" component={TabNavigator} />
+            <Stack.Screen name="register" component={RegistrationForm} />
+            <Stack.Screen name="matching" component={Matching} />
+            <Stack.Screen name="login" component={LoginForm} />
+            <Stack.Screen name="update_profile" component={UpdateProfile} />
+        </Stack.Navigator>
+    );
 }
