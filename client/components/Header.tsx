@@ -22,6 +22,7 @@ const Header = () => {
         router.push('/'); // navigate to home screen
     };
 
+    // TODO add personalized message when user is logged in, like "Hi username"
     return (
         <View style={styles.header}>
             <Link href="/" asChild>
