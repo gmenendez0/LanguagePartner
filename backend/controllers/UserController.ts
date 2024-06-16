@@ -14,7 +14,7 @@ export class UserController extends Controller {
     }
 
     //Post: Returns 200 Ok and the user object (only public data) if the user was retrieved successfully by service layer or error.
-    private getUserPublicData = async (req: Request, res: Response) => {
+    public getUserPublicData = async (req: Request, res: Response) => {
         try {
             const user = await this.service.getUserPublicDataById(Number(req.params.id));
             this.okResponse(res, user);
@@ -31,9 +31,37 @@ export class UserController extends Controller {
         await this.getUserPublicData(req, res);
     }
 
+    public addMeKnownLanguages = async (req: Request, res: Response) => {
+        const user = req.user as LP_User;
+
+        req.params.id = user.getId().toString();
+        await this.addKnownLanguages(req, res);
+    }
+
+    public addMeWantedLanguages = async (req: Request, res: Response) => {
+        const user = req.user as LP_User;
+
+        req.params.id = user.getId().toString();
+        await this.addWantedLanguages(req, res);
+    }
+
+    public removeMeKnownLanguages = async (req: Request, res: Response) => {
+        const user = req.user as LP_User;
+
+        req.params.id = user.getId().toString();
+        await this.removeKnownLanguages(req, res);
+    }
+
+    public removeMeWantedLanguages = async (req: Request, res: Response) => {
+        const user = req.user as LP_User;
+
+        req.params.id = user.getId().toString();
+        await this.removeWantedLanguages(req, res);
+    }
+
     //Pre: Request body must contain a languageName field, which corresponds to an already existing language.
     //Post: Adds a known language to the user and returns 200 Ok if it was added successfully by service layer or error.
-    public addKnownLanguages = async (req: Request, res: Response) => {
+    private addKnownLanguages = async (req: Request, res: Response) => {
         try {
             const userId = Number(req.params.id);
             const languagesNames = req.body.languageNames;
@@ -46,7 +74,7 @@ export class UserController extends Controller {
         }
     }
 
-    public addWantedLanguages = async (req: Request, res: Response) => {
+    private addWantedLanguages = async (req: Request, res: Response) => {
         try {
             const userId = Number(req.params.id);
             const languagesNames = req.body.languageNames;
@@ -59,7 +87,7 @@ export class UserController extends Controller {
         }
     }
 
-    public removeKnownLanguages = async (req: Request, res: Response) => {
+    private removeKnownLanguages = async (req: Request, res: Response) => {
         try {
             const userId = Number(req.params.id);
             const languagesNames = req.body.languageNames;
@@ -72,7 +100,7 @@ export class UserController extends Controller {
         }
     }
 
-    public removeWantedLanguages = async (req: Request, res: Response) => {
+    private removeWantedLanguages = async (req: Request, res: Response) => {
         try {
             const userId = Number(req.params.id);
             const languagesNames = req.body.languageNames;
