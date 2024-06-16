@@ -25,37 +25,27 @@ export class UserController extends Controller {
 
     //Post: Returns 200 Ok and the loggedIn user object if it was retrieved successfully by service layer or error.
     public getMe = async (req: Request, res: Response) => {
-        const user = req.user as LP_User;
-
-        req.params.id = user.getId().toString();
+        req.params.id = this.getAuthenticatedUserIdFromRequest(req).toString();
         await this.getUserPublicData(req, res);
     }
 
     public addMeKnownLanguages = async (req: Request, res: Response) => {
-        const user = req.user as LP_User;
-
-        req.params.id = user.getId().toString();
+        req.params.id = this.getAuthenticatedUserIdFromRequest(req).toString();
         await this.addKnownLanguages(req, res);
     }
 
     public addMeWantedLanguages = async (req: Request, res: Response) => {
-        const user = req.user as LP_User;
-
-        req.params.id = user.getId().toString();
+        req.params.id = this.getAuthenticatedUserIdFromRequest(req).toString();
         await this.addWantedLanguages(req, res);
     }
 
     public removeMeKnownLanguages = async (req: Request, res: Response) => {
-        const user = req.user as LP_User;
-
-        req.params.id = user.getId().toString();
+        req.params.id = this.getAuthenticatedUserIdFromRequest(req).toString();
         await this.removeKnownLanguages(req, res);
     }
 
     public removeMeWantedLanguages = async (req: Request, res: Response) => {
-        const user = req.user as LP_User;
-
-        req.params.id = user.getId().toString();
+        req.params.id = this.getAuthenticatedUserIdFromRequest(req).toString();
         await this.removeWantedLanguages(req, res);
     }
 
@@ -113,6 +103,9 @@ export class UserController extends Controller {
         }
     }
 
+    private getAuthenticatedUserIdFromRequest = (req: Request) => {
+        return (req.user as LP_User).getId();
+    }
     private getLanguagesByName = async (languagesNames: string[]) => {
         const languages = await languageService.getLanguagesByName(languagesNames);
 
