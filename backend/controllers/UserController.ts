@@ -2,6 +2,7 @@ import {Controller} from "./Controller";
 import {userService, UserService} from "../service/UserService";
 import {Request, Response} from "express";
 import {languageService} from "../service/LanguageService";
+import {LP_User} from "../src/entity/User/LP_User";
 
 export class UserController extends Controller {
     private service: UserService;
@@ -21,10 +22,22 @@ export class UserController extends Controller {
         }
     }
 
+    //Post: Returns 200 Ok and the user object (only public data) if the user was retrieved successfully by service layer or error.
+    private getUserPublicData = async (req: Request, res: Response) => {
+        try {
+            const user = await this.service.getUserPublicDataById(Number(req.params.id));
+            this.okResponse(res, user);
+        } catch (error) {
+            this.handleError(error, res);
+        }
+    }
+
     //Post: Returns 200 Ok and the loggedIn user object if it was retrieved successfully by service layer or error.
     public getMe = async (req: Request, res: Response) => {
-        req.params.id = req.user.getId().toString();
-        await this.getUser(req, res);
+        const user = req.user as LP_User;
+
+        req.params.id = user.getId().toString();
+        await this.getUserPublicData(req, res);
     }
 
     //Post: Returns 200 Ok and the users known languages list if it was retrieved successfully by service layer or error.

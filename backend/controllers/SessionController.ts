@@ -38,7 +38,7 @@ class SessionController extends Controller {
             const {email, password} = req.body;
             const userToken = await this.service.login(email, password);
 
-            this.okResponse(res, { success: true, message: "Login successful", token: userToken });
+            this.okResponse(res, { success: true, token: userToken });
         } catch (error) {
             this.handleError(error, res)
         }

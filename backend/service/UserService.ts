@@ -26,6 +26,11 @@ export class UserService {
         return await this.userRepository.findById(id);
     }
 
+    getUserPublicDataById = async (id: number) => {
+        const user = await this.getUserById(id);
+        return user.asPublic();
+    }
+
     getUserByEmail = async (email: string) => {
         return await this.userRepository.findByEmail(email);
     }
