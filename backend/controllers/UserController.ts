@@ -5,31 +5,12 @@ import {languageService} from "../service/LanguageService";
 import {LP_User} from "../src/entity/User/LP_User";
 import {InvalidArgumentsError} from "../errors/InvalidArgumentsError";
 
-/*
-    TODO:
-    0. Poder ver el perfil de me con mi info publica (nombre, mail, foto, idiomas que conozco y que quiero aprender). DONE
-    1. Poder ver el perfil de un usuario X con su info publica (nombre, mail, foto, idiomas que conoce y que quiere aprender). DONE
-    2. Poder agregar con una sola API call multiples idiomas que conoce y que quiere aprender. DONE
-    3. Poder remover con una sola API call multiples idiomas que conoce y que quiere aprender. DONE
-    4. Poder actualizar el perfil de un usuario (City) y foto (opcional).
- */
-
 export class UserController extends Controller {
     private service: UserService;
 
     constructor() {
         super();
         this.service = userService;
-    }
-
-    //Post: Returns 200 Ok and the user object if the user was retrieved successfully by service layer or error.
-    private getUser = async (req: Request, res: Response) => {
-        try {
-            const user = await this.service.getUserById(Number(req.params.id));
-            this.okResponse(res, user);
-        } catch (error) {
-            this.handleError(error, res);
-        }
     }
 
     //Post: Returns 200 Ok and the user object (only public data) if the user was retrieved successfully by service layer or error.
