@@ -19,4 +19,8 @@ export class Language {
     public getName(): string {
         return this.name;
     }
+
+    public equals = (language: Language): boolean => {
+        return this.id === language.id;
+    }
 }

@@ -4,6 +4,7 @@ import {Language} from "../src/entity/Language/Language";
 import {InvalidArgumentsError} from "../errors/InvalidArgumentsError";
 import {InvalidCredentialsError} from "../errors/InvalidCredentialsError";
 import {LP_User} from "../src/entity/User/LP_User";
+import {ResourceNotFoundError} from "../errors/ResourceNotFoundError";
 
 export class UserService {
     private userRepository: UserRepository;
@@ -28,6 +29,7 @@ export class UserService {
 
     public getUserPublicDataById = async (id: number) => {
         const user = await this.getUserById(id);
+        if(!user) throw new ResourceNotFoundError();
         return user.asPublic();
     }
 
