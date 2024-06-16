@@ -149,9 +149,9 @@ export class LP_User{
             email: this.email,
             city: this.city,
             profilePicHash: this.profilePicHash,
-            /*knownLanguages: this.knownLanguages,
+            knownLanguages: this.knownLanguages,
             wantToKnowLanguages: this.wantToKnowLanguages,
-            approvedUsers: this.approvedUsers,
+            /*approvedUsers: this.approvedUsers,
             rejectedUsers: this.rejectedUsers,
             matchedUsers: this.matchedUsers,*/
         }

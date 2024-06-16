@@ -12,7 +12,7 @@ export class UserService {
         this.userRepository = userRepository;
     }
 
-    createUser = async (name: string, email: string, password: string, city: string) => {
+    public createUser = async (name: string, email: string, password: string, city: string) => {
         if (!city || !name || !email || !password) throw new InvalidArgumentsError('All fields (city, name, email and password) are required not empty.');
         if (await userRepository.findByEmail(email)) throw new InvalidCredentialsError('Email already in use.');
 
@@ -22,47 +22,71 @@ export class UserService {
         return await userRepository.saveUser(newUser);
     }
 
-    getUserById = async (id: number) => {
+    public getUserById = async (id: number) => {
         return await this.userRepository.findById(id);
     }
 
-    getUserPublicDataById = async (id: number) => {
+    public getUserPublicDataById = async (id: number) => {
         const user = await this.getUserById(id);
         return user.asPublic();
     }
 
-    getUserByEmail = async (email: string) => {
+    public getUserByEmail = async (email: string) => {
         return await this.userRepository.findByEmail(email);
     }
 
-    addKnownLanguageToUser = async (userId: number, language: Language) => {
-        const user = await this.getUserById(userId);
-        user.addKnownLanguage(language);
+    private saveUser = async (user: LP_User) => {
+        return await this.userRepository.saveUser(user);
     }
 
-    addWantToKnowLanguageToUser = async (userId: number, language: Language) => {
-        const user = await this.getUserById(userId);
-        user.addWantToKnowLanguage(language);
-    }
-
-    removeKnownLanguageFromUser = async (userId: number, language: Language) => {
-        const user = await this.getUserById(userId);
-        user.removeKnownLanguage(language);
-    }
-
-    removeWantToKnowLanguageFromUser = async (userId: number, language: Language) => {
-        const user = await this.getUserById(userId);
-        user.removeWantToKnowLanguage(language);
-    }
-
-    getKnownLanguagesFromUser = async (userId: number) => {
+    public getKnownLanguagesFromUser = async (userId: number) => {
         const user = await this.getUserById(userId);
         return user.getKnownLanguages();
     }
 
-    getWantToKnowLanguagesFromUser = async (userId: number) => {
+    public getWantToKnowLanguagesFromUser = async (userId: number) => {
         const user = await this.getUserById(userId);
         return user.getWantToKnowLanguages();
+    }
+
+    addKnownLanguagesToUser = async (userId: number, languages: Language[]) => {
+        const user = await this.getUserById(userId);
+
+        for (const language of languages) {
+            user.addKnownLanguage(language);
+        }
+
+        return await this.saveUser(user);
+    }
+
+    addWantToKnowLanguagesToUser = async (userId: number, languages: Language[]) => {
+        const user = await this.getUserById(userId);
+
+        for (const language of languages) {
+            user.addWantToKnowLanguage(language);
+        }
+
+        return await this.saveUser(user);
+    }
+
+    removeKnownLanguagesFromUser = async (userId: number, languages: Language[]) => {
+        const user = await this.getUserById(userId);
+
+        for (const language of languages) {
+            user.removeKnownLanguage(language);
+        }
+
+        return await this.saveUser(user);
+    }
+
+    removeWantToKnowLanguagesFromUser = async (userId: number, languages: Language[]) => {
+        const user = await this.getUserById(userId);
+
+        for (const language of languages) {
+            user.removeWantToKnowLanguage(language);
+        }
+
+        return await this.saveUser(user);
     }
 }
 

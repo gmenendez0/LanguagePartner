@@ -3,6 +3,16 @@ import {userService, UserService} from "../service/UserService";
 import {Request, Response} from "express";
 import {languageService} from "../service/LanguageService";
 import {LP_User} from "../src/entity/User/LP_User";
+import {InvalidArgumentsError} from "../errors/InvalidArgumentsError";
+
+/*
+    TODO:
+    0. Poder ver el perfil de me con mi info publica (nombre, mail, foto, idiomas que conozco y que quiero aprender). DONE
+    1. Poder ver el perfil de un usuario X con su info publica (nombre, mail, foto, idiomas que conoce y que quiere aprender). DONE
+    2. Poder agregar con una sola API call multiples idiomas que conoce y que quiere aprender. DONE
+    3. Poder remover con una sola API call multiples idiomas que conoce y que quiere aprender. DONE
+    4. Poder actualizar el perfil de un usuario (City) y foto (opcional).
+ */
 
 export class UserController extends Controller {
     private service: UserService;
@@ -40,94 +50,68 @@ export class UserController extends Controller {
         await this.getUserPublicData(req, res);
     }
 
-    //Post: Returns 200 Ok and the users known languages list if it was retrieved successfully by service layer or error.
-    public getUserKnownLanguages = async (req: Request, res: Response) => {
-        try {
-            const id = Number(req.params.id);
-
-            const languages = await this.service.getKnownLanguagesFromUser(id);
-            this.okResponse(res, languages);
-        } catch (error) {
-            this.handleError(error, res);
-        }
-    }
-
-    //Post: Returns 200 Ok and the users wanted languages list if it was retrieved successfully by service layer or error.
-    public getUserWantedLanguages = async (req: Request, res: Response) => {
-        try {
-            const id = Number(req.params.id);
-
-            const languages = await this.service.getWantToKnowLanguagesFromUser(id);
-            this.okResponse(res, languages);
-        } catch (error) {
-            this.handleError(error, res);
-        }
-    }
-
     //Pre: Request body must contain a languageName field, which corresponds to an already existing language.
     //Post: Adds a known language to the user and returns 200 Ok if it was added successfully by service layer or error.
-    public addKnownLanguage = async (req: Request, res: Response) => {
+    public addKnownLanguages = async (req: Request, res: Response) => {
         try {
-            const id = Number(req.params.id);
+            const userId = Number(req.params.id);
+            const languagesNames = req.body.languageNames;
+            const languages = await this.getLanguagesByName(languagesNames);
 
-            const language = await this.getLanguageByName(req.body.languageName);
-            await this.service.addKnownLanguageToUser(id, language);
-
-            this.okResponse(res, 'Language added successfully');
+            await this.service.addKnownLanguagesToUser(userId, languages);
+            this.okResponse(res, 'Languages added successfully');
         } catch (error) {
             this.handleError(error, res);
         }
     }
 
-    //Pre: Request body must contain a languageName field, which corresponds to an already existing language.
-    //Post: Adds a wanted to learn language to the user and returns 200 Ok if it was added successfully by service layer or error.
-    public addWantedLanguage = async (req: Request, res: Response) => {
+    public addWantedLanguages = async (req: Request, res: Response) => {
         try {
-            const id = Number(req.params.id);
+            const userId = Number(req.params.id);
+            const languagesNames = req.body.languageNames;
+            const languages = await this.getLanguagesByName(languagesNames);
 
-            const language = await this.getLanguageByName(req.body.languageName);
-            await this.service.addWantToKnowLanguageToUser(id, language);
-
-            this.okResponse(res, 'Language added successfully');
+            await this.service.addWantToKnowLanguagesToUser(userId, languages);
+            this.okResponse(res, 'Languages added successfully');
         } catch (error) {
             this.handleError(error, res);
         }
     }
 
-    //Pre: Request body must contain a languageName field, which corresponds to an already existing language.
-    //Post: Removes a known language from the user and returns 200 Ok if it was removed successfully by service layer or error.
-    public removeKnownLanguage = async (req: Request, res: Response) => {
+    public removeKnownLanguages = async (req: Request, res: Response) => {
         try {
-            const id = Number(req.params.id);
+            const userId = Number(req.params.id);
+            const languagesNames = req.body.languageNames;
+            const languages = await this.getLanguagesByName(languagesNames);
 
-            const language = await this.getLanguageByName(req.body.languageName);
-            await this.service.removeKnownLanguageFromUser(id, language);
-
-            this.okResponse(res, 'Language removed successfully');
+            await this.service.removeKnownLanguagesFromUser(userId, languages);
+            this.okResponse(res, 'Languages removed successfully');
         } catch (error) {
             this.handleError(error, res);
         }
     }
 
-    //Pre: Request body must contain a languageName field, which corresponds to an already existing language.
-    //Post: Removes a wanted to learn language from the user and returns 200 Ok if it was removed successfully by service layer or error.
-    public removeWantedLanguage = async (req: Request, res: Response) => {
+    public removeWantedLanguages = async (req: Request, res: Response) => {
         try {
-            const id = Number(req.params.id);
+            const userId = Number(req.params.id);
+            const languagesNames = req.body.languageNames;
+            const languages = await this.getLanguagesByName(languagesNames);
 
-            const language = await this.getLanguageByName(req.body.languageName);
-            await this.service.removeWantToKnowLanguageFromUser(id, language);
-
-            this.okResponse(res, 'Language removed successfully');
+            await this.service.removeWantToKnowLanguagesFromUser(userId, languages);
+            this.okResponse(res, 'Languages removed successfully');
         } catch (error) {
             this.handleError(error, res);
         }
     }
 
-    //Pre: There must be a Language created with name = languageName.
-    //Post: Returns the language object if it was retrieved successfully by service layer, otherwise returns null.
-    private getLanguageByName = async (languageName: string) => {
-        return await languageService.getLanguageByName(languageName);
+    private getLanguagesByName = async (languagesNames: string[]) => {
+        const languages = await languageService.getLanguagesByName(languagesNames);
+
+        for (const language of languages) {
+            if(!language) throw new InvalidArgumentsError(("Language " + language + " does is invalid."));
+        }
+
+        return languages;
     }
 }
 
