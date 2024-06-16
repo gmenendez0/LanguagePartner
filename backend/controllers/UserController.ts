@@ -109,8 +109,10 @@ export class UserController extends Controller {
     private getLanguagesByName = async (languagesNames: string[]) => {
         const languages = await languageService.getLanguagesByName(languagesNames);
 
-        for (const language of languages) {
-            if(!language) throw new InvalidArgumentsError(("Language " + language + " does is invalid."));
+        console.log(languages)
+
+        for (let languageName of languagesNames) {
+            if (!languages.some(language => language.getName() === languageName)) throw new InvalidArgumentsError(`Language with name ${languageName} is invalid.`);
         }
 
         return languages;
