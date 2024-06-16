@@ -4,8 +4,8 @@ import {PersistanceError} from "../errors/PersistanceError";
 import {InvalidCredentialsError} from "../errors/InvalidCredentialsError";
 import {RepositoryAccessError} from "../errors/RepositoryAccessError";
 import {InvalidRequestFormatError} from "../errors/InvalidRequestFormatError";
-import {HTTPResponseCode} from "./HTTPResponseCode";
 import {AuthenticationError} from "../errors/AuthenticationError";
+import {HttpStatusCode} from "axios";
 
 const UNHANDLED_ERROR_OBJECT = { error: "Internal server error." };
 
@@ -17,7 +17,7 @@ export abstract class Controller {
      * @throws {Error} If the provided object cannot be converted to the standard body media type.
      */
     protected okResponse = <T>(res: Response, object: T): void => {
-        this.setUpAndSendResponse(res, object, HTTPResponseCode.OK);
+        this.setUpAndSendResponse(res, object, HttpStatusCode.Ok);
     }
 
     /**
@@ -27,7 +27,7 @@ export abstract class Controller {
      * @throws {Error} If the provided object cannot be converted to the standard body media type.
      */
     protected createdResponse = <T>(res: Response, object: T): void => {
-        this.setUpAndSendResponse(res, object, HTTPResponseCode.CREATED);
+        this.setUpAndSendResponse(res, object, HttpStatusCode.Created);
     }
 
     /**
@@ -37,7 +37,7 @@ export abstract class Controller {
      * @throws {Error} If the provided object cannot be converted to the standard body media type.
      */
     protected badRequestResponse = <T>(res: Response, object: T): void => {
-        this.setUpAndSendResponse(res, object, HTTPResponseCode.BAD_REQUEST);
+        this.setUpAndSendResponse(res, object, HttpStatusCode.BadRequest);
     }
 
     /**
@@ -47,7 +47,7 @@ export abstract class Controller {
      * @throws {Error} If the provided object cannot be converted to the standard body media type.
      */
     protected unauthorizedResponse = <T>(res: Response, object: T): void => {
-        this.setUpAndSendResponse(res, object, HTTPResponseCode.UNAUTHORIZED);
+        this.setUpAndSendResponse(res, object, HttpStatusCode.Unauthorized);
     }
 
     /**
@@ -57,7 +57,7 @@ export abstract class Controller {
      * @throws {Error} If the provided object cannot be converted to the standard body media type.
      */
     protected notFoundResponse = <T>(res: Response, object: T): void => {
-        this.setUpAndSendResponse(res, object, HTTPResponseCode.NOT_FOUND);
+        this.setUpAndSendResponse(res, object, HttpStatusCode.NotFound);
     }
 
     /**
@@ -67,7 +67,7 @@ export abstract class Controller {
      * @throws {Error} If the provided object cannot be converted to the standard body media type.
      */
     protected internalServerErrorResponse = <T>(res: Response, object: T): void => {
-        this.setUpAndSendResponse(res, object, HTTPResponseCode.INTERNAL_SERVER_ERROR);
+        this.setUpAndSendResponse(res, object, HttpStatusCode.InternalServerError);
     }
 
     /**
@@ -77,28 +77,9 @@ export abstract class Controller {
      * @param statusCode - The status code to send with the response.
      * @throws {Error} If the provided object cannot be converted to the standard body media type.
      */
-    private setUpAndSendResponse = (res: Response, object: any, statusCode: HTTPResponseCode): void => {
-        this.setResponseBody(res, object);
-        this.sendResponseWithStatusCode(res, statusCode);
-    }
-
-    /**
-     * Converts the provided object to the standard body media type (JSON) and sets it as the response body.
-     * @param res - The Response object to set the response body.
-     * @param object - The object to convert and set as the response body.
-     * @throws {Error} If the provided object cannot be converted to JSON.
-     */
-    private setResponseBody = <T>(res: Response, object: T): void => {
+    private setUpAndSendResponse = (res: Response, object: any, statusCode: HttpStatusCode): void => {
+        res.status(statusCode)
         res.json(object);
-    }
-
-    /**
-     * Sends the response with the given status code.
-     * @param res - The Response object to send.
-     * @param statusCode - The status code to send with the response.
-     */
-    private sendResponseWithStatusCode = (res: Response, statusCode: HTTPResponseCode): void => {
-        res.status(statusCode).send();
     }
 
     /**
@@ -107,8 +88,6 @@ export abstract class Controller {
      * @param res - The Response object to send.
      */
     protected handleError = (err: Error, res: Response): void => {
-        console.log(err.message)
-
         if (err instanceof InvalidArgumentsError)     return this.badRequestResponse(res, { error: err.message });
         if (err instanceof PersistanceError)          return this.internalServerErrorResponse(res, { error: err.message });
         if (err instanceof InvalidCredentialsError)   return this.unauthorizedResponse(res, { error: err.message });

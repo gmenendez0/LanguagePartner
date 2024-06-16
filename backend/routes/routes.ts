@@ -4,6 +4,7 @@ import * as matchingController from '../controllers/matchingController';
 import * as imageController from '../controllers/imageController';*/
 import languageRouter from "./languageRoutes";
 import sessionRouter from "./sessionRoutes";
+import userRouter from "./userRoutes";
 
 const router = Router();
 
@@ -24,5 +25,6 @@ router.get('/profile-picture', imageController.getProfilePicture);*/
 
 router.use('/v1/session', sessionRouter);
 router.use('/v1/language', languageRouter);
+router.use('/v1/user', userRouter);
 
 export default router;

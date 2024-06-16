@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 import {userApprovedUsersTableOptionsTableOptions, userMatchedUsersTableOptions, userKnownLanguagesTableOptions, userWantToKnowLanguagesTableOptions, userRejectedUsersTableOptionsTableOptions} from "./UserTableOptions";
 
 @Entity()
-export class LP_User {
+export class LP_User{
     @PrimaryGeneratedColumn()
     private id: number;
 
@@ -143,10 +143,17 @@ export class LP_User {
      * @returns public exposable fields.
      */
     public asPublic = () => {
+        //TODO: Deben agregarse los campos de idiomas y usuarios aprobados, rechazados y emparejados, pero sin exponer al usuario completo, sino solo su id.
         return {
             name: this.name,
             email: this.email,
             city: this.city,
+            profilePicHash: this.profilePicHash,
+            knownLanguages: this.knownLanguages,
+            wantToKnowLanguages: this.wantToKnowLanguages,
+            /*approvedUsers: this.approvedUsers,
+            rejectedUsers: this.rejectedUsers,
+            matchedUsers: this.matchedUsers,*/
         }
     }
 }
