@@ -56,7 +56,6 @@ export class UserController extends Controller {
             const userId = Number(req.params.id);
             const languagesNames = req.body.languageNames;
             const languages = await this.getLanguagesByName(languagesNames);
-
             await this.service.addKnownLanguagesToUser(userId, languages);
             this.okResponse(res, 'Languages added successfully');
         } catch (error) {
@@ -108,8 +107,6 @@ export class UserController extends Controller {
     }
     private getLanguagesByName = async (languagesNames: string[]) => {
         const languages = await languageService.getLanguagesByName(languagesNames);
-
-        console.log(languages)
 
         for (let languageName of languagesNames) {
             if (!languages.some(language => language.getName() === languageName)) throw new InvalidArgumentsError(`Language with name ${languageName} is invalid.`);

@@ -3,11 +3,11 @@ import {JoinTableOptions} from "typeorm";
 export const userApprovedUsersTableOptionsTableOptions: JoinTableOptions = {
     name: 'user_approved_users',
     joinColumn: {
-        name: 'user_id',
+        name: 'userId',
         referencedColumnName: 'id',
     },
     inverseJoinColumn: {
-        name: 'approved_user_id',
+        name: 'approvedUserId',
         referencedColumnName: 'id',
     },
 }
@@ -15,11 +15,11 @@ export const userApprovedUsersTableOptionsTableOptions: JoinTableOptions = {
 export const userRejectedUsersTableOptionsTableOptions: JoinTableOptions = {
     name: 'user_rejected_users',
     joinColumn: {
-        name: 'user_id',
+        name: 'userId',
         referencedColumnName: 'id',
     },
     inverseJoinColumn: {
-        name: 'rejected_user_id',
+        name: 'rejectedUserId',
         referencedColumnName: 'id',
     },
 }

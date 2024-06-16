@@ -78,7 +78,7 @@ export abstract class Controller {
      * @throws {Error} If the provided object cannot be converted to the standard body media type.
      */
     private setUpAndSendResponse = (res: Response, object: any, statusCode: HttpStatusCode): void => {
-        res.status(statusCode)
+        res.status(statusCode);
         res.json(object);
     }
 
@@ -88,6 +88,8 @@ export abstract class Controller {
      * @param res - The Response object to send.
      */
     protected handleError = (err: Error, res: Response): void => {
+        console.log(err.message);
+
         if (err instanceof InvalidArgumentsError)     return this.badRequestResponse(res, { error: err.message });
         if (err instanceof PersistanceError)          return this.internalServerErrorResponse(res, { error: err.message });
         if (err instanceof InvalidCredentialsError)   return this.unauthorizedResponse(res, { error: err.message });
