@@ -93,23 +93,23 @@ export class LP_User{
     };
 
     public removeApprovedUser = (user: LP_User): void => {
-        this.approvedUsers = this.approvedUsers.filter(approvedUser => approvedUser !== user);
+        this.approvedUsers = this.approvedUsers.filter(approvedUser => approvedUser != user);
     };
 
     public removeRejectedUser = (user: LP_User): void => {
-        this.rejectedUsers = this.rejectedUsers.filter(rejectedUser => rejectedUser !== user);
+        this.rejectedUsers = this.rejectedUsers.filter(rejectedUser => rejectedUser != user);
     };
 
     public removeMatchedUser = (user: LP_User): void => {
-        this.matchedUsers = this.matchedUsers.filter(matchedUser => matchedUser !== user);
+        this.matchedUsers = this.matchedUsers.filter(matchedUser => matchedUser != user);
     };
 
     public removeKnownLanguage = (language: Language): void => {
-        this.knownLanguages = this.knownLanguages.filter(knownLanguage => knownLanguage !== language);
+        this.knownLanguages = this.knownLanguages.filter(knownLanguage => !knownLanguage.equals(language));
     };
 
     public removeWantToKnowLanguage = (language: Language): void => {
-        this.wantToKnowLanguages = this.wantToKnowLanguages.filter(wantToKnowLanguage => wantToKnowLanguage !== language);
+        this.wantToKnowLanguages = this.wantToKnowLanguages.filter(wantToKnowLanguage => !wantToKnowLanguage.equals(language));
     };
 
     /**

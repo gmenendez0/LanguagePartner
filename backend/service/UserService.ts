@@ -28,6 +28,7 @@ export class UserService {
 
     public getUserPublicDataById = async (id: number) => {
         const user = await this.getUserById(id);
+        if(!user) throw new InvalidArgumentsError('User not found.');
         return user.asPublic();
     }
 
