@@ -19,7 +19,8 @@ export const userRepository = AppDataSource.getRepository(LP_User).extend({
             return this.findOne({
                 where: {
                     email: email,
-                }
+                },
+                relations: ["approvedUsers", "rejectedUsers", "matchedUsers", "knownLanguages", "wantToKnowLanguages"],
             });
         } catch (error) {
             throw new RepositoryAccessError();
@@ -51,7 +52,8 @@ export const userRepository = AppDataSource.getRepository(LP_User).extend({
             return this.findOne({
                 where: {
                     id: id,
-                }
+                },
+                relations: ["approvedUsers", "rejectedUsers", "matchedUsers", "knownLanguages", "wantToKnowLanguages"],
             });
         } catch (error) {
             throw new RepositoryAccessError();

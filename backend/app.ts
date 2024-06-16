@@ -7,6 +7,20 @@ import swaggerUi from 'swagger-ui-express';
 import * as swaggerDocument from './swagger_output.json';
 import cors from 'cors';
 
+/*
+    TODO:
+    1. Todos los secretos hardcodeados, deben ser almacenados en variables de entorno.
+    2. Reordenar directorios.
+    3. Quitar el script de create_database.sh, ya que no debe estar tan acoplado al backend.
+    4. Poder actualizar el perfil de un usuario (City) y foto (opcional).
+    5. Documentar todas las funciones.
+    6. Desarrollar MatchingControllers.
+    7. Desarrollar ChatControllers.
+    8. En LP_User, en asPublic, agregar los usuarios likeados, dislikeados y matcheados.
+    9. Revisar lo de CORS.
+ */
+
+
 const app = express();
 
 // TODO move this client url somewhere else

@@ -39,16 +39,6 @@ export class UserService {
         return await this.userRepository.saveUser(user);
     }
 
-    public getKnownLanguagesFromUser = async (userId: number) => {
-        const user = await this.getUserById(userId);
-        return user.getKnownLanguages();
-    }
-
-    public getWantToKnowLanguagesFromUser = async (userId: number) => {
-        const user = await this.getUserById(userId);
-        return user.getWantToKnowLanguages();
-    }
-
     addKnownLanguagesToUser = async (userId: number, languages: Language[]) => {
         const user = await this.getUserById(userId);
 

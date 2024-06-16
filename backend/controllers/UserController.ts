@@ -5,15 +5,6 @@ import {languageService} from "../service/LanguageService";
 import {LP_User} from "../src/entity/User/LP_User";
 import {InvalidArgumentsError} from "../errors/InvalidArgumentsError";
 
-/*
-    TODO:
-    0. Poder ver el perfil de me con mi info publica (nombre, mail, foto, idiomas que conozco y que quiero aprender). DONE
-    1. Poder ver el perfil de un usuario X con su info publica (nombre, mail, foto, idiomas que conoce y que quiere aprender). DONE
-    2. Poder agregar con una sola API call multiples idiomas que conoce y que quiere aprender. DONE
-    3. Poder remover con una sola API call multiples idiomas que conoce y que quiere aprender. DONE
-    4. Poder actualizar el perfil de un usuario (City) y foto (opcional).
- */
-
 export class UserController extends Controller {
     private service: UserService;
 
@@ -22,18 +13,8 @@ export class UserController extends Controller {
         this.service = userService;
     }
 
-    //Post: Returns 200 Ok and the user object if the user was retrieved successfully by service layer or error.
-    private getUser = async (req: Request, res: Response) => {
-        try {
-            const user = await this.service.getUserById(Number(req.params.id));
-            this.okResponse(res, user);
-        } catch (error) {
-            this.handleError(error, res);
-        }
-    }
-
     //Post: Returns 200 Ok and the user object (only public data) if the user was retrieved successfully by service layer or error.
-    private getUserPublicData = async (req: Request, res: Response) => {
+    public getUserPublicData = async (req: Request, res: Response) => {
         try {
             const user = await this.service.getUserPublicDataById(Number(req.params.id));
             this.okResponse(res, user);
@@ -44,20 +25,37 @@ export class UserController extends Controller {
 
     //Post: Returns 200 Ok and the loggedIn user object if it was retrieved successfully by service layer or error.
     public getMe = async (req: Request, res: Response) => {
-        const user = req.user as LP_User;
-
-        req.params.id = user.getId().toString();
+        req.params.id = this.getAuthenticatedUserIdFromRequest(req).toString();
         await this.getUserPublicData(req, res);
+    }
+
+    public addMeKnownLanguages = async (req: Request, res: Response) => {
+        req.params.id = this.getAuthenticatedUserIdFromRequest(req).toString();
+        await this.addKnownLanguages(req, res);
+    }
+
+    public addMeWantedLanguages = async (req: Request, res: Response) => {
+        req.params.id = this.getAuthenticatedUserIdFromRequest(req).toString();
+        await this.addWantedLanguages(req, res);
+    }
+
+    public removeMeKnownLanguages = async (req: Request, res: Response) => {
+        req.params.id = this.getAuthenticatedUserIdFromRequest(req).toString();
+        await this.removeKnownLanguages(req, res);
+    }
+
+    public removeMeWantedLanguages = async (req: Request, res: Response) => {
+        req.params.id = this.getAuthenticatedUserIdFromRequest(req).toString();
+        await this.removeWantedLanguages(req, res);
     }
 
     //Pre: Request body must contain a languageName field, which corresponds to an already existing language.
     //Post: Adds a known language to the user and returns 200 Ok if it was added successfully by service layer or error.
-    public addKnownLanguages = async (req: Request, res: Response) => {
+    private addKnownLanguages = async (req: Request, res: Response) => {
         try {
             const userId = Number(req.params.id);
             const languagesNames = req.body.languageNames;
             const languages = await this.getLanguagesByName(languagesNames);
-
             await this.service.addKnownLanguagesToUser(userId, languages);
             this.okResponse(res, 'Languages added successfully');
         } catch (error) {
@@ -65,7 +63,7 @@ export class UserController extends Controller {
         }
     }
 
-    public addWantedLanguages = async (req: Request, res: Response) => {
+    private addWantedLanguages = async (req: Request, res: Response) => {
         try {
             const userId = Number(req.params.id);
             const languagesNames = req.body.languageNames;
@@ -78,7 +76,7 @@ export class UserController extends Controller {
         }
     }
 
-    public removeKnownLanguages = async (req: Request, res: Response) => {
+    private removeKnownLanguages = async (req: Request, res: Response) => {
         try {
             const userId = Number(req.params.id);
             const languagesNames = req.body.languageNames;
@@ -91,7 +89,7 @@ export class UserController extends Controller {
         }
     }
 
-    public removeWantedLanguages = async (req: Request, res: Response) => {
+    private removeWantedLanguages = async (req: Request, res: Response) => {
         try {
             const userId = Number(req.params.id);
             const languagesNames = req.body.languageNames;
@@ -104,11 +102,14 @@ export class UserController extends Controller {
         }
     }
 
+    private getAuthenticatedUserIdFromRequest = (req: Request) => {
+        return (req.user as LP_User).getId();
+    }
     private getLanguagesByName = async (languagesNames: string[]) => {
         const languages = await languageService.getLanguagesByName(languagesNames);
 
-        for (const language of languages) {
-            if(!language) throw new InvalidArgumentsError(("Language " + language + " does is invalid."));
+        for (let languageName of languagesNames) {
+            if (!languages.some(language => language.getName() === languageName)) throw new InvalidArgumentsError(`Language with name ${languageName} is invalid.`);
         }
 
         return languages;
