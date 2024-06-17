@@ -22,8 +22,8 @@ class ChatController extends Controller {
 
   public getChat = async (req: Request, res: Response) => {
     try {
-      await this.service.getChat(req.params.id as unknown as number, (req.user as LP_User).getId());
-      this.okResponse(res, { message: 'Chat retrieved successfully.' });
+      const chat = await this.service.getChat(req.params.id as unknown as number, (req.user as LP_User).getId());
+      this.okResponse(res, chat);
     } catch (error) {
       this.handleError(error, res);
     }

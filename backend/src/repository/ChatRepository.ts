@@ -42,9 +42,9 @@ export class ChatRepository {
   public addMessage = async (message: string, user1: number, user2: number) => {
     const chat = this.chats.find((chat) => (chat.user1 === user1 && chat.user2 === user2) || (chat.user1 === user2 && chat.user2 === user1));
     if (!chat) {
-      this.chats.push({ user1, user2, messages: [{ from: user1, message, timestamp: new Date() }] });
+      this.chats.push({ user1, user2, messages: [{ from: user2, message, timestamp: new Date() }] });
     } else {
-      chat.messages.push({ from: user1, message, timestamp: new Date() });
+      chat.messages.push({ from: user2, message, timestamp: new Date() });
     }
     this.saveChats();
   }

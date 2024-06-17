@@ -50,6 +50,57 @@ const ChatList = () => {
             });
     }, []);
 
+    //Prueba de fetch de chat
+
+    /*
+    useEffect(() => {
+        // Fetch the chat data
+
+        AsyncStorage.getItem('session_token').then((authToken) => {
+            if (chats && selectedChat) {
+                fetch(`http://localhost:3000/v1/chat/${selectedChat}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`,
+                    },
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        console.log(data);
+                    })
+                    .catch((error) => {
+                        console.error('Error fetching data:', error);
+                    });
+            }});
+    }, [chats, user, selectedChat]);*/
+
+    //prueba de post de chat
+
+    useEffect(() => {
+        // Fetch the chat data
+
+        AsyncStorage.getItem('session_token').then((authToken) => {
+            if (chats && selectedChat) {
+                fetch(`http://localhost:3000/v1/chat/${selectedChat}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`,
+                    },
+                    body: JSON.stringify({ message: 'Hola' }),
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        console.log(data);
+                    })
+                    .catch((error) => {
+                        console.error('Error fetching data:', error);
+                    });
+            }
+        });
+    }, [chats, user, selectedChat]);
+
     const loadChatDetails = (chatId: number) => {
         // Function to load chat details based on chatId
         setSelectedChat(chatId);
@@ -83,11 +134,13 @@ const ChatList = () => {
                 </ScrollView>
             </View>
             <View style={styles.blankContainer}>
-            {selectedChat && chats ? (
-                <View style={styles.blankContainer}>
-                    <Chat me={user.id} chatter={chats.find((chat) => chat.id === selectedChat) || chats[0]} />
-                </View>
-            ) : null}
+                {selectedChat ? (
+                    <Chat me={user.id} chatter={chats?.find((chat) => chat.id === selectedChat) || chats[0]} />
+                ) : (
+                    <View>
+                        <Text>Select a chat to view details</Text>
+                    </View>
+                )}
             </View>
         </View>
     );
