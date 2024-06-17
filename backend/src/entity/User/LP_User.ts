@@ -51,11 +51,6 @@ export class LP_User{
         this.city = city;
     };
 
-    //Pre: Se debe haber validado que el DTO es correcto.
-    public static fromDTO = (dto: CreateLP_UserDTO): LP_User => {
-        return new LP_User(dto.name, dto.email, dto.password, dto.city);
-    }
-
     public getId = (): number => this.id;
 
     public getName = (): string => this.name;

@@ -1,5 +1,6 @@
 import {UserService} from "../UserService";
 import {CreateLP_UserDTO} from "../../DTOs/CreateLP_UserDTO";
+import {LP_User} from "../../src/entity/User/LP_User";
 
 //Se agrega LP_ al nombre de la interfaz para indicar que es una interfaz nativa de LanguagePartner y evitar chocar con otras entidades de otras librerias.
 export interface LP_SessionStrategy {
@@ -10,7 +11,7 @@ export interface LP_SessionStrategy {
      * @param userService - The UserService instance.
      * @returns A promise that resolves with the result of the registration operation.
      */
-    register(registerData: CreateLP_UserDTO, userService: UserService): Promise<unknown>;
+    register(registerData: CreateLP_UserDTO, userService: UserService): Promise<LP_User>;
 
     /**
      * Logs the user in.

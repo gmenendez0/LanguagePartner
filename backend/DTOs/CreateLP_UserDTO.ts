@@ -26,6 +26,7 @@ export class CreateLP_UserDTO extends DTO<LP_User> {
 
         const user = new LP_User(this.name, this.email, this.password, this.city);
         user.hashPassword();
+
         return user;
     }
 }

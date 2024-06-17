@@ -2,7 +2,6 @@ import {Controller} from "./Controller";
 import {sessionService, SessionService} from "../service/SessionService";
 import {NextFunction, Request, Response} from "express";
 import {passportAuthenticate} from "../config/passportConfig";
-import {LP_User} from "../src/entity/User/LP_User";
 import {CreateLP_UserDTO} from "../DTOs/CreateLP_UserDTO";
 import {plainToInstance} from "class-transformer";
 
@@ -24,9 +23,9 @@ class SessionController extends Controller {
             const { city, name, email, password } = req.body;
             const userData = plainToInstance(CreateLP_UserDTO, { city, name, email, password });
 
-            await this.service.register(userData);
+            const user = await this.service.register(userData);
 
-            this.createdResponse(res, null);
+            this.createdResponse(res, user.asPublic());
         } catch (error) {
             this.handleError(error, res)
         }
