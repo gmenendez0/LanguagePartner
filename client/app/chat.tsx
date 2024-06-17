@@ -1,6 +1,6 @@
 import { Composer, ComposerProps } from 'react-native-gifted-chat';
 import React, { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import {
     GiftedChat,
     IMessage,
@@ -10,17 +10,18 @@ import {
     SystemMessageProps,
     InputToolbarProps, BubbleProps
 } from "react-native-gifted-chat";
+import { matchedUser } from "./chat_view";
 
 interface ChatProps {
     me: number;
-    chatId: number;
+    chatter: matchedUser;
 }
 
-const Chat: React.FC<ChatProps> = ({ me, chatId }) => {
+const Chat: React.FC<ChatProps> = ({ me, chatter }) => {
     const [messages, setMessages] = useState<IMessage[]>([
         {
             _id: 1,
-            text: "Hello developer",
+            text: `My name is ${me} and I am chatting with ${me}.`,
             createdAt: new Date(),
             user: {
                 _id: 2,
@@ -29,6 +30,12 @@ const Chat: React.FC<ChatProps> = ({ me, chatId }) => {
             },
         }
     ]);
+
+    if (!chatter) {
+        return (
+            <View style={styles.container}/>
+        );
+    }
 
     const onSend = (newMessages: IMessage[] = []) => {
         setMessages((previousMessages: IMessage[]) => GiftedChat.append(previousMessages, newMessages));

@@ -5,10 +5,21 @@ import { useState } from 'react';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Chat from './chat';
 
+export interface matchedUser {
+    id: number;
+    name: string;
+    email: string;
+    age: number;
+    city: string;
+    knownLanguages: string[];
+    wantToKnowLanguages: string[];
+}
+
 const ChatList = () => {
 
-    const [chats, setChats] = useState<string[] | null>(null);
+    const [chats, setChats] = useState<matchedUser[] | null>(null);
     const [selectedChat, setSelectedChat] = useState<number | null>(null)
+    const [user, setUser] = useState<any | null>(null);
 
     useEffect(() => {
         // Fetch the auth token and then fetch the chat data
@@ -29,7 +40,10 @@ const ChatList = () => {
             .then((response) => response.json())
             .then((data) => {
                 console.log(data);
-                setChats(data.matchedUsers.map((user: any) => user.name));
+                setChats(data.matchedUsers);
+                setUser(data);
+                console.log(user);
+
             })
             .catch((error) => {
                 console.error('Error fetching data:', error);
@@ -58,9 +72,9 @@ const ChatList = () => {
                             <TouchableOpacity
                                 key={index}
                                 style={index % 2 === 0 ? styles.chatItemEven : styles.chatItemOdd}
-                                onPress={() => loadChatDetails(index)}
+                                onPress={() => loadChatDetails(chat.id)}
                             >
-                                <Text style={styles.chatText}>{chat}</Text>
+                                <Text style={styles.chatText}>{chat.name}</Text>
                             </TouchableOpacity>
                         ))
                     ) : (
@@ -68,8 +82,12 @@ const ChatList = () => {
                     )}
                 </ScrollView>
             </View>
-            <View style={styles.blankContainer} >
-                <Chat me={1} chatId={selectedChat || 0}/>
+            <View style={styles.blankContainer}>
+            {selectedChat && chats ? (
+                <View style={styles.blankContainer}>
+                    <Chat me={user.id} chatter={chats.find((chat) => chat.id === selectedChat) || chats[0]} />
+                </View>
+            ) : null}
             </View>
         </View>
     );
