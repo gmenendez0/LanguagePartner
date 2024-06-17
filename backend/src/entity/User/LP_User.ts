@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable } from 't
 import { Language } from '../Language/Language';
 import bcrypt from "bcrypt";
 import {userApprovedUsersTableOptionsTableOptions, userMatchedUsersTableOptions, userKnownLanguagesTableOptions, userWantToKnowLanguagesTableOptions, userRejectedUsersTableOptionsTableOptions} from "./UserTableOptions";
+import {CreateLP_UserDTO} from "../../../DTOs/CreateLP_UserDTO";
 
 @Entity()
 export class LP_User{
@@ -41,7 +42,7 @@ export class LP_User{
     private wantToKnowLanguages: Language[];
 
     @Column({ nullable: true })
-    profilePicHash: string;
+    private profilePicHash: string;
 
     constructor(name: string, email: string, password: string, city: string) {
         this.name = name;
@@ -49,6 +50,11 @@ export class LP_User{
         this.password = password;
         this.city = city;
     };
+
+    //Pre: Se debe haber validado que el DTO es correcto.
+    public static fromDTO = (dto: CreateLP_UserDTO): LP_User => {
+        return new LP_User(dto.name, dto.email, dto.password, dto.city);
+    }
 
     public getId = (): number => this.id;
 
@@ -138,6 +144,21 @@ export class LP_User{
         return bcrypt.hashSync(string, 10); //TODO Reemplazar 10 por una variable de entorno.
     };
 
+    private getApprovedUsersIds = (): number[] => {
+        if (!this.approvedUsers) return [];
+        return this.approvedUsers.map(user => user.getId());
+    }
+
+    private getRejectedUsersIds = (): number[] => {
+        if (!this.rejectedUsers) return [];
+        return this.rejectedUsers.map(user => user.getId());
+    }
+
+    private getMatchedUsersIds = (): number[] => {
+        if (!this.matchedUsers) return [];
+        return this.matchedUsers.map(user => user.getId());
+    }
+
     /**
      * Returns the safe exposable fields of LP_User.
      * @returns public exposable fields.
@@ -151,9 +172,9 @@ export class LP_User{
             profilePicHash: this.profilePicHash,
             knownLanguages: this.knownLanguages,
             wantToKnowLanguages: this.wantToKnowLanguages,
-            /*approvedUsers: this.approvedUsers,
-            rejectedUsers: this.rejectedUsers,
-            matchedUsers: this.matchedUsers,*/
+            approvedUsers: this.getApprovedUsersIds(),
+            rejectedUsers: this.getRejectedUsersIds(),
+            matchedUsers: this.getMatchedUsersIds(),
         }
     }
 }

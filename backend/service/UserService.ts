@@ -1,10 +1,10 @@
 import {UserRepository} from "../src/repository/UserRepository";
 import {userRepository} from "../src/repository/UserRepository";
 import {Language} from "../src/entity/Language/Language";
-import {InvalidArgumentsError} from "../errors/InvalidArgumentsError";
-import {InvalidCredentialsError} from "../errors/InvalidCredentialsError";
 import {LP_User} from "../src/entity/User/LP_User";
 import {ResourceNotFoundError} from "../errors/ResourceNotFoundError";
+import {CreateLP_UserDTO} from "../DTOs/CreateLP_UserDTO";
+import {InvalidArgumentsError} from "../errors/InvalidArgumentsError";
 
 export class UserService {
     private userRepository: UserRepository;
@@ -13,12 +13,10 @@ export class UserService {
         this.userRepository = userRepository;
     }
 
-    public createUser = async (name: string, email: string, password: string, city: string) => {
-        if (!city || !name || !email || !password) throw new InvalidArgumentsError('All fields (city, name, email and password) are required not empty.');
-        if (await userRepository.findByEmail(email)) throw new InvalidCredentialsError('Email already in use.');
+    public createUser = async (userData: CreateLP_UserDTO) => {
+        const newUser = await userData.toBusinessObject();
 
-        const newUser = new LP_User(name, email, password, city);
-        newUser.hashPassword();
+        if (await userRepository.findByEmail(newUser.getEmail())) throw new InvalidArgumentsError('Email already in use.');
 
         return await userRepository.saveUser(newUser);
     }
@@ -41,7 +39,7 @@ export class UserService {
         return await this.userRepository.saveUser(user);
     }
 
-    addKnownLanguagesToUser = async (userId: number, languages: Language[]) => {
+    public addKnownLanguagesToUser = async (userId: number, languages: Language[]) => {
         const user = await this.getUserById(userId);
 
         for (const language of languages) {
@@ -51,7 +49,7 @@ export class UserService {
         return await this.saveUser(user);
     }
 
-    addWantToKnowLanguagesToUser = async (userId: number, languages: Language[]) => {
+    public addWantToKnowLanguagesToUser = async (userId: number, languages: Language[]) => {
         const user = await this.getUserById(userId);
 
         for (const language of languages) {
@@ -61,7 +59,7 @@ export class UserService {
         return await this.saveUser(user);
     }
 
-    removeKnownLanguagesFromUser = async (userId: number, languages: Language[]) => {
+    public removeKnownLanguagesFromUser = async (userId: number, languages: Language[]) => {
         const user = await this.getUserById(userId);
 
         for (const language of languages) {
@@ -71,7 +69,7 @@ export class UserService {
         return await this.saveUser(user);
     }
 
-    removeWantToKnowLanguagesFromUser = async (userId: number, languages: Language[]) => {
+    public removeWantToKnowLanguagesFromUser = async (userId: number, languages: Language[]) => {
         const user = await this.getUserById(userId);
 
         for (const language of languages) {
@@ -79,6 +77,10 @@ export class UserService {
         }
 
         return await this.saveUser(user);
+    }
+
+    private validateDTO = async (dto: CreateLP_UserDTO) => {
+
     }
 }
 

@@ -89,7 +89,7 @@ export abstract class Controller {
      * @param res - The Response object to send.
      */
     protected handleError = (err: Error, res: Response): void => {
-        console.log(err.message);
+        console.log(err.message)
 
         if (err instanceof InvalidArgumentsError)     return this.badRequestResponse(res, { error: err.message });
         if (err instanceof PersistanceError)          return this.internalServerErrorResponse(res, { error: err.message });

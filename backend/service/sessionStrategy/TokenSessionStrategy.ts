@@ -4,16 +4,14 @@ import {LP_User} from "../../src/entity/User/LP_User";
 import {LP_SessionStrategy} from "./LP_SessionStrategy";
 import * as jwt from "jsonwebtoken";
 import {UserService} from "../UserService";
+import {CreateLP_UserDTO} from "../../DTOs/CreateLP_UserDTO";
 
 export class TokenSessionStrategy implements LP_SessionStrategy {
     /**
      * @inheritdoc
      */
-    public register = async (registerData: { email: string, password: string , name: string, city: string}, userService: UserService): Promise<LP_User> => {
-        const { city, name, email, password } = registerData;
-        if (!city || !name || !email || !password) throw new InvalidArgumentsError('All fields (city, name, email and password) are required not empty.');
-
-        return await userService.createUser(name, email, password, city);
+    public register = async (registerData: CreateLP_UserDTO, userService: UserService): Promise<LP_User> => {
+        return await userService.createUser(registerData);
     }
 
     /**

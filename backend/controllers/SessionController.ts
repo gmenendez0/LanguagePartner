@@ -3,6 +3,8 @@ import {sessionService, SessionService} from "../service/SessionService";
 import {NextFunction, Request, Response} from "express";
 import {passportAuthenticate} from "../config/passportConfig";
 import {LP_User} from "../src/entity/User/LP_User";
+import {CreateLP_UserDTO} from "../DTOs/CreateLP_UserDTO";
+import {plainToInstance} from "class-transformer";
 
 class SessionController extends Controller {
     private service: SessionService;
@@ -20,9 +22,11 @@ class SessionController extends Controller {
     public register = async (req: Request, res: Response) => {
         try {
             const { city, name, email, password } = req.body;
-            let user = await this.service.register(name, email, password, city) as LP_User;
+            const userData = plainToInstance(CreateLP_UserDTO, { city, name, email, password });
 
-            this.createdResponse(res, user.asPublic());
+            await this.service.register(userData);
+
+            this.createdResponse(res, null);
         } catch (error) {
             this.handleError(error, res)
         }

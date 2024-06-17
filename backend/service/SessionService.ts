@@ -1,6 +1,7 @@
 import {LP_SessionStrategy} from "./sessionStrategy/LP_SessionStrategy";
 import {userService, UserService} from "./UserService";
 import {TokenSessionStrategy} from "./sessionStrategy/TokenSessionStrategy";
+import {CreateLP_UserDTO} from "../DTOs/CreateLP_UserDTO";
 
 export class SessionService {
     private readonly service: UserService;
@@ -13,14 +14,11 @@ export class SessionService {
 
     /**
      * Delegates user registration to the authentication strategy.
-     * @param name - The name of the user.
-     * @param email - The email address of the user.
-     * @param password - The password of the user.
-     * @param city - The city where the user resides.
-     * @throws {Error} If any of the parameters (name, email, password, city) are empty.
+     * @param userData - The user data.
+     * @throws {Error} If any of the parameters (name, email, password, city) inside userData are empty or are no strings.
      */
-    public register = async (name: string, email: string, password: string, city: string) => {
-        return await this.strategy.register({name, email, password, city}, this.service);
+    public register = async (userData: CreateLP_UserDTO) => {
+        return await this.strategy.register(userData, this.service);
     }
 
     /**

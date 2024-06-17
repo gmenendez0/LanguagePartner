@@ -56,6 +56,7 @@ export class UserController extends Controller {
             const userId = Number(req.params.id);
             const languagesNames = req.body.languageNames;
             const languages = await this.getLanguagesByName(languagesNames);
+
             await this.service.addKnownLanguagesToUser(userId, languages);
             this.okResponse(res, 'Languages added successfully');
         } catch (error) {
