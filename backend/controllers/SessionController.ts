@@ -24,7 +24,7 @@ class SessionController extends Controller {
             const userData = this.convertBodyToDTO(req, CreateLP_UserDTO);
 
             const user = await this.service.register(userData);
-            this.createdResponse(res, user.asPublic());
+            this.createdResponse(res, user.asPublicDTO());
         } catch (error) {
             this.handleError(error, res)
         }

@@ -74,9 +74,8 @@ export class UserController extends Controller {
     private executeLanguagesOperation = async (req: Request, res: Response, operation: (userId: number, languages: any) => Promise<any>) => {
         try {
             const userId = Number(req.params.id);
-            const languagesNames = req.body.languageName;
+            const languagesNames = req.body.languagesNames;
 
-            this.validateLanguageNames(languagesNames)
             const languages = await this.getLanguagesByName(languagesNames);
 
             await operation(userId, languages);
@@ -85,12 +84,6 @@ export class UserController extends Controller {
             this.handleError(error, res);
         }
     }
-
-    private validateLanguageNames = (languageNames: string[]) => {
-        if (!languageNames || languageNames.length === 0) throw new InvalidArgumentsError('No languages provided.');
-        if (languageNames.every(str => typeof str === 'string' && str.trim().length > 0)) throw new InvalidArgumentsError('Each language in the array must be a non-empty string.');
-    }
-
     private getLanguagesByName = async (languagesNames: string[]) => {
         const languages = await languageService.getLanguagesByName(languagesNames);
 

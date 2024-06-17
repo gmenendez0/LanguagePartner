@@ -3,6 +3,7 @@ import { Language } from '../Language/Language';
 import bcrypt from "bcrypt";
 import {userApprovedUsersTableOptionsTableOptions, userMatchedUsersTableOptions, userKnownLanguagesTableOptions, userWantToKnowLanguagesTableOptions, userRejectedUsersTableOptionsTableOptions} from "./UserTableOptions";
 import {CreateLP_UserDTO} from "../../../DTOs/UserDTOs/CreateLP_UserDTO";
+import {plainToInstance} from "class-transformer";
 
 @Entity()
 export class LP_User{
@@ -158,8 +159,7 @@ export class LP_User{
      * Returns the safe exposable fields of LP_User.
      * @returns public exposable fields.
      */
-    public asPublic = () => {
-        //TODO: Deben agregarse los campos de idiomas y usuarios aprobados, rechazados y emparejados, pero sin exponer al usuario completo, sino solo su id.
+    private asPublic = () => {
         return {
             name: this.name,
             email: this.email,
@@ -171,5 +171,13 @@ export class LP_User{
             rejectedUsers: this.getRejectedUsersIds(),
             matchedUsers: this.getMatchedUsersIds(),
         }
+    }
+
+    /**
+     * Returns the safe exposable fields of LP_User as a CreateLP_UserDTO object.
+     * @returns public exposable fields as a CreateLP_UserDTO object
+     * */
+    public asPublicDTO = () => {
+        return plainToInstance(CreateLP_UserDTO, this.asPublic());
     }
 }

@@ -28,7 +28,7 @@ export class UserService {
     public getUserPublicDataById = async (id: number) => {
         const user = await this.getUserById(id);
         if(!user) throw new ResourceNotFoundError();
-        return user.asPublic();
+        return user.asPublicDTO();
     }
 
     public getUserByEmail = async (email: string) => {
