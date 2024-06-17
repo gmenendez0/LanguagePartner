@@ -16,7 +16,7 @@ export class UserController extends Controller {
     //Post: Returns 200 Ok and the user object (only public data) if the user was retrieved successfully by service layer or error.
     public getUserPublicData = async (req: Request, res: Response) => {
         try {
-            const user = await this.service.getUserPublicDataById(Number(req.params.id));
+            const user = await this.service.getUserById(Number(req.params.id));
             this.okResponse(res, user);
         } catch (error) {
             this.handleError(error, res);
