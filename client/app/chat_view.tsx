@@ -2,10 +2,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect } from 'react';
 import { ScrollView, View, Text, StyleSheet } from 'react-native';
 import { useState } from 'react';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const ChatList = () => {
 
     const [chats, setChats] = useState<string[] | null>(null);
+    const [selectedChat, setSelectedChat] = useState<number | null>(null)
 
     useEffect(() => {
         // Fetch the auth token and then fetch the chat data
@@ -33,6 +35,11 @@ const ChatList = () => {
             });
     }, []);
 
+    const loadChatDetails = (chatId: number) => {
+        // Function to load chat details based on chatId
+        setSelectedChat(chatId);
+    };
+
     if (!chats) {
         return (
             <View style={styles.container}>
@@ -47,9 +54,13 @@ const ChatList = () => {
                 <ScrollView contentContainerStyle={styles.container}>
                     {chats ? (
                         chats.map((chat, index) => (
-                            <View key={index} style={index % 2 === 0 ? styles.chatItemEven : styles.chatItemOdd}>
+                            <TouchableOpacity
+                                key={index}
+                                style={index % 2 === 0 ? styles.chatItemEven : styles.chatItemOdd}
+                                onPress={() => loadChatDetails(index)}
+                            >
                                 <Text style={styles.chatText}>{chat}</Text>
-                            </View>
+                            </TouchableOpacity>
                         ))
                     ) : (
                         <Text style={styles.chatText}>No chats found</Text>
