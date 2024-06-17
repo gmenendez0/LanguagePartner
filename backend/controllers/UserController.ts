@@ -52,59 +52,43 @@ export class UserController extends Controller {
     //Pre: Request body must contain a languageName field, which corresponds to an already existing language.
     //Post: Adds a known language to the user and returns 200 Ok if it was added successfully by service layer or error.
     private addKnownLanguages = async (req: Request, res: Response) => {
-        try {
-            const userId = Number(req.params.id);
-            const languagesNames = req.body.languageNames;
-            const languages = await this.getLanguagesByName(languagesNames);
-
-            await this.service.addKnownLanguagesToUser(userId, languages);
-            this.okResponse(res, 'Languages added successfully');
-        } catch (error) {
-            this.handleError(error, res);
-        }
+        await this.executeLanguagesOperation(req, res, this.service.addKnownLanguagesToUser);
     }
 
     private addWantedLanguages = async (req: Request, res: Response) => {
-        try {
-            const userId = Number(req.params.id);
-            const languagesNames = req.body.languageNames;
-            const languages = await this.getLanguagesByName(languagesNames);
-
-            await this.service.addWantToKnowLanguagesToUser(userId, languages);
-            this.okResponse(res, 'Languages added successfully');
-        } catch (error) {
-            this.handleError(error, res);
-        }
+        await this.executeLanguagesOperation(req, res, this.service.addWantToKnowLanguagesToUser);
     }
 
     private removeKnownLanguages = async (req: Request, res: Response) => {
-        try {
-            const userId = Number(req.params.id);
-            const languagesNames = req.body.languageNames;
-            const languages = await this.getLanguagesByName(languagesNames);
-
-            await this.service.removeKnownLanguagesFromUser(userId, languages);
-            this.okResponse(res, 'Languages removed successfully');
-        } catch (error) {
-            this.handleError(error, res);
-        }
+        await this.executeLanguagesOperation(req, res, this.service.removeKnownLanguagesFromUser);
     }
 
     private removeWantedLanguages = async (req: Request, res: Response) => {
-        try {
-            const userId = Number(req.params.id);
-            const languagesNames = req.body.languageNames;
-            const languages = await this.getLanguagesByName(languagesNames);
-
-            await this.service.removeWantToKnowLanguagesFromUser(userId, languages);
-            this.okResponse(res, 'Languages removed successfully');
-        } catch (error) {
-            this.handleError(error, res);
-        }
+        await this.executeLanguagesOperation(req, res, this.service.removeWantToKnowLanguagesFromUser);
     }
 
     private getAuthenticatedUserIdFromRequest = (req: Request) => {
         return (req.user as LP_User).getId();
+    }
+
+    private executeLanguagesOperation = async (req: Request, res: Response, operation: (userId: number, languages: any) => Promise<any>) => {
+        try {
+            const userId = Number(req.params.id);
+            const languagesNames = req.body.languageName;
+
+            this.validateLanguageNames(languagesNames)
+            const languages = await this.getLanguagesByName(languagesNames);
+
+            await operation(userId, languages);
+            this.noContentResponse(res);
+        } catch (error) {
+            this.handleError(error, res);
+        }
+    }
+
+    private validateLanguageNames = (languageNames: string[]) => {
+        if (!languageNames || languageNames.length === 0) throw new InvalidArgumentsError('No languages provided.');
+        if (languageNames.every(str => typeof str === 'string' && str.trim().length > 0)) throw new InvalidArgumentsError('Each language in the array must be a non-empty string.');
     }
 
     private getLanguagesByName = async (languagesNames: string[]) => {

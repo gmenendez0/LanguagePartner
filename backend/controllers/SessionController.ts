@@ -21,7 +21,7 @@ class SessionController extends Controller {
      */
     public register = async (req: Request, res: Response) => {
         try {
-            const userData = plainToInstance(CreateLP_UserDTO, req.body);
+            const userData = this.convertBodyToDTO(req, CreateLP_UserDTO);
 
             const user = await this.service.register(userData);
             this.createdResponse(res, user.asPublic());
@@ -37,8 +37,7 @@ class SessionController extends Controller {
      */
     public login = async (req: Request, res: Response) => {
         try {
-            const userData = plainToInstance(LogInDTO, req.body);
-            console.log(userData);
+            const userData = this.convertBodyToDTO(req, LogInDTO);
 
             const userToken = await this.service.login(userData);
             this.okResponse(res, { success: true, token: userToken });

@@ -78,10 +78,6 @@ export class UserService {
 
         return await this.saveUser(user);
     }
-
-    private validateDTO = async (dto: CreateLP_UserDTO) => {
-
-    }
 }
 
 export const userService = new UserService();
