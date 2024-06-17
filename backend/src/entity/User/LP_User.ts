@@ -2,6 +2,8 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable } from 't
 import { Language } from '../Language/Language';
 import bcrypt from "bcrypt";
 import {userApprovedUsersTableOptionsTableOptions, userMatchedUsersTableOptions, userKnownLanguagesTableOptions, userWantToKnowLanguagesTableOptions, userRejectedUsersTableOptionsTableOptions} from "./UserTableOptions";
+import {CreateLP_UserDTO} from "../../../DTOs/UserDTOs/CreateLP_UserDTO";
+import {plainToInstance} from "class-transformer";
 
 @Entity()
 export class LP_User{
@@ -41,7 +43,7 @@ export class LP_User{
     private wantToKnowLanguages: Language[];
 
     @Column({ nullable: true })
-    profilePicHash: string;
+    private profilePicHash: string;
 
     constructor(name: string, email: string, password: string, city: string) {
         this.name = name;
@@ -138,12 +140,26 @@ export class LP_User{
         return bcrypt.hashSync(string, 10); //TODO Reemplazar 10 por una variable de entorno.
     };
 
+    private getApprovedUsersIds = (): number[] => {
+        if (!this.approvedUsers) return [];
+        return this.approvedUsers.map(user => user.getId());
+    }
+
+    private getRejectedUsersIds = (): number[] => {
+        if (!this.rejectedUsers) return [];
+        return this.rejectedUsers.map(user => user.getId());
+    }
+
+    private getMatchedUsersIds = (): number[] => {
+        if (!this.matchedUsers) return [];
+        return this.matchedUsers.map(user => user.getId());
+    }
+
     /**
      * Returns the safe exposable fields of LP_User.
      * @returns public exposable fields.
      */
-    public asPublic = () => {
-        //TODO: Deben agregarse los campos de idiomas y usuarios aprobados, rechazados y emparejados, pero sin exponer al usuario completo, sino solo su id.
+    private asPublic = () => {
         return {
             name: this.name,
             email: this.email,
@@ -151,9 +167,17 @@ export class LP_User{
             profilePicHash: this.profilePicHash,
             knownLanguages: this.knownLanguages,
             wantToKnowLanguages: this.wantToKnowLanguages,
-            /*approvedUsers: this.approvedUsers,
-            rejectedUsers: this.rejectedUsers,
-            matchedUsers: this.matchedUsers,*/
+            approvedUsers: this.getApprovedUsersIds(),
+            rejectedUsers: this.getRejectedUsersIds(),
+            matchedUsers: this.getMatchedUsersIds(),
         }
+    }
+
+    /**
+     * Returns the safe exposable fields of LP_User as a CreateLP_UserDTO object.
+     * @returns public exposable fields as a CreateLP_UserDTO object
+     * */
+    public asPublicDTO = () => {
+        return plainToInstance(CreateLP_UserDTO, this.asPublic());
     }
 }

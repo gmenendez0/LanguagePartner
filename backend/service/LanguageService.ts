@@ -29,7 +29,12 @@ export class LanguageService {
      * @returns A promise that resolves with the languages found in the repository, or an empty array if not found.
      */
     public getLanguagesByName = async (names: string[]) => {
+        this.validateLanguageNames(names);
         return await this.languageRepository.getLanguagesByName(names);
+    }
+
+    private validateLanguageNames = (languageNames: string[]) => {
+        if (!languageNames || languageNames.length === 0) throw new InvalidArgumentsError('No languages provided.');
     }
 }
 

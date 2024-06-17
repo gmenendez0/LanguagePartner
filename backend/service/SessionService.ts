@@ -1,6 +1,8 @@
 import {LP_SessionStrategy} from "./sessionStrategy/LP_SessionStrategy";
 import {userService, UserService} from "./UserService";
 import {TokenSessionStrategy} from "./sessionStrategy/TokenSessionStrategy";
+import {CreateLP_UserDTO} from "../DTOs/UserDTOs/CreateLP_UserDTO";
+import {LogInDTO} from "../DTOs/SessionDTOs/LogInDTO";
 
 export class SessionService {
     private readonly service: UserService;
@@ -13,25 +15,21 @@ export class SessionService {
 
     /**
      * Delegates user registration to the authentication strategy.
-     * @param name - The name of the user.
-     * @param email - The email address of the user.
-     * @param password - The password of the user.
-     * @param city - The city where the user resides.
-     * @throws {Error} If any of the parameters (name, email, password, city) are empty.
+     * @param userData - The user data.
+     * @throws {Error} If any of the parameters (name, email, password, city) inside userData are empty or are no strings.
      */
-    public register = async (name: string, email: string, password: string, city: string) => {
-        return await this.strategy.register({name, email, password, city}, this.service);
+    public register = async (userData: CreateLP_UserDTO) => {
+        return await this.strategy.register(userData, this.service);
     }
 
     /**
      * Delegates user login to the authentication strategy.
-     * @param userEmail - The email address of the user.
-     * @param userPassword - The password of the user.
+     * @param userData - The user data.
      * @returns A promise that resolves with the result of the login operation.
-     * @throws {Error} If either userEmail or userPassword is empty.
+     * @throws {Error} If any of the parameters inside userData is empty.
      */
-    public login = async (userEmail: string, userPassword: string) => {
-        return this.strategy.logIn({userEmail, userPassword}, this.service);
+    public login = async (userData: LogInDTO) => {
+        return this.strategy.logIn(userData, this.service);
     }
 }
 

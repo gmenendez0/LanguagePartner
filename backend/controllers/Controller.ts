@@ -1,4 +1,4 @@
-import {Response} from "express";
+import {Request, Response} from "express";
 import {InvalidArgumentsError} from "../errors/InvalidArgumentsError";
 import {PersistanceError} from "../errors/PersistanceError";
 import {InvalidCredentialsError} from "../errors/InvalidCredentialsError";
@@ -7,6 +7,8 @@ import {InvalidRequestFormatError} from "../errors/InvalidRequestFormatError";
 import {AuthenticationError} from "../errors/AuthenticationError";
 import {HttpStatusCode} from "axios";
 import {ResourceNotFoundError} from "../errors/ResourceNotFoundError";
+import {ClassConstructor, plainToInstance} from "class-transformer";
+import {DTO} from "../DTOs/DTO";
 
 const UNHANDLED_ERROR_OBJECT = { error: "Internal server error." };
 
@@ -29,6 +31,10 @@ export abstract class Controller {
      */
     protected createdResponse = <T>(res: Response, object: T): void => {
         this.setUpAndSendResponse(res, object, HttpStatusCode.Created);
+    }
+
+    protected noContentResponse = (res: Response): void => {
+        this.setUpAndSendResponse(res, {}, HttpStatusCode.NoContent);
     }
 
     /**
@@ -89,7 +95,7 @@ export abstract class Controller {
      * @param res - The Response object to send.
      */
     protected handleError = (err: Error, res: Response): void => {
-        console.log(err.message);
+        console.log(err.message)
 
         if (err instanceof InvalidArgumentsError)     return this.badRequestResponse(res, { error: err.message });
         if (err instanceof PersistanceError)          return this.internalServerErrorResponse(res, { error: err.message });
@@ -100,5 +106,19 @@ export abstract class Controller {
         if (err instanceof ResourceNotFoundError)     return this.notFoundResponse(res, { error: err.message });
 
         this.internalServerErrorResponse(res, UNHANDLED_ERROR_OBJECT);
+    }
+
+    /**
+     * Converts the request body to the provided DTO class.
+     * @param req - The Request object containing the body to convert.
+     * @param DTOClass - The class to convert the body to.
+     * @throws {InvalidRequestFormatError} If the body cannot be converted to the provided DTO class.
+     */
+    protected convertBodyToDTO = <T extends DTO>(req: Request, DTOClass: ClassConstructor<T>): T => {
+        try {
+            return plainToInstance(DTOClass, req.body);
+        } catch (error) {
+            throw new InvalidRequestFormatError(error.message);
+        }
     }
 }

@@ -4,28 +4,26 @@ import {LP_User} from "../../src/entity/User/LP_User";
 import {LP_SessionStrategy} from "./LP_SessionStrategy";
 import * as jwt from "jsonwebtoken";
 import {UserService} from "../UserService";
+import {CreateLP_UserDTO} from "../../DTOs/UserDTOs/CreateLP_UserDTO";
+import {LogInDTO} from "../../DTOs/SessionDTOs/LogInDTO";
 
 export class TokenSessionStrategy implements LP_SessionStrategy {
     /**
      * @inheritdoc
      */
-    public register = async (registerData: { email: string, password: string , name: string, city: string}, userService: UserService): Promise<LP_User> => {
-        const { city, name, email, password } = registerData;
-        if (!city || !name || !email || !password) throw new InvalidArgumentsError('All fields (city, name, email and password) are required not empty.');
-
-        return await userService.createUser(name, email, password, city);
+    public register = async (registerData: CreateLP_UserDTO, userService: UserService): Promise<LP_User> => {
+        return await userService.createUser(registerData);
     }
 
     /**
      * @inheritdoc
      */
-    public logIn = async (logInData: { userEmail: string, userPassword: string }, userService: UserService): Promise<String> => {
-        const { userEmail, userPassword } = logInData;
-        if (!userEmail || !userPassword) throw new InvalidArgumentsError('Both email and password are required not empty.');
+    public logIn = async (logInData: LogInDTO, userService: UserService): Promise<String> => {
+        await logInData.validate();
 
-        let user: LP_User = await userService.getUserByEmail(userEmail);
+        let user: LP_User = await userService.getUserByEmail(logInData.email);
         if (!user) throw new InvalidCredentialsError('User not found with given credentials.');
-        if (!user.stringMatchesPassword(userPassword)) throw new InvalidCredentialsError('User not found with given credentials.');
+        if (!user.stringMatchesPassword(logInData.password)) throw new InvalidCredentialsError('User not found with given credentials.');
 
         return this.generateJWTForUser(user);
     }
