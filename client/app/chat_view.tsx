@@ -42,21 +42,41 @@ const ChatList = () => {
     }
 
     return (
-        <ScrollView style={styles.container}>
-            {chats.map((chat, index) => (
-                <View key={index} style={index % 2 === 0 ? styles.chatItemEven : styles.chatItemOdd}>
-                    <Text style={styles.chatText}>{chat}</Text>
-                </View>
-            ))}
-        </ScrollView>
+        <View style={styles.outerContainer}>
+            <View style={styles.chatContainer}>
+                <ScrollView contentContainerStyle={styles.container}>
+                    {chats ? (
+                        chats.map((chat, index) => (
+                            <View key={index} style={index % 2 === 0 ? styles.chatItemEven : styles.chatItemOdd}>
+                                <Text style={styles.chatText}>{chat}</Text>
+                            </View>
+                        ))
+                    ) : (
+                        <Text style={styles.chatText}>No chats found</Text>
+                    )}
+                </ScrollView>
+            </View>
+            <View style={styles.blankContainer} >
+                <Text style={styles.chatText}>Chat will appear here</Text>
+            </View>
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
-    container: {
+    outerContainer: {
         flex: 1,
-        padding: 10,
+        flexDirection: 'row',
+    },
+    chatContainer: {
+        flex: 0.2,
         backgroundColor: '#333',
+    },
+    blankContainer: {
+        flex: 0.8,
+    },
+    container: {
+        padding: 10,
     },
     chatItemEven: {
         backgroundColor: '#555',
