@@ -7,6 +7,8 @@ import {InvalidRequestFormatError} from "../errors/InvalidRequestFormatError";
 import {AuthenticationError} from "../errors/AuthenticationError";
 import {HttpStatusCode} from "axios";
 import {ResourceNotFoundError} from "../errors/ResourceNotFoundError";
+import {ClassConstructor, plainToInstance} from "class-transformer";
+import {DTO} from "../DTOs/DTO";
 
 const UNHANDLED_ERROR_OBJECT = { error: "Internal server error." };
 

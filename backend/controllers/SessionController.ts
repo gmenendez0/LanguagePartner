@@ -2,8 +2,9 @@ import {Controller} from "./Controller";
 import {sessionService, SessionService} from "../service/SessionService";
 import {NextFunction, Request, Response} from "express";
 import {passportAuthenticate} from "../config/passportConfig";
-import {CreateLP_UserDTO} from "../DTOs/CreateLP_UserDTO";
+import {CreateLP_UserDTO} from "../DTOs/UserDTOs/CreateLP_UserDTO";
 import {plainToInstance} from "class-transformer";
+import {LogInDTO} from "../DTOs/SessionDTOs/LogInDTO";
 
 class SessionController extends Controller {
     private service: SessionService;
@@ -20,11 +21,9 @@ class SessionController extends Controller {
      */
     public register = async (req: Request, res: Response) => {
         try {
-            const { city, name, email, password } = req.body;
-            const userData = plainToInstance(CreateLP_UserDTO, { city, name, email, password });
+            const userData = plainToInstance(CreateLP_UserDTO, req.body);
 
             const user = await this.service.register(userData);
-
             this.createdResponse(res, user.asPublic());
         } catch (error) {
             this.handleError(error, res)
@@ -38,9 +37,10 @@ class SessionController extends Controller {
      */
     public login = async (req: Request, res: Response) => {
         try {
-            const {email, password} = req.body;
-            const userToken = await this.service.login(email, password);
+            const userData = plainToInstance(LogInDTO, req.body);
+            console.log(userData);
 
+            const userToken = await this.service.login(userData);
             this.okResponse(res, { success: true, token: userToken });
         } catch (error) {
             this.handleError(error, res)

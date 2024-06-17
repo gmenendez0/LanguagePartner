@@ -106,6 +106,7 @@ export class UserController extends Controller {
     private getAuthenticatedUserIdFromRequest = (req: Request) => {
         return (req.user as LP_User).getId();
     }
+
     private getLanguagesByName = async (languagesNames: string[]) => {
         const languages = await languageService.getLanguagesByName(languagesNames);
 

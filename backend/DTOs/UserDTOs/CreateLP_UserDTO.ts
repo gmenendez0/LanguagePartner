@@ -1,9 +1,10 @@
 import {IsString, IsNotEmpty, IsEmail} from 'class-validator';
-import {DTO} from "./DTO";
-import {LP_User} from "../src/entity/User/LP_User";
+import {DTO} from "../DTO";
+import {LP_User} from "../../src/entity/User/LP_User";
+import {CreationDTO} from "../CreationDTO";
 
 
-export class CreateLP_UserDTO extends DTO<LP_User> {
+export class CreateLP_UserDTO extends DTO implements CreationDTO<LP_User> {
     @IsString()
     @IsNotEmpty()
     public name: string;

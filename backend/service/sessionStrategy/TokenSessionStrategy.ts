@@ -4,7 +4,8 @@ import {LP_User} from "../../src/entity/User/LP_User";
 import {LP_SessionStrategy} from "./LP_SessionStrategy";
 import * as jwt from "jsonwebtoken";
 import {UserService} from "../UserService";
-import {CreateLP_UserDTO} from "../../DTOs/CreateLP_UserDTO";
+import {CreateLP_UserDTO} from "../../DTOs/UserDTOs/CreateLP_UserDTO";
+import {LogInDTO} from "../../DTOs/SessionDTOs/LogInDTO";
 
 export class TokenSessionStrategy implements LP_SessionStrategy {
     /**
@@ -17,13 +18,12 @@ export class TokenSessionStrategy implements LP_SessionStrategy {
     /**
      * @inheritdoc
      */
-    public logIn = async (logInData: { userEmail: string, userPassword: string }, userService: UserService): Promise<String> => {
-        const { userEmail, userPassword } = logInData;
-        if (!userEmail || !userPassword) throw new InvalidArgumentsError('Both email and password are required not empty.');
+    public logIn = async (logInData: LogInDTO, userService: UserService): Promise<String> => {
+        await logInData.validate();
 
-        let user: LP_User = await userService.getUserByEmail(userEmail);
+        let user: LP_User = await userService.getUserByEmail(logInData.email);
         if (!user) throw new InvalidCredentialsError('User not found with given credentials.');
-        if (!user.stringMatchesPassword(userPassword)) throw new InvalidCredentialsError('User not found with given credentials.');
+        if (!user.stringMatchesPassword(logInData.password)) throw new InvalidCredentialsError('User not found with given credentials.');
 
         return this.generateJWTForUser(user);
     }

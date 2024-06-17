@@ -1,6 +1,7 @@
 import {UserService} from "../UserService";
-import {CreateLP_UserDTO} from "../../DTOs/CreateLP_UserDTO";
+import {CreateLP_UserDTO} from "../../DTOs/UserDTOs/CreateLP_UserDTO";
 import {LP_User} from "../../src/entity/User/LP_User";
+import {LogInDTO} from "../../DTOs/SessionDTOs/LogInDTO";
 
 //Se agrega LP_ al nombre de la interfaz para indicar que es una interfaz nativa de LanguagePartner y evitar chocar con otras entidades de otras librerias.
 export interface LP_SessionStrategy {
@@ -15,11 +16,11 @@ export interface LP_SessionStrategy {
 
     /**
      * Logs the user in.
-     * @param logInData - The data of the user to log in. The schema must be defined by the subclass that implements this method.
+     * @param logInData - The data of the user to log in.
      * @param userService - The UserService instance.
      * @returns A promise that resolves with the result of the login operation.
      */
-    logIn(logInData: unknown, userService: UserService): Promise<unknown>;
+    logIn(logInData: LogInDTO, userService: UserService): Promise<unknown>;
 
     /**
      * Logs the user out.

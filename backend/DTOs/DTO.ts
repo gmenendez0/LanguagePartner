@@ -1,9 +1,7 @@
 import {InvalidArgumentsError} from "../errors/InvalidArgumentsError";
 import {validate, ValidationError} from 'class-validator';
 
-export abstract class DTO<T> {
-    public abstract toBusinessObject(): Promise<T>;
-
+export abstract class DTO {
     public async validate(): Promise<void> {
         const errors = await validate(this, {skipMissingProperties: true});
 

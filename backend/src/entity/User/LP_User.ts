@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable } from 't
 import { Language } from '../Language/Language';
 import bcrypt from "bcrypt";
 import {userApprovedUsersTableOptionsTableOptions, userMatchedUsersTableOptions, userKnownLanguagesTableOptions, userWantToKnowLanguagesTableOptions, userRejectedUsersTableOptionsTableOptions} from "./UserTableOptions";
-import {CreateLP_UserDTO} from "../../../DTOs/CreateLP_UserDTO";
+import {CreateLP_UserDTO} from "../../../DTOs/UserDTOs/CreateLP_UserDTO";
 
 @Entity()
 export class LP_User{

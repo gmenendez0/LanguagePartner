@@ -3,7 +3,7 @@ import {userRepository} from "../src/repository/UserRepository";
 import {Language} from "../src/entity/Language/Language";
 import {LP_User} from "../src/entity/User/LP_User";
 import {ResourceNotFoundError} from "../errors/ResourceNotFoundError";
-import {CreateLP_UserDTO} from "../DTOs/CreateLP_UserDTO";
+import {CreateLP_UserDTO} from "../DTOs/UserDTOs/CreateLP_UserDTO";
 import {InvalidArgumentsError} from "../errors/InvalidArgumentsError";
 
 export class UserService {
