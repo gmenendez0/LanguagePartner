@@ -60,11 +60,11 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
         paddingVertical: 8,
         borderWidth: 1,
-        borderColor: '#ddd',
+        borderColor: 'gray',
         borderRadius: 8,
-        backgroundColor: '#f9f9f9',
-        width: '80%', // Adjusted width
-        alignSelf: 'center', // Center the component
+        backgroundColor: '#222',
+        width: '100%',
+        alignSelf: 'center',
     },
     inputContainer: {
         flexDirection: 'row',
@@ -73,16 +73,17 @@ const styles = StyleSheet.create({
     },
     textInput: {
         flex: 1,
-        borderColor: '#ccc',
+        borderColor: 'gray',
         borderWidth: 1,
         borderRadius: 4,
         padding: 8,
         marginRight: 8,
+        color: '#FFF',
     },
     addButton: {
         backgroundColor: '#e60041',
         padding: 10,
-        borderRadius: 15,
+        borderRadius: 25,
         justifyContent: 'center',
         alignItems: 'center',
     },

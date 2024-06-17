@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
-import {SafeAreaView, TextInput, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {SafeAreaView, TextInput, Text, StyleSheet, TouchableOpacity, View} from 'react-native';
+import TagPicker from "@/components/tag_picker";
 
 interface Errors {
     username?: string;
@@ -23,6 +24,8 @@ const UpdateProfile: React.FC = () => {
     const [errors, setErrors] = useState<Errors>({});
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const [knownLanguages, setknownLanguages] = useState<string[]>([]);
+    const [wantToKnowLanguages, setWantToKnowLanguages] = useState<string[]>([]);
 
     // TODO: Fetch the current user's details and populate the state variables
 
@@ -124,6 +127,13 @@ const UpdateProfile: React.FC = () => {
             />
             {errors.city && <Text style={styles.errorText}>{errors.city}</Text>}
 
+            <View style={styles.tagPickerContainer}>
+                <TagPicker input_text="Enter known language..." setTags={setknownLanguages} tags={knownLanguages} />
+            </View>
+            <View style={styles.tagPickerContainer}>
+                <TagPicker input_text="Enter want to know language..." setTags={setWantToKnowLanguages} tags={wantToKnowLanguages} />
+            </View>
+
             <TouchableOpacity style={styles.button} onPress={handleUpdate}>
                 <Text style={styles.buttonText}>Update</Text>
             </TouchableOpacity>
@@ -164,6 +174,11 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.8,
         shadowRadius: 2,
         elevation: 5,
+    },
+    tagPickerContainer: {
+        width: '40%', // Adjust this value to make the TagPicker fields less wide
+        marginVertical: 1, // Add vertical margin
+        padding: 5, // Add padding
     },
     buttonText: {
         color: '#FFF',
