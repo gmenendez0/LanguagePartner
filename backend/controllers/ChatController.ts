@@ -13,7 +13,7 @@ class ChatController extends Controller {
 
   public addMessage = async (req: Request, res: Response) => {
     try {
-      await this.service.addMessage(req.body.message, req.params.id as unknown as number, (req.user as LP_User).getId());
+      await this.service.addMessage(req.body.message, Number(req.params.id), (req.user as LP_User).getId());
       this.createdResponse(res, { message: 'Message added successfully.' });
     } catch (error) {
       this.handleError(error, res);
@@ -22,7 +22,7 @@ class ChatController extends Controller {
 
   public getChat = async (req: Request, res: Response) => {
     try {
-      const chat = await this.service.getChat(req.params.id as unknown as number, (req.user as LP_User).getId());
+      const chat = await this.service.getChat(Number(req.params.id), (req.user as LP_User).getId());
       this.okResponse(res, chat);
     } catch (error) {
       this.handleError(error, res);
