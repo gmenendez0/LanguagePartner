@@ -11,7 +11,12 @@ import {
     InputToolbarProps, BubbleProps
 } from "react-native-gifted-chat";
 
-const Chat = () => {
+interface ChatProps {
+    me: number;
+    chatId: number;
+}
+
+const Chat: React.FC<ChatProps> = ({ me, chatId }) => {
     const [messages, setMessages] = useState<IMessage[]>([
         {
             _id: 1,

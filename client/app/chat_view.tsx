@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import { ScrollView, View, Text, StyleSheet } from 'react-native';
 import { useState } from 'react';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import Chat from './chat';
 
 const ChatList = () => {
 
@@ -68,7 +69,7 @@ const ChatList = () => {
                 </ScrollView>
             </View>
             <View style={styles.blankContainer} >
-                <Text style={styles.chatText}>Chat will appear here</Text>
+                <Chat me={1} chatId={selectedChat || 0}/>
             </View>
         </View>
     );
