@@ -83,6 +83,42 @@ export default function MatchngScreen() {
     //LLAMADA A API
   };
 
+  // const handleRejectApi = () => {
+  //   fetch('http://localhost:3000/reject', {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify({
+  //       profile: profiles[0],
+  //     }),
+  //   });
+  // }
+
+  // const handleAcceptApi = () => {
+  //   fetch('http://localhost:3000/accept', {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify({
+  //       profile: profiles[0],
+  //     }),
+  //   });
+  // }
+
+  // const getNewProfileApi = () => {
+  //   fetch('http://localhost:3000/profile', {
+  //     method: 'GET',
+  //   })
+  //     .then(response => response.json())
+  //     .then(data => {
+  //       setProfiles(prevProfiles => {
+  //         return [...prevProfiles, data];
+  //       });
+  //     });
+  // }
+
   return (
     <View style={styles.container}>
       {profiles.length > 0 && (
