@@ -1,5 +1,5 @@
 import { Composer, ComposerProps } from 'react-native-gifted-chat';
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, View, Text } from "react-native";
 import {
     GiftedChat,
@@ -11,6 +11,7 @@ import {
     InputToolbarProps, BubbleProps
 } from "react-native-gifted-chat";
 import { matchedUser } from "./chat_view";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface ChatProps {
     me: number;
@@ -31,6 +32,52 @@ const Chat: React.FC<ChatProps> = ({ me, chatter }) => {
         }
     ]);
 
+    let currentId = 0
+
+    const generateId = () => {
+        currentId += 1
+        return currentId
+    }
+
+    useEffect(() => {
+
+        const handlerMessages = async () => {
+            try {
+                const token = await AsyncStorage.getItem('session_token').then(async (authToken) => {
+                    const response = await fetch(`http://localhost:3000/v1/chat/${chatter.id}`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${authToken}`,
+                        },
+                    });
+                    const data = await response.json();
+                    console.log(data);
+                    data.messages.reverse()
+                    data.messages.forEach((message: any) => {
+                        message.createdAt = new Date(message.timestamp);
+                        message._id = generateId();
+                        message.text = message.message;
+                        message.user = {
+                            _id: message.from,
+                            name: message.from === me ? me.toString() : chatter.name,
+                            //avatar: "https://placeimg.com/140/140/any",
+                        };
+                    });
+                    setMessages(data.messages);
+                });
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        console.log(chatter);
+        handlerMessages();
+        
+    }, [chatter]);
+
+    
+
     if (!chatter) {
         return (
             <View style={styles.container}/>
@@ -39,6 +86,26 @@ const Chat: React.FC<ChatProps> = ({ me, chatter }) => {
 
     const onSend = (newMessages: IMessage[] = []) => {
         setMessages((previousMessages: IMessage[]) => GiftedChat.append(previousMessages, newMessages));
+        handleSendMessage(newMessages[0].text);
+    };
+
+    const handleSendMessage = async (message: string) => {
+        try {
+            const token = await AsyncStorage.getItem('session_token').then(async (authToken) => {
+                const response = await fetch(`http://localhost:3000/v1/chat/${chatter.id}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`,
+                    },
+                    body: JSON.stringify({
+                        message: message
+                    })
+                });
+            });
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
     };
 
     const renderBubble = (props: BubbleProps<IMessage>) => {

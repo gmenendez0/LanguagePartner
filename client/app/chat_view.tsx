@@ -77,6 +77,7 @@ const ChatList = () => {
 
     //prueba de post de chat
 
+    /*
     useEffect(() => {
         // Fetch the chat data
 
@@ -100,6 +101,7 @@ const ChatList = () => {
             }
         });
     }, [chats, user, selectedChat]);
+    */
 
     const loadChatDetails = (chatId: number) => {
         // Function to load chat details based on chatId
