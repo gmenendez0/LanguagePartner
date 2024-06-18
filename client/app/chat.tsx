@@ -19,18 +19,7 @@ interface ChatProps {
 }
 
 const Chat: React.FC<ChatProps> = ({ me, chatter }) => {
-    const [messages, setMessages] = useState<IMessage[]>([
-        {
-            _id: 1,
-            text: `My name is ${me} and I am chatting with ${me}.`,
-            createdAt: new Date(),
-            user: {
-                _id: 2,
-                name: "React Native",
-                avatar: "https://placeimg.com/140/140/any",
-            },
-        }
-    ]);
+    const [messages, setMessages] = useState<IMessage[]>([]);
 
     let currentId = 0
 
@@ -86,14 +75,18 @@ const Chat: React.FC<ChatProps> = ({ me, chatter }) => {
         ws.onmessage = (event) => {
             console.log('WebSocket message received:', event.data);
             const newMessage = JSON.parse(event.data);
-            newMessage.createdAt = new Date(newMessage.timestamp);
-            newMessage._id = generateId();
-            newMessage.text = newMessage.message;
-            newMessage.user = {
-                _id: newMessage.from,
-                name: newMessage.from === me ? me : chatter.name,
-            };
-            setMessages((prevMessages) => GiftedChat.append(prevMessages, [newMessage]));
+            if (newMessage.from === chatter.id) {
+                newMessage.createdAt = new Date(newMessage.timestamp);
+                newMessage._id = generateId();
+                newMessage.text = newMessage.message;
+                newMessage.user = {
+                    _id: newMessage.from,
+                    name: newMessage.from === me ? me : chatter.name,
+                };
+                setMessages((prevMessages) => GiftedChat.append(prevMessages, [newMessage]));
+            } else {
+                console.log('Message from another user');
+            } 
         };
 
         ws.onclose = () => {
