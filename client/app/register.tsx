@@ -76,7 +76,7 @@ const RegistrationForm: React.FC = () => {
                     if (!data.error) {
                         console.log('Registration successful');
                         setLoadingMessage('Registration successful');
-                        await new Promise(resolve => setTimeout(resolve, 2000)); // Inline delay
+                        await new Promise(resolve => setTimeout(resolve, 500)); // Inline delay
                         setUsername('');
                         setCity('');
                         setEmail('');
@@ -101,7 +101,7 @@ const RegistrationForm: React.FC = () => {
                                             setTimeout(() => {
                                                 router.push('/'); // navigate to home screen
                                                 setIsLoading(false); // Hide loading modal
-                                            }, 2000); // Wait for 2 seconds before redirecting
+                                            }, 500); // Wait for 2 seconds before redirecting
                                         })
                                         .catch(error => {
                                             console.error('Error saving session token:', error);

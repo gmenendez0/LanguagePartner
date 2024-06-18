@@ -72,7 +72,7 @@ const LoginForm: React.FC = () => {
                                 setTimeout(() => {
                                     router.push('/'); // navigate to home screen
                                     setIsLoading(false); // Hide loading modal
-                                }, 2000); // Wait for 2 seconds before redirecting
+                                }, 500); // Wait for 2 seconds before redirecting
                             })
                             .catch(error => {
                                 console.error('Error saving session token:', error);

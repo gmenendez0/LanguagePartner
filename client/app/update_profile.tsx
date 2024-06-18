@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {SafeAreaView, TextInput, Text, StyleSheet, TouchableOpacity, View} from 'react-native';
 import TagPicker from "@/components/tag_picker";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface Errors {
     username?: string;
@@ -8,8 +9,11 @@ interface Errors {
 }
 
 interface UpdateUserData {
+    name: string,
     city: string,
-    username: string,
+    profilePicHash: string,
+    knownLanguages: string[],
+    wantToKnowLanguages: string[]
 }
 
 interface PostResponse {
@@ -24,7 +28,7 @@ const UpdateProfile: React.FC = () => {
     const [errors, setErrors] = useState<Errors>({});
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
-    const [knownLanguages, setknownLanguages] = useState<string[]>([]);
+    const [knownLanguages, setKnownLanguages] = useState<string[]>([]);
     const [wantToKnowLanguages, setWantToKnowLanguages] = useState<string[]>([]);
 
     // TODO: Fetch the current user's details and populate the state variables
@@ -76,37 +80,70 @@ const UpdateProfile: React.FC = () => {
     };
 
     useEffect(() => {
-        if (isSubmitting) {
-            const postData: UpdateUserData = {
-                "city": city,
-                "username": username,
-            };
-
-            // TODO: Replace with your API endpoint
-            fetch('http://localhost:3000/v1/user/update', {
-                method: 'POST',
+        const fetchUserData = async () => {
+            const token = await AsyncStorage.getItem('session_token');
+            fetch('http://localhost:3000/v1/user/me', {
+                method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
                 },
-                body: JSON.stringify(postData),
             })
                 .then(response => response.json())
-                .then((data: PostResponse) => {
-                    if (!data.error) {
-                        console.log('Update successful');
-                        // TODO: Update the user's details in the app
-                    } else {
-                        console.log("Update Failed");
-                        setErrorMessage(data.error);
-                    }
+                .then(data => {
+                    setUsername(data.name);
+                    setCity(data.city);
+                    setKnownLanguages(data.knownLanguages);
+                    setWantToKnowLanguages(data.wantToKnowLanguages);
                 })
-                .catch(error => {
-                    console.error('Error sending data:', error);
+                .catch(error => console.error('Error:', error));
+        };
+
+        fetchUserData();
+    }, []);
+
+    useEffect(() => {
+        const updateUserData = async () => {
+            if (isSubmitting) {
+                const postData: UpdateUserData = {
+                    "name": username,
+                    "city": city,
+                    "profilePicHash": "asd",
+                    "knownLanguages": knownLanguages,
+                    "wantToKnowLanguages": wantToKnowLanguages
+                };
+
+                // TODO: Replace with your API endpoint
+                const token = await AsyncStorage.getItem('session_token');
+                fetch('http://localhost:3000/v1/user/me', {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    },
+                    body: JSON.stringify(postData),
                 })
-                .finally(() => {
-                    setIsSubmitting(false);
-                });
-        }
+                    .then(response => response.json())
+                    .then((data: PostResponse) => {
+                        if (!data.error) {
+                            console.log('Update successful');
+                            // TODO: Update the user's details in the app
+                            console.log(data);
+                        } else {
+                            console.log("Update Failed");
+                            setErrorMessage(data.error);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error sending data:', error);
+                    })
+                    .finally(() => {
+                        setIsSubmitting(false);
+                    });
+            }
+        };
+
+        updateUserData();
     }, [isSubmitting]);
 
     return (
@@ -128,10 +165,10 @@ const UpdateProfile: React.FC = () => {
             {errors.city && <Text style={styles.errorText}>{errors.city}</Text>}
 
             <View style={styles.tagPickerContainer}>
-                <TagPicker input_text="Enter known language..." setTags={setknownLanguages} tags={knownLanguages}  endpoint={'http://localhost:3000/v1/user/me/known-languages'}/>
+                <TagPicker input_text="Enter known language..." setTags={setKnownLanguages} tags={knownLanguages} />
             </View>
             <View style={styles.tagPickerContainer}>
-                <TagPicker input_text="Enter want to know language..." setTags={setWantToKnowLanguages} tags={wantToKnowLanguages}  endpoint={'http://localhost:3000/v1/user/me/wanted-languages'}/>
+                <TagPicker input_text="Enter want to know language..." setTags={setWantToKnowLanguages} tags={wantToKnowLanguages} />
             </View>
 
             <TouchableOpacity style={styles.button} onPress={handleUpdate}>
