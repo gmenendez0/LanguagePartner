@@ -2,7 +2,7 @@ import {Controller} from "./Controller";
 import {userService, UserService} from "../service/UserService";
 import {Request, Response} from "express";
 import {LP_User} from "../src/entity/User/LP_User";
-import {UpdateUserPublicDataDTO} from "../DTOs/UserDTOs/UpdateUserDTO";
+import {UpdateLPUserPublicDataDTO} from "../DTOs/UserDTOs/UpdateLPUserDTO";
 
 export class UserController extends Controller {
     private service: UserService;
@@ -25,7 +25,7 @@ export class UserController extends Controller {
     private updateUserPublicData = async (req: Request, res: Response) => {
         try {
             const userId = Number(req.params.id);
-            const userData = this.convertBodyToDTO(req, UpdateUserPublicDataDTO);
+            const userData = this.convertBodyToDTO(req, UpdateLPUserPublicDataDTO);
 
             const user = await this.service.updateUserPublicData(userId, userData);
             this.okResponse(res, user.asPublicDTO());

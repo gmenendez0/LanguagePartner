@@ -5,7 +5,7 @@ import {LP_User} from "../src/entity/User/LP_User";
 import {ResourceNotFoundError} from "../errors/ResourceNotFoundError";
 import {CreateLP_UserDTO} from "../DTOs/UserDTOs/CreateLP_UserDTO";
 import {InvalidArgumentsError} from "../errors/InvalidArgumentsError";
-import {UpdateUserPublicDataDTO} from "../DTOs/UserDTOs/UpdateUserDTO";
+import {UpdateLPUserPublicDataDTO} from "../DTOs/UserDTOs/UpdateLPUserDTO";
 import {languageService} from "./LanguageService";
 
 export class UserService {
@@ -37,7 +37,7 @@ export class UserService {
         return user.asPublicDTO();
     }
 
-    public updateUserPublicData = async (userId: number, userData: UpdateUserPublicDataDTO) => {
+    public updateUserPublicData = async (userId: number, userData: UpdateLPUserPublicDataDTO) => {
         await userData.validate();
         const user = await this.getUserById(userId);
 
@@ -47,13 +47,13 @@ export class UserService {
         return this.saveUser(user);
     }
 
-    private updateBasicLPUserData = async (user: LP_User, userData: UpdateUserPublicDataDTO) => {
+    private updateBasicLPUserData = async (user: LP_User, userData: UpdateLPUserPublicDataDTO) => {
         if (userData.name) user.setName(userData.name);
         if (userData.city) user.setCity(userData.city);
         if (userData.profilePicHash) user.setProfilePicHash(userData.profilePicHash);
     }
 
-    private updateLPUserLanguages = async (user: LP_User, userData: UpdateUserPublicDataDTO) => {
+    private updateLPUserLanguages = async (user: LP_User, userData: UpdateLPUserPublicDataDTO) => {
         await this.executeUpdateLanguageCollectionOperationOnLPUser(userData.knownLanguagesToRemove, user.removeKnownLanguage);
         await this.executeUpdateLanguageCollectionOperationOnLPUser(userData.wantToKnowLanguagesToRemove, user.removeWantToKnowLanguage);
         await this.executeUpdateLanguageCollectionOperationOnLPUser(userData.knownLanguagesToAdd, user.addKnownLanguage);
