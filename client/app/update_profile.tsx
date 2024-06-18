@@ -128,10 +128,10 @@ const UpdateProfile: React.FC = () => {
             {errors.city && <Text style={styles.errorText}>{errors.city}</Text>}
 
             <View style={styles.tagPickerContainer}>
-                <TagPicker input_text="Enter known language..." setTags={setknownLanguages} tags={knownLanguages} />
+                <TagPicker input_text="Enter known language..." setTags={setknownLanguages} tags={knownLanguages}  endpoint={'http://localhost:3000/v1/user/me/known-languages'}/>
             </View>
             <View style={styles.tagPickerContainer}>
-                <TagPicker input_text="Enter want to know language..." setTags={setWantToKnowLanguages} tags={wantToKnowLanguages} />
+                <TagPicker input_text="Enter want to know language..." setTags={setWantToKnowLanguages} tags={wantToKnowLanguages}  endpoint={'http://localhost:3000/v1/user/me/wanted-languages'}/>
             </View>
 
             <TouchableOpacity style={styles.button} onPress={handleUpdate}>

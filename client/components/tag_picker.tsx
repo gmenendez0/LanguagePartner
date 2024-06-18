@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { Icon } from 'react-native-elements';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface TagPickerProps {
     tags: string[];
     setTags: React.Dispatch<React.SetStateAction<string[]>>;
     input_text: string;
+    endpoint: string;
 }
 
-const TagPicker: React.FC<TagPickerProps> = ({ tags, setTags, input_text }) => {
+const TagPicker: React.FC<TagPickerProps> = ({ tags, setTags, input_text, endpoint}) => {
     const [inputValue, setInputValue] = useState<string>('');
 
     const addTag = () => {
@@ -16,14 +18,73 @@ const TagPicker: React.FC<TagPickerProps> = ({ tags, setTags, input_text }) => {
             let newTag = inputValue.trim();
             setTags([...tags, newTag]);
             setInputValue('');
-            // tag added TODO send to the server
+            postTag(newTag);
             console.log("Added tag: " + newTag);
         }
     };
 
+    const postTag = async (tag: string) => {
+        const postData = {
+            languagesNames: [tag], // Wrap the tag in an array
+        };
+        const token = await AsyncStorage.getItem('session_token');
+        console.log('Token:', token);
+        console.log('Data to send:', JSON.stringify(postData));
+
+        fetch(endpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify(postData),
+        })
+            .then(response => {
+                console.log('Raw response:', response);
+                return response.json();
+            })
+            .then(data => {
+                if (!data.error) {
+                    console.log('Tag added successfully');
+                } else {
+                    console.error('Error adding tag:', data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error sending data:', error);
+            });
+    };
+
+    const deleteTag = async (tag: string) => {
+        const deleteData = {
+            languagesNames: [tag], // Wrap the tag in an array
+        };
+        const token = await AsyncStorage.getItem('session_token');
+
+        fetch(endpoint, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify(deleteData),
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (!data.error) {
+                    console.log('Tag removed successfully');
+                } else {
+                    console.error('Error removing tag:', data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error sending data:', error);
+            });
+    };
+
     const removeTag = (index: number, tag: string) => {
         setTags(tags.filter((_, i) => i !== index));
-        // tag removed TODO send to the server
+        deleteTag(tag);
         console.log("Removed tag: " + tag);
     };
 
