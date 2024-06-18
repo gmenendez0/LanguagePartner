@@ -5,6 +5,8 @@ import {LP_User} from "../src/entity/User/LP_User";
 import {ResourceNotFoundError} from "../errors/ResourceNotFoundError";
 import {CreateLP_UserDTO} from "../DTOs/UserDTOs/CreateLP_UserDTO";
 import {InvalidArgumentsError} from "../errors/InvalidArgumentsError";
+import {UpdateUserPublicDataDTO} from "../DTOs/UserDTOs/UpdateUserDTO";
+import {languageService} from "./LanguageService";
 
 export class UserService {
     private userRepository: UserRepository;
@@ -25,58 +27,61 @@ export class UserService {
         return await this.userRepository.findById(id);
     }
 
+    public getUserByEmail = async (email: string) => {
+        return await this.userRepository.findByEmail(email);
+    }
+
     public getUserPublicDataById = async (id: number) => {
         const user = await this.getUserById(id);
         if(!user) throw new ResourceNotFoundError();
         return user.asPublicDTO();
     }
 
-    public getUserByEmail = async (email: string) => {
-        return await this.userRepository.findByEmail(email);
+    public updateUserPublicData = async (userId: number, userData: UpdateUserPublicDataDTO) => {
+        await userData.validate();
+        const user = await this.getUserById(userId);
+
+        await this.updateBasicLPUserData(user, userData);
+        await this.updateLPUserLanguages(user, userData);
+
+        return this.saveUser(user);
+    }
+
+    private updateBasicLPUserData = async (user: LP_User, userData: UpdateUserPublicDataDTO) => {
+        if (userData.name) user.setName(userData.name);
+        if (userData.city) user.setCity(userData.city);
+        if (userData.profilePicHash) user.setProfilePicHash(userData.profilePicHash);
+    }
+
+    private updateLPUserLanguages = async (user: LP_User, userData: UpdateUserPublicDataDTO) => {
+        await this.executeUpdateLanguageCollectionOperationOnLPUser(userData.knownLanguagesToRemove, user.removeKnownLanguage);
+        await this.executeUpdateLanguageCollectionOperationOnLPUser(userData.wantToKnowLanguagesToRemove, user.removeWantToKnowLanguage);
+        await this.executeUpdateLanguageCollectionOperationOnLPUser(userData.knownLanguagesToAdd, user.addKnownLanguage);
+        await this.executeUpdateLanguageCollectionOperationOnLPUser(userData.wantToKnowLanguagesToAdd, user.addWantToKnowLanguage);
+    }
+
+    private executeUpdateLanguageCollectionOperationOnLPUser = async (languageNames: string[], operation: (language: Language) => void) => {
+        if (languageNames) {
+            const languages = await this.getLanguagesByName(languageNames);
+
+            for (const language of languages) {
+                operation(language);
+            }
+        }
     }
 
     private saveUser = async (user: LP_User) => {
         return await this.userRepository.saveUser(user);
     }
 
-    public addKnownLanguagesToUser = async (userId: number, languages: Language[]) => {
-        const user = await this.getUserById(userId);
+    private getLanguagesByName = async (languagesNames: string[]) => {
+        const languages = await languageService.getLanguagesByName(languagesNames);
 
-        for (const language of languages) {
-            user.addKnownLanguage(language);
+        for (let languageName of languagesNames) {
+            if (!languages.some(language => language.getName() === languageName)) throw new InvalidArgumentsError(`Language with name ${languageName} is invalid.`);
         }
 
-        return await this.saveUser(user);
-    }
-
-    public addWantToKnowLanguagesToUser = async (userId: number, languages: Language[]) => {
-        const user = await this.getUserById(userId);
-
-        for (const language of languages) {
-            user.addWantToKnowLanguage(language);
-        }
-
-        return await this.saveUser(user);
-    }
-
-    public removeKnownLanguagesFromUser = async (userId: number, languages: Language[]) => {
-        const user = await this.getUserById(userId);
-
-        for (const language of languages) {
-            user.removeKnownLanguage(language);
-        }
-
-        return await this.saveUser(user);
-    }
-
-    public removeWantToKnowLanguagesFromUser = async (userId: number, languages: Language[]) => {
-        const user = await this.getUserById(userId);
-
-        for (const language of languages) {
-            user.removeWantToKnowLanguage(language);
-        }
-
-        return await this.saveUser(user);
+        return languages;
     }
 }
 
