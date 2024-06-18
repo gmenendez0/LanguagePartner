@@ -46,10 +46,11 @@ const Chat: React.FC<ChatProps> = ({ me, chatter }) => {
                         message.createdAt = new Date(message.timestamp);
                         message._id = generateId();
                         message.text = message.message;
+                        const avatar = chatter.profilePicHash ? `https://i.imgur.com/${chatter.profilePicHash}.jpg` : undefined;
                         message.user = {
                             _id: message.from,
                             name: message.from === me ? me.toString() : chatter.name,
-                            avatar: `https://i.imgur.com/${chatter.profilePicHash}.jpg`,
+                            avatar: avatar,
                         };
                     });
                     setMessages(data.messages);
@@ -79,10 +80,11 @@ const Chat: React.FC<ChatProps> = ({ me, chatter }) => {
                 newMessage.createdAt = new Date(newMessage.timestamp);
                 newMessage._id = generateId();
                 newMessage.text = newMessage.message;
+                const avatar = chatter.profilePicHash ? `https://i.imgur.com/${chatter.profilePicHash}.jpg` : undefined;
                 newMessage.user = {
                     _id: newMessage.from,
                     name: newMessage.from === me ? me : chatter.name,
-                    avatar: `https://i.imgur.com/${chatter.profilePicHash}.jpg`,
+                    avatar: avatar,
                 };
                 setMessages((prevMessages) => GiftedChat.append(prevMessages, [newMessage]));
             } else {
