@@ -6,6 +6,9 @@ import passport from './config/passportConfig';
 import swaggerUi from 'swagger-ui-express';
 import * as swaggerDocument from './swagger_output.json';
 import cors from 'cors';
+import langs from 'langs';
+import {languageService} from "./service/LanguageService";
+
 
 /*
     TODO:
@@ -44,11 +47,16 @@ app.use('/', myRouter);
 app.use(passport.initialize());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
+const addLanguagesToDatabase = () => {
+    const languages = langs.all().map((lang: { name: string; }) => lang.name);
+    languageService.addLanguagesToDatabase(languages);
+}
 
 const PORT = process.env.PORT || 3000;
 AppDataSource.initialize().then(async () => {
   // Run all pending migrations
   await AppDataSource.runMigrations({transaction: 'all'});
+  addLanguagesToDatabase();
 
   app.listen(PORT, () => {console.log(`Server is running on port ${PORT}`);});
 }).catch(error => console.log(error))

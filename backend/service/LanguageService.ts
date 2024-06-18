@@ -23,6 +23,20 @@ export class LanguageService {
         await this.languageRepository.saveLanguage(newLanguage);
     }
 
+    //Adds all received languages to the database. Should only be used once, when the database is created.
+    public addLanguagesToDatabase = async (languagesNames: string[]) => {
+        this.validateLanguageNames(languagesNames);
+
+        const persistedLanguages = await this.getAllLanguages();
+        const persistedLanguagesNames = persistedLanguages.map((language: Language) => language.getName());
+
+        for (const languageName of languagesNames) {
+            if (!persistedLanguagesNames.includes(languageName)) {
+                await this.createLanguage(languageName);
+            }
+        }
+    }
+
     /**
      * Retrieves languages from the repository by their names.
      * @param names - The names of the languages to retrieve.
@@ -35,6 +49,14 @@ export class LanguageService {
 
     private validateLanguageNames = (languageNames: string[]) => {
         if (!languageNames || languageNames.length === 0) throw new InvalidArgumentsError('No languages provided.');
+    }
+
+    /**
+     * Retrieves all languages from the repository.
+     * @returns A promise that resolves with all languages in the repository.
+     */
+    private getAllLanguages = async () => {
+        return this.languageRepository.getAllLanguagesNames();
     }
 }
 

@@ -4,7 +4,7 @@ import {PersistanceError} from "../../errors/PersistanceError";
 import {Language} from "../entity/Language/Language";
 import {In, Repository} from "typeorm";
 
-export type LanguageRepository = Repository<Language> & { findByName(name: string): Promise<Language>; saveLanguage(language: Language): Promise<Language>; getLanguagesByName(names: string[]): Promise<Language[]>};
+export type LanguageRepository = Repository<Language> & { findByName(name: string): Promise<Language>; saveLanguage(language: Language): Promise<Language>; getLanguagesByName(names: string[]): Promise<Language[]>; getAllLanguagesNames(): Language[];}
 
 export const languageRepository = AppDataSource.getRepository(Language).extend({
     /**
@@ -56,4 +56,13 @@ export const languageRepository = AppDataSource.getRepository(Language).extend({
             throw new RepositoryAccessError();
         }
     },
+    getAllLanguagesNames(): Language[] {
+        try {
+            return this.find({
+                select: ["name"]
+            })
+        } catch (error) {
+            throw new RepositoryAccessError();
+        }
+    }
 })
