@@ -22,6 +22,18 @@ export class UpdateLPUserPublicDataDTO extends DTO {
     @IsArray()
     @IsString({each: true})
     @IsNotEmpty({each: true})
+    public knownLanguages: string[];
+
+    @IsOptional()
+    @IsArray()
+    @IsString({each: true})
+    @IsNotEmpty({each: true})
+    public wantToKnowLanguages: string[];
+
+    @IsOptional()
+    @IsArray()
+    @IsString({each: true})
+    @IsNotEmpty({each: true})
     public knownLanguagesToRemove: string[];
 
     @IsOptional()
@@ -44,7 +56,13 @@ export class UpdateLPUserPublicDataDTO extends DTO {
 
     public async validate(): Promise<void> {
         await super.validate();
-        if (!this.name && !this.city && !this.profilePicHash && !this.knownLanguagesToAdd && !this.knownLanguagesToRemove && !this.wantToKnowLanguagesToAdd && !this.wantToKnowLanguagesToRemove)
-            throw new InvalidArgumentsError('At least one field must be filled.');
+        if (this.noFieldsFilled()) throw new InvalidArgumentsError('At least one field must be filled.');
+    }
+
+    private noFieldsFilled(): boolean {
+        return !this.name && !this.city
+            && !this.profilePicHash && !this.knownLanguagesToAdd
+            && !this.knownLanguagesToRemove && !this.wantToKnowLanguagesToAdd
+            && !this.wantToKnowLanguagesToRemove && !this.knownLanguages && !this.wantToKnowLanguages;
     }
 }

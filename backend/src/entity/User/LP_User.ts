@@ -22,6 +22,9 @@ export class LP_User{
     @Column()
     private city: string;
 
+    @Column({ nullable: true })
+    private profilePicHash: string;
+
     @ManyToMany(() => LP_User)
     @JoinTable(userApprovedUsersTableOptionsTableOptions)
     private approvedUsers: LP_User[];
@@ -41,9 +44,6 @@ export class LP_User{
     @ManyToMany(() => Language)
     @JoinTable(userWantToKnowLanguagesTableOptions)
     private wantToKnowLanguages: Language[];
-
-    @Column({ nullable: true })
-    private profilePicHash: string;
 
     constructor(name: string, email: string, password: string, city: string) {
         this.name = name;
@@ -90,6 +90,14 @@ export class LP_User{
     public addMatchedUser = (user: LP_User): void => {
         this.matchedUsers.push(user);
     };
+
+    public setKnownLanguages = (languages: Language[]): void => {
+        this.knownLanguages = languages;
+    }
+
+    public setWantToKnowLanguages = (languages: Language[]): void => {
+        this.wantToKnowLanguages = languages;
+    }
 
     public addKnownLanguage = (language: Language): void => {
         this.knownLanguages.push(language);
