@@ -40,68 +40,14 @@ const ChatList = () => {
             .then((response) => response.json())
             .then((data) => {
                 console.log(data);
+                console.log("USUARIO REGISTRADO: ", data)
                 setChats(data.matchedUsers);
                 setUser(data);
-                console.log(user);
-
             })
             .catch((error) => {
                 console.error('Error fetching data:', error);
             });
     }, []);
-
-    //Prueba de fetch de chat
-
-    /*
-    useEffect(() => {
-        // Fetch the chat data
-
-        AsyncStorage.getItem('session_token').then((authToken) => {
-            if (chats && selectedChat) {
-                fetch(`http://localhost:3000/v1/chat/${selectedChat}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${authToken}`,
-                    },
-                })
-                    .then((response) => response.json())
-                    .then((data) => {
-                        console.log(data);
-                    })
-                    .catch((error) => {
-                        console.error('Error fetching data:', error);
-                    });
-            }});
-    }, [chats, user, selectedChat]);*/
-
-    //prueba de post de chat
-
-    /*
-    useEffect(() => {
-        // Fetch the chat data
-
-        AsyncStorage.getItem('session_token').then((authToken) => {
-            if (chats && selectedChat) {
-                fetch(`http://localhost:3000/v1/chat/${selectedChat}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${authToken}`,
-                    },
-                    body: JSON.stringify({ message: 'Hola' }),
-                })
-                    .then((response) => response.json())
-                    .then((data) => {
-                        console.log(data);
-                    })
-                    .catch((error) => {
-                        console.error('Error fetching data:', error);
-                    });
-            }
-        });
-    }, [chats, user, selectedChat]);
-    */
 
     const loadChatDetails = (chatId: number) => {
         // Function to load chat details based on chatId

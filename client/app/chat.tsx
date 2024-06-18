@@ -169,7 +169,7 @@ const Chat: React.FC<ChatProps> = ({ me, chatter }) => {
             <GiftedChat
                 messages={messages}
                 onSend={newMessages => onSend(newMessages)}
-                user={{ _id: 1 }}
+                user={{ _id: me }}
                 renderBubble={renderBubble}
                 renderSystemMessage={renderSystemMessage}
                 renderInputToolbar={renderInputToolbar}
