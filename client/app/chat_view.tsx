@@ -13,6 +13,7 @@ export interface matchedUser {
     city: string;
     knownLanguages: string[];
     wantToKnowLanguages: string[];
+    profilePicHash: string;
 }
 
 const ChatList = () => {

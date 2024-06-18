@@ -49,7 +49,7 @@ const Chat: React.FC<ChatProps> = ({ me, chatter }) => {
                         message.user = {
                             _id: message.from,
                             name: message.from === me ? me.toString() : chatter.name,
-                            //avatar: "https://placeimg.com/140/140/any",
+                            avatar: `https://i.imgur.com/${chatter.profilePicHash}.jpg`,
                         };
                     });
                     setMessages(data.messages);
@@ -82,6 +82,7 @@ const Chat: React.FC<ChatProps> = ({ me, chatter }) => {
                 newMessage.user = {
                     _id: newMessage.from,
                     name: newMessage.from === me ? me : chatter.name,
+                    avatar: `https://i.imgur.com/${chatter.profilePicHash}.jpg`,
                 };
                 setMessages((prevMessages) => GiftedChat.append(prevMessages, [newMessage]));
             } else {
