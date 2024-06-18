@@ -40,7 +40,6 @@ const Chat: React.FC<ChatProps> = ({ me, chatter }) => {
     }
 
     useEffect(() => {
-
         const handlerMessages = async () => {
             try {
                 const token = await AsyncStorage.getItem('session_token').then(async (authToken) => {
@@ -76,7 +75,40 @@ const Chat: React.FC<ChatProps> = ({ me, chatter }) => {
         
     }, [chatter]);
 
-    
+    useEffect(() => {
+        const ws = new WebSocket(`ws://localhost:3001`);
+
+        ws.onopen = () => {
+            console.log('WebSocket connection opened');
+            ws.send(me.toString());
+        };
+
+        ws.onmessage = (event) => {
+            console.log('WebSocket message received:', event.data);
+            const newMessage = JSON.parse(event.data);
+            newMessage.createdAt = new Date(newMessage.timestamp);
+            newMessage._id = generateId();
+            newMessage.text = newMessage.message;
+            newMessage.user = {
+                _id: newMessage.from,
+                name: newMessage.from === me ? me : chatter.name,
+            };
+            setMessages((prevMessages) => GiftedChat.append(prevMessages, [newMessage]));
+        };
+
+        ws.onclose = () => {
+            console.log('WebSocket connection closed');
+        };
+
+        ws.onerror = (error) => {
+            console.error('WebSocket error:', error);
+        };
+
+        return () => {
+            ws.close();
+        };
+
+    }, [chatter]);
 
     if (!chatter) {
         return (

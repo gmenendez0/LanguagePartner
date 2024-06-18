@@ -1,6 +1,6 @@
 import '../app'
 import {InvalidArgumentsError} from "../errors/InvalidArgumentsError";
-import {ChatRepository, chatRepository} from "../src/repository/ChatRepository";
+import { chatRepository, ChatRepository } from "../src/repository/ChatRepository";
 
 export class ChatService {
     private chatRepository: ChatRepository;

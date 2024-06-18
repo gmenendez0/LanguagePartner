@@ -34,7 +34,8 @@ export class UserService {
     public getUserPublicDataById = async (id: number) => {
         const user = await this.getUserById(id);
         if(!user) throw new ResourceNotFoundError();
-        return user.asPublicDTO();
+        //return user.asPublicDTO();
+        return user
     }
 
     public updateUserPublicData = async (userId: number, userData: UpdateUserPublicDataDTO) => {
