@@ -55,6 +55,8 @@ export class UserService {
     }
 
     private updateLPUserLanguages = async (user: LP_User, userData: UpdateLPUserPublicDataDTO) => {
+        await this.setLanguagesOnLPUserOperation(userData.knownLanguages, user.setKnownLanguages);
+        await this.setLanguagesOnLPUserOperation(userData.wantToKnowLanguages, user.setWantToKnowLanguages);
         await this.executeUpdateLanguageCollectionOperationOnLPUser(userData.knownLanguagesToRemove, user.removeKnownLanguage);
         await this.executeUpdateLanguageCollectionOperationOnLPUser(userData.wantToKnowLanguagesToRemove, user.removeWantToKnowLanguage);
         await this.executeUpdateLanguageCollectionOperationOnLPUser(userData.knownLanguagesToAdd, user.addKnownLanguage);
@@ -68,6 +70,13 @@ export class UserService {
             for (const language of languages) {
                 operation(language);
             }
+        }
+    }
+
+    private setLanguagesOnLPUserOperation = async (languagesNames: string[], operation: (language: Language[]) => void) => {
+        if(languagesNames) {
+            const languages = await this.getLanguagesByName(languagesNames);
+            operation(languages);
         }
     }
 
