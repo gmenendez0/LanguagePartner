@@ -6,9 +6,6 @@ const userRouter = Router();
 
 userRouter.get('/me', sessionController.authenticate, userController.getMe);
 userRouter.get('/:id', userController.getUserPublicData);
-userRouter.post('/me/known-languages', sessionController.authenticate, userController.addMeKnownLanguages);
-userRouter.post('/me/wanted-languages', sessionController.authenticate, userController.addMeWantedLanguages);
-userRouter.delete('/me/known-languages', sessionController.authenticate, userController.removeMeKnownLanguages);
-userRouter.delete('/me/wanted-languages', sessionController.authenticate, userController.removeMeWantedLanguages);
+userRouter.patch('/me', sessionController.authenticate, userController.updateMe);
 
 export default userRouter;

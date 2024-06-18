@@ -11,7 +11,7 @@ export class LP_User{
     private id: number;
 
     @Column()
-    private readonly name: string;
+    private name: string;
 
     @Column()
     private readonly email: string;
@@ -20,7 +20,7 @@ export class LP_User{
     private password: string;
 
     @Column()
-    private readonly city: string;
+    private city: string;
 
     @ManyToMany(() => LP_User)
     @JoinTable(userApprovedUsersTableOptionsTableOptions)
@@ -54,13 +54,16 @@ export class LP_User{
 
     public getId = (): number => this.id;
 
-    public getName = (): string => this.name;
+    public setName = (name: string): void => {
+        this.name = name;
+    }
 
     public getEmail = (): string => this.email;
 
-    public getPassword = (): string => this.password;
 
-    public getCity = (): string => this.city;
+    public setCity = (city: string): void => {
+        this.city = city;
+    }
 
     public getApprovedUsers = (): LP_User[] => this.approvedUsers;
 
@@ -72,7 +75,9 @@ export class LP_User{
 
     public getWantToKnowLanguages = (): Language[] => this.wantToKnowLanguages;
 
-    public getProfilePicHash = (): string => this.profilePicHash;
+    public setProfilePicHash = (profilePicHash: string): void => {
+        this.profilePicHash = profilePicHash;
+    }
 
     public addApprovedUser = (user: LP_User): void => {
         this.approvedUsers.push(user);
