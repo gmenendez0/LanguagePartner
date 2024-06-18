@@ -36,17 +36,13 @@ export class UserController extends Controller {
 
     //Post: Returns 200 Ok and the loggedIn user object if it was retrieved successfully by service layer or error.
     public getMe = async (req: Request, res: Response) => {
-        req.params.id = this.getAuthenticatedUserIdFromRequest(req).toString();
+        req.params.id = this.getAuthenticatedUserIdFromRequest(req);
         await this.getUserPublicData(req, res);
     }
 
     public updateMe = async (req: Request, res: Response) => {
-        req.params.id = this.getAuthenticatedUserIdFromRequest(req).toString();
+        req.params.id = this.getAuthenticatedUserIdFromRequest(req);
         await this.updateUserPublicData(req, res);
-    }
-
-    private getAuthenticatedUserIdFromRequest = (req: Request) => {
-        return (req.user as LP_User).getId();
     }
 }
 

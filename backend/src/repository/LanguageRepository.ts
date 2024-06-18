@@ -21,7 +21,7 @@ export const languageRepository = AppDataSource.getRepository(Language).extend({
                 }
             });
         } catch (error) {
-            throw new RepositoryAccessError();
+            throw new RepositoryAccessError(error.message);
         }
     },
 
@@ -35,7 +35,7 @@ export const languageRepository = AppDataSource.getRepository(Language).extend({
         try {
             return this.save(language);
         } catch (error) {
-            throw new PersistanceError();
+            throw new PersistanceError(error.message);
         }
     },
 
@@ -53,7 +53,7 @@ export const languageRepository = AppDataSource.getRepository(Language).extend({
                 }
             });
         } catch (error) {
-            throw new RepositoryAccessError();
+            throw new RepositoryAccessError(error.message);
         }
     },
     getAllLanguagesNames(): Language[] {
@@ -62,7 +62,7 @@ export const languageRepository = AppDataSource.getRepository(Language).extend({
                 select: ["name"]
             })
         } catch (error) {
-            throw new RepositoryAccessError();
+            throw new RepositoryAccessError(error.message);
         }
     }
 })

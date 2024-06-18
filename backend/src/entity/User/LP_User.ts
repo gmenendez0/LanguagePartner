@@ -60,6 +60,8 @@ export class LP_User{
 
     public getEmail = (): string => this.email;
 
+    public getCity = (): string => this.city;
+
 
     public setCity = (city: string): void => {
         this.city = city;

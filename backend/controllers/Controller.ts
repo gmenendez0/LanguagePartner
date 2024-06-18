@@ -9,6 +9,7 @@ import {HttpStatusCode} from "axios";
 import {ResourceNotFoundError} from "../errors/ResourceNotFoundError";
 import {ClassConstructor, plainToInstance} from "class-transformer";
 import {DTO} from "../DTOs/DTO";
+import {LP_User} from "../src/entity/User/LP_User";
 
 const UNHANDLED_ERROR_OBJECT = { error: "Internal server error." };
 
@@ -120,5 +121,9 @@ export abstract class Controller {
         } catch (error) {
             throw new InvalidRequestFormatError(error.message);
         }
+    }
+
+    protected getAuthenticatedUserIdFromRequest = (req: Request) => {
+        return (req.user as LP_User).getId().toString();
     }
 }

@@ -1,6 +1,6 @@
 export class PersistanceError extends Error {
-    constructor() {
-        super("Error persisting data.");
+    constructor(messageDetail?: string) {
+        super("Error persisting data: " + messageDetail || "");
         Object.setPrototypeOf(this, PersistanceError.prototype)
     }
 }

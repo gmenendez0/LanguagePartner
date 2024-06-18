@@ -8,6 +8,9 @@ import {InvalidArgumentsError} from "../errors/InvalidArgumentsError";
 import {UpdateLPUserPublicDataDTO} from "../DTOs/UserDTOs/UpdateLPUserDTO";
 import {languageService} from "./LanguageService";
 
+//TODO:
+//1. Revisar validaciones de cuando se hace un getUserById, si no se encuentra el user, que pasa.
+//2. Revisar que a veces se hacen queries de usuarios a la base de datos, pidiendo datos innecesarios (como las relaciones)
 export class UserService {
     private userRepository: UserRepository;
 
@@ -40,11 +43,19 @@ export class UserService {
     public updateUserPublicData = async (userId: number, userData: UpdateLPUserPublicDataDTO) => {
         await userData.validate();
         const user = await this.getUserById(userId);
+        if (!user) throw new ResourceNotFoundError();
 
         await this.updateBasicLPUserData(user, userData);
         await this.updateLPUserLanguages(user, userData);
 
         return this.saveUser(user);
+    }
+
+    public getMatchableUsers = async (userId: number, max: number) => {
+        const user = await this.getUserById(userId);
+        if (!user) throw new ResourceNotFoundError();
+
+        return await this.userRepository.getMatchableUsers(user, max);
     }
 
     private updateBasicLPUserData = async (user: LP_User, userData: UpdateLPUserPublicDataDTO) => {
