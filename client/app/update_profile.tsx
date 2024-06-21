@@ -148,34 +148,50 @@ const UpdateProfile: React.FC = () => {
 
     return (
         <SafeAreaView style={styles.container}>
+
+        <Text style={{color: '#FFF', fontSize: 36, marginBottom: 16}}>Edit Profile</Text>
+
+        <View style={styles.inputContainer}>
+            <Text style={styles.label}>Username</Text>
             <TextInput
                 style={styles.input}
                 placeholder="Username"
                 onChangeText={(text) => handleChange('username', text)}
                 value={username}
             />
-            {errors.username && <Text style={styles.errorText}>{errors.username}</Text>}
+        </View>
+        {errors.username && <Text style={styles.errorText}>{errors.username}</Text>}
 
+        <View style={styles.inputContainer}>
+            <Text style={styles.label}>City</Text>
             <TextInput
                 style={styles.input}
                 placeholder="City"
                 onChangeText={(text) => handleChange('city', text)}
                 value={city}
             />
-            {errors.city && <Text style={styles.errorText}>{errors.city}</Text>}
+        </View>
+        {errors.city && <Text style={styles.errorText}>{errors.city}</Text>}
 
+        <View style={styles.inputContainer}>
+            <Text style={styles.label}>Known languages</Text>
             <View style={styles.tagPickerContainer}>
                 <TagPicker input_text="Enter known language..." setTags={setKnownLanguages} tags={knownLanguages} />
             </View>
+        </View>
+
+        <View style={styles.inputContainer}>
+            <Text style={styles.label}>Want to know languages</Text>
             <View style={styles.tagPickerContainer}>
                 <TagPicker input_text="Enter want to know language..." setTags={setWantToKnowLanguages} tags={wantToKnowLanguages} />
             </View>
+        </View>
 
-            <TouchableOpacity style={styles.button} onPress={handleUpdate}>
-                <Text style={styles.buttonText}>Update</Text>
-            </TouchableOpacity>
-            {errorMessage && <Text style={styles.errorText}>{errorMessage}</Text>}
-        </SafeAreaView>
+        <TouchableOpacity style={styles.button} onPress={handleUpdate}>
+            <Text style={styles.buttonText}>Update</Text>
+        </TouchableOpacity>
+        {errorMessage && <Text style={styles.errorText}>{errorMessage}</Text>}
+    </SafeAreaView>
     );
 };
 
@@ -186,6 +202,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 16,
         backgroundColor: '#222',
+        paddingBottom: 100,
     },
     input: {
         height: 40,
@@ -213,7 +230,7 @@ const styles = StyleSheet.create({
         elevation: 5,
     },
     tagPickerContainer: {
-        width: '40%', // Adjust this value to make the TagPicker fields less wide
+        width: '100%', // Adjust this value to make the TagPicker fields less wide
         marginVertical: 1, // Add vertical margin
         padding: 5, // Add padding
     },
@@ -222,6 +239,15 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
         textAlign: 'center',
+    },inputContainer: {
+        width: '40%',
+        marginBottom: 12,
+    },
+    label: {
+        width: '40%',
+        fontSize: 16,
+        color: '#FFF',
+        fontWeight: 'bold',
     },
 });
 
