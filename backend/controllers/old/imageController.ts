@@ -79,22 +79,4 @@ export const deleteProfilePicture = async (req: Request, res: Response) => {
   userRepository.save(user);
   return res.status(200).json(user);
 }
-
-export const getProfilePicture = async (req: Request, res: Response) => {
-  const { id } = req.body;
-  const userRepository = AppDataSource.getRepository(User) as UserRepository;
-  const user = await userRepository.findOneBy({ id });
-
-  if (!user || !user.profilePicHash) {
-      return res.status(404).json({ message: 'No profile picture found' });
-  }
-
-  const response = await axios.get(
-      `https://api.imgur.com/3/image/${user.profilePicHash}`,
-      { headers: { Authorization: `Bearer ${TOKEN}` } }
-  );
-
-  return res.status(response.status).json(response.data);
-  // The photo is in data.link (response.data.data.link)
-}
 */
