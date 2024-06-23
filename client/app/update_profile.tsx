@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {SafeAreaView, TextInput, Text, StyleSheet, TouchableOpacity, View} from 'react-native';
 import TagPicker from "@/components/tag_picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import ImageUploader from "@/components/ImageUploader";
 
 interface Errors {
     username?: string;
@@ -148,9 +149,7 @@ const UpdateProfile: React.FC = () => {
 
     return (
         <SafeAreaView style={styles.container}>
-
-        <Text style={{color: '#FFF', fontSize: 36, marginBottom: 16}}>Edit Profile</Text>
-
+            <ImageUploader />
         <View style={styles.inputContainer}>
             <Text style={styles.label}>Username</Text>
             <TextInput
