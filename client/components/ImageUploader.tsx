@@ -41,7 +41,7 @@ const ImageUploader = () => {
         formData.append('image', { uri, name, type });
 
         try {
-            const response = await axios.post('https://api.imgur.com/3/image', formData, {
+            const response = await axios.post('http://localhost:3000/v1/image', formData, {
                 headers: {
                     Authorization: `Client-ID ${process.env.CLIENT_ID}`,
                 },

@@ -4,6 +4,6 @@ import { uploadProfilePicture } from '../controllers/old/imageController';
 
 const imageRouter = Router();
 
-imageRouter.post('/upload-profile-picture', SessionController.authenticate, uploadProfilePicture);
+imageRouter.post('', SessionController.authenticate, uploadProfilePicture);
 
 export default imageRouter;
