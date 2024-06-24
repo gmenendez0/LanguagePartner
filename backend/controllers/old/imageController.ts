@@ -36,7 +36,7 @@ export const uploadProfilePicture = async (req: Request, res: Response) => {
   } else {
 
     //const user = userRepository.findOneBy({ id: userid }).then(user => {
-      if (user.getProfilePicHash) {
+      if (user.getProfilePicHash()) {
         deleteImage(user);
       }
       user.setProfilePicHash(response.data.data.id);
@@ -49,7 +49,7 @@ export const uploadProfilePicture = async (req: Request, res: Response) => {
 
 const deleteImage = async (user: LP_User): Promise<Response> => {
   //No checkea si la imagen existe ni guarda el usuario en el repo
-  const hash = user.getProfilePicHash;
+  const hash = user.getProfilePicHash();
   const response = await axios.delete(
     `https://api.imgur.com/3/image/${hash}`,
     { headers: { Authorization: `Bearer ${TOKEN}` } }
