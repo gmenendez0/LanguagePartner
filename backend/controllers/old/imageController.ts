@@ -1,10 +1,9 @@
-/*
+
 
 import { Request, Response } from 'express';
-import '../app'
-import { AppDataSource } from '../src/data-source';
-import { UserRepository } from '../src/repository/UserRepository';
-import { User } from '../src/entity/User';
+import { AppDataSource } from '../../src/data-source';
+import { userRepository } from '../../src/repository/UserRepository';
+import { LP_User } from '../../src/entity/User/LP_User';
 
 const axios = require('axios');
 const multer = require('multer');
@@ -15,9 +14,9 @@ const upload = multer({ storage: multer.memoryStorage() });
 export const uploadMiddleware = upload.single('photo');
 
 export const uploadProfilePicture = async (req: Request, res: Response) => {
-  const userid = req.session.user;
+  const user = req.user as LP_User;
 
-  if (!userid) {
+  if (!user) {
     return res.status(401).json({ message: 'Unauthorized' });
   }
 
@@ -41,30 +40,30 @@ export const uploadProfilePicture = async (req: Request, res: Response) => {
     return res.status(response.status).json(response.data);
   } else {
 
-    const userRepository = AppDataSource.getRepository(User) as UserRepository;
-    const user = userRepository.findOneBy({ id: userid }).then(user => {
-      if (user.profilePicHash) {
+    //const user = userRepository.findOneBy({ id: userid }).then(user => {
+      if (user.getProfilePicHash) {
         deleteImage(user);
       }
-      user.profilePicHash = response.data.data.id;
+      user.setProfilePicHash(response.data.data.id);
       userRepository.save(user);
       return res.status(200).json(user);
-    });
+    //}
+    //);
   }
 }
 
-const deleteImage = async (user: User): Promise<Response> => {
+const deleteImage = async (user: LP_User): Promise<Response> => {
   //No checkea si la imagen existe ni guarda el usuario en el repo
   const response = await axios.delete(
-    `https://api.imgur.com/3/image/${user.profilePicHash}`,
+    `https://api.imgur.com/3/image/${user.getProfilePicHash}`,
     { headers: { Authorization: `Bearer ${TOKEN}` } }
   );
-  user.profilePicHash = null;
+  user.setProfilePicHash(null)
   return response;
 }
-
+/*
 export const deleteProfilePicture = async (req: Request, res: Response) => {
-  const userid = req.session.user;
+  const userid = req.user;
 
   if (!userid) {
     return res.status(401).json({ message: 'Unauthorized' });
@@ -78,5 +77,4 @@ export const deleteProfilePicture = async (req: Request, res: Response) => {
   await deleteImage(user);
   userRepository.save(user);
   return res.status(200).json(user);
-}
-*/
+}*/

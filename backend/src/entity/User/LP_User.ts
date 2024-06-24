@@ -75,6 +75,8 @@ export class LP_User{
 
     public getWantToKnowLanguages = (): Language[] => this.wantToKnowLanguages;
 
+    public getProfilePicHash = (): string => this.profilePicHash;
+
     public setProfilePicHash = (profilePicHash: string): void => {
         this.profilePicHash = profilePicHash;
     }
