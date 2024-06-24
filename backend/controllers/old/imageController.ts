@@ -4,6 +4,7 @@ import { Request, Response } from 'express';
 import { AppDataSource } from '../../src/data-source';
 import { userRepository } from '../../src/repository/UserRepository';
 import { LP_User } from '../../src/entity/User/LP_User';
+import { Blob } from 'buffer';
 
 const axios = require('axios');
 const multer = require('multer');
@@ -21,29 +22,35 @@ export const uploadProfilePicture = async (req: Request, res: Response) => {
     return res.status(400).json({ message: 'No photo provided' });
   }
 
-  const fileBuffer = photo.buffer;
-  const base64Image = fileBuffer.toString('base64');
+  let response;
 
-  const response = await axios.post(
-    'https://api.imgur.com/3/image',
-    { image: base64Image, type: 'base64' },
-    { headers: { Authorization: `Bearer ${TOKEN}` } }
-  );
+  if (photo.mimetype == 'blob') {
+    response = await axios.post(
+      'https://api.imgur.com/3/image',
+      { image: photo, type: 'blob' },
+      { headers: { Authorization: `Bearer ${TOKEN}` } }
+    );
+  } else {
+    const fileBuffer = photo.buffer;
+    const base64Image = fileBuffer.toString('base64');
+
+    response = await axios.post(
+      'https://api.imgur.com/3/image',
+      { image: base64Image, type: 'base64' },
+      { headers: { Authorization: `Bearer ${TOKEN}` } }
+    );
+  }
 
   //Si habia una imagen previa, la borro
   if (response.status !== 200) {
     return res.status(response.status).json(response.data);
   } else {
-
-    //const user = userRepository.findOneBy({ id: userid }).then(user => {
-      if (user.getProfilePicHash()) {
-        deleteImage(user);
-      }
-      user.setProfilePicHash(response.data.data.id);
-      userRepository.save(user);
-      return res.status(200).json(user);
-    //}
-    //);
+    if (user.getProfilePicHash()) {
+      deleteImage(user);
+    }
+    user.setProfilePicHash(response.data.data.id);
+    userRepository.save(user);
+    return res.status(200).json(user);
   }
 }
 
