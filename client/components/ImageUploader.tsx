@@ -3,6 +3,7 @@ import { Image, Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import FormData from 'form-data';
 import * as ImagePicker from 'expo-image-picker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ImageUploader = () => {
     const [image, setImage] = useState<string | null>(null);
@@ -38,26 +39,28 @@ const ImageUploader = () => {
         let match = /\.(\w+)$/.exec(name as string);
         let type = match ? `image/${match[1]}` : `image`;
 
-        formData.append('image', { uri, name, type });
+        formData.append('photo', { uri, name, type });
+
+        AsyncStorage.getItem('session_token').then(async (authToken) => {
 
         try {
             const response = await axios.post('http://localhost:3000/v1/image', formData, {
                 headers: {
-                    Authorization: `Client-ID ${process.env.CLIENT_ID}`,
+                    'Authorization': `Bearer ${authToken}`,
                 },
             });
-
             console.log("response.data");
             console.log(response.data);
             setUploadResponse(response.data);
+
         } catch (error: any) {
             if (error.response && error.response.status === 429) {
                 console.error("You have hit the rate limit for the Imgur API. Please try again later.");
             } else {
                 console.error(error);
             }
-        }
-    };
+        }});
+    } 
 
     return (
         <View style={styles.container}>

@@ -1,9 +1,9 @@
 import { Router } from 'express';
 import SessionController from '../controllers/SessionController';
-import { uploadProfilePicture } from '../controllers/old/imageController';
+import { uploadProfilePicture, uploadMiddleware } from '../controllers/old/imageController';
 
 const imageRouter = Router();
 
-imageRouter.post('', SessionController.authenticate, uploadProfilePicture);
+imageRouter.post('', uploadMiddleware, SessionController.authenticate, uploadProfilePicture);
 
 export default imageRouter;

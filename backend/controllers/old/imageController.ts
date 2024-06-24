@@ -15,11 +15,6 @@ export const uploadMiddleware = upload.single('photo');
 
 export const uploadProfilePicture = async (req: Request, res: Response) => {
   const user = req.user as LP_User;
-
-  if (!user) {
-    return res.status(401).json({ message: 'Unauthorized' });
-  }
-
   const photo = req.file;
 
   if (!photo) {
@@ -54,8 +49,9 @@ export const uploadProfilePicture = async (req: Request, res: Response) => {
 
 const deleteImage = async (user: LP_User): Promise<Response> => {
   //No checkea si la imagen existe ni guarda el usuario en el repo
+  const hash = user.getProfilePicHash;
   const response = await axios.delete(
-    `https://api.imgur.com/3/image/${user.getProfilePicHash}`,
+    `https://api.imgur.com/3/image/${hash}`,
     { headers: { Authorization: `Bearer ${TOKEN}` } }
   );
   user.setProfilePicHash(null)
