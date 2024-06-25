@@ -1,9 +1,7 @@
 
 
 import { Request, Response } from 'express';
-import { v4 as uuidv4 } from 'uuid';
 import { userRepository } from '../../src/repository/UserRepository';
-import '../app'
 import { LP_User } from '../../src/entity/User/LP_User';
 
 
@@ -59,7 +57,7 @@ export const approveUser = async (req: Request, res: Response) => {
     return res.status(400).json({ message: 'You cannot approve yourself' });
   }
 
-  const userToApprove = await userRepository.findById(req.body.userId);
+  const userToApprove = await userRepository.findById(Number(req.params.id));
 
   if (!userToApprove) {
     return res.status(404).json({ message: 'User not found' });
@@ -101,7 +99,7 @@ export const rejectUser = async (req: Request, res: Response) => {
     return res.status(400).json({ message: 'You cannot approve yourself' });
   }
 
-  const userToReject = await userRepository.findById(req.body.userId);
+  const userToReject = await userRepository.findById(Number(req.params.id));
 
   if (!userToReject) {
     return res.status(404).json({ message: 'User not found' });
