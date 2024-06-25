@@ -15,17 +15,24 @@ export const getMatchableUser = async (req: Request, res: Response) => {
   const filteredUsers = fiterMatchableUsers(user, matchableUsers);
 
   if (filteredUsers.length > 0) {
-    return res.status(200).json(filteredUsers[Math.floor(Math.random() * filteredUsers.length)]);
+    
+    const profile = filteredUsers[Math.floor(Math.random() * filteredUsers.length)];
+    return res.status(200).json(await userRepository.findById(profile.getId()));
+
   } else {
     // Si no hay usuarios posibles, borro la lista de rechazados y vuelvo a intentar
     user.removeAllRejectedUsers();
     userRepository.save(user);
     const filteredUsers = fiterMatchableUsers(user, matchableUsers);
+
+    console.log('filteredUsers', filteredUsers);
+
     if (filteredUsers.length > 0) {
 
       const profile = filteredUsers[Math.floor(Math.random() * filteredUsers.length)];
+      return res.status(200).json(await userRepository.findById(profile.getId()));
 
-      return res.status(200).json(userRepository.findById(profile.getId()) as LP_UserPublicDataDTO);
+
     } else {
       return res.status(404).json({ message: 'No matchable users found' });
     }

@@ -12,10 +12,10 @@ export default function MatchngScreen() {
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [token, setToken] = useState<string | null>(null);
 
-  const getNewProfile = async (): Promise<Profile> => {
+  const getNewProfile = async (this_token: string): Promise<Profile> => {
     const response = await axios.get(`http://localhost:3000/v1/matching`, {
       headers: {
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${this_token}`
       }
     });
     const data = response.data;
@@ -32,36 +32,36 @@ export default function MatchngScreen() {
   };
 
   useEffect(() => {
+    const fetchProfiles = async (token: string) => {
+      // Assuming getNewProfile now accepts a token parameter
+      const newProfiles = await Promise.all([getNewProfile(token), getNewProfile(token)]);
+      setProfiles(newProfiles);
+    };
+  
     const fetchToken = async () => {
       const token = await AsyncStorage.getItem('session_token');
       setToken(token);
+      return token; // Return the token for use in the next step
     };
-    fetchToken();
-  }, []);
-
-  useEffect(() => {
-    const fetchProfiles = async () => {
-      const newProfiles = await Promise.all([getNewProfile(), getNewProfile()]);
-      setProfiles(newProfiles);
-    };
-    if (token) {
-      fetchProfiles();
-    }
+  
+    fetchToken().then(token => {
+      if (token) {
+        fetchProfiles(token);
+      }
+    });
   }, []);
 
   const handleSwiped = async () => {
-    const newProfile = await getNewProfile();
+    const newProfile = await getNewProfile(token!);
     setProfiles(prevProfiles => [...prevProfiles, newProfile]);
   };
 
   const handleSwipedLeft = () => {
-    console.log('Swiped left');
     handleSwiped();
     handleRejectApi(profiles[0].id);
   };
 
   const handleSwipedRight = () => {
-    console.log('Swiped right');
     handleSwiped();
     handleAcceptApi(profiles[0].id);
   };
@@ -90,14 +90,6 @@ export default function MatchngScreen() {
     return (
       <View style={styles.container}>
         <Text style={styles.title}>No profiles found</Text>
-      </View>
-    );
-  }
-
-  if (true) {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.title}>AAAAAAAAAAAAAAAAA</Text>
       </View>
     );
   }
