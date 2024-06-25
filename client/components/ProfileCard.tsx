@@ -18,7 +18,7 @@ export type ProfileCardProps = {
 export const ProfileCard: React.FC<ProfileCardProps> = ({ profile }) => {
   return (
     <View style={styles.card}>
-      <Image source={{ uri: profile.image }} style={styles.image} />
+      <Image source={{ uri: `https://i.imgur.com/${profile.image}.jpg` }} style={styles.image} />
       <Text selectable={false} style={styles.interests}>
         Speaks {profile.knownLanguages.join(', ')} and wants to learn {profile.wantToKnowLanguages.join(', ')}.
       </Text>
