@@ -25,13 +25,10 @@ export const getMatchableUser = async (req: Request, res: Response) => {
     userRepository.save(user);
     const filteredUsers = fiterMatchableUsers(user, matchableUsers);
 
-    console.log('filteredUsers', filteredUsers);
-
     if (filteredUsers.length > 0) {
 
       const profile = filteredUsers[Math.floor(Math.random() * filteredUsers.length)];
       return res.status(200).json(await userRepository.findById(profile.getId()));
-
 
     } else {
       return res.status(404).json({ message: 'No matchable users found' });
@@ -60,9 +57,6 @@ export const approveUser = async (req: Request, res: Response) => {
 
   if (!user) {
     return res.status(401).json({ message: 'Unauthorized' });
-  }
-  if (!req.body.userId) {
-    return res.status(400).json({ message: 'userId is required' });
   }
   if (user.getId === req.body.userId) {
     return res.status(400).json({ message: 'You cannot approve yourself' });
@@ -97,14 +91,11 @@ export const approveUser = async (req: Request, res: Response) => {
 }
 
 export const rejectUser = async (req: Request, res: Response) => {
-  
+
   const user = req.user as LP_User;
 
   if (!user) {
     return res.status(401).json({ message: 'Unauthorized' });
-  }
-  if (!req.body.userId) {
-    return res.status(400).json({ message: 'userId is required' });
   }
   if (user.getId === req.body.userId) {
     return res.status(400).json({ message: 'You cannot approve yourself' });
