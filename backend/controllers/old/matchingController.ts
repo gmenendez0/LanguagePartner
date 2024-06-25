@@ -3,6 +3,7 @@
 import { Request, Response } from 'express';
 import { userRepository } from '../../src/repository/UserRepository';
 import { LP_User } from '../../src/entity/User/LP_User';
+import { LP_UserPublicDataDTO } from '../../DTOs/UserDTOs/LP_UserPublicDataDTO';
 
 
 export const getMatchableUser = async (req: Request, res: Response) => {
@@ -21,7 +22,10 @@ export const getMatchableUser = async (req: Request, res: Response) => {
     userRepository.save(user);
     const filteredUsers = fiterMatchableUsers(user, matchableUsers);
     if (filteredUsers.length > 0) {
-      return res.status(200).json(filteredUsers[Math.floor(Math.random() * filteredUsers.length)]);
+
+      const profile = filteredUsers[Math.floor(Math.random() * filteredUsers.length)];
+
+      return res.status(200).json(userRepository.findById(profile.getId()) as LP_UserPublicDataDTO);
     } else {
       return res.status(404).json({ message: 'No matchable users found' });
     }

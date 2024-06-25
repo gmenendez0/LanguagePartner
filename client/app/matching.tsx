@@ -2,122 +2,105 @@ import { StyleSheet } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import Swiper from 'react-native-deck-swiper';
 import { ProfileCard, Profile, ProfileCardProps } from '@/components/ProfileCard';
-
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
 
 export default function MatchngScreen() {
 
-  const defaultprofiles: Profile[] = [
-    {
-      id: 1,
-      name: 'John Doe',
-      age: 30,
-      city: 'New York',
-      description: 'Loves hiking and outdoor adventures.',
-      image: 'https://i.imgur.com/IM82bWA.jpeg',
-      knownLanguages: ['English', 'Spanish'],
-      wantToKnowLanguages: ['French'],
-    },
-    { 
-      id: 2,
-      name: 'Jane Smith',
-      age: 25,
-      city: 'San Francisco',
-      description: 'Enjoys reading and quiet evenings at home.',
-      image: 'https://i.imgur.com/tfUxQbf.jpeg',
-      knownLanguages: ['English', 'French'],
-      wantToKnowLanguages: ['Spanish'],
-    },
-    { 
-      id: 3,
-      name: 'Alice Johnson',
-      age: 35,
-      city: 'Los Angeles',
-      description: 'Passionate about food and cooking.',
-      image: 'https://i.imgur.com/eiwJg1P.jpeg',
-      knownLanguages: ['English', 'Italian'],
-      wantToKnowLanguages: ['Japanese'],
-    },
-    {
-      id: 4,
-      name: 'Bob Brown',
-      age: 28,
-      city: 'Chicago',
-      description: 'Loves playing sports and staying active.',
-      image: 'https://i.imgur.com/38g0nji.jpeg',
-      knownLanguages: ['English', 'German'],
-      wantToKnowLanguages: ['Chinese'],
-    }
-  ];
-  
-  const getNewProfile = (): Profile => {
-    return defaultprofiles[Math.floor(Math.random() * defaultprofiles.length)];
-    //LLAMADA A API
+  const [profiles, setProfiles] = useState<Profile[]>([]);
+  const [token, setToken] = useState<string | null>(null);
+
+  const getNewProfile = async (): Promise<Profile> => {
+    const response = await axios.get(`http://localhost:3000/v1/matching`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    const data = response.data;
+    console.log(data);
+    const newProfile: Profile = {
+      id: data.id,
+      name: data.name,
+      image: data.profilePicHash,
+      city: data.city,
+      knownLanguages: data.knownLanguages.map((lang: any) => lang.name),
+      wantToKnowLanguages: data.wantToKnowLanguages.map((lang: any) => lang.name),
+    };
+    return newProfile;
   };
 
-
-  const [profiles, setProfiles] = useState<Profile[]>([getNewProfile(), getNewProfile()]);
-
-
   useEffect(() => {
-    setProfiles([getNewProfile(), getNewProfile()]);
+    const fetchToken = async () => {
+      const token = await AsyncStorage.getItem('session_token');
+      setToken(token);
+    };
+    fetchToken();
   }, []);
 
-  const handleSwiped = () => {
-    setProfiles(prevProfiles => {
-      const newProfile = getNewProfile();
-      return [...prevProfiles, newProfile];
-    });
+  useEffect(() => {
+    const fetchProfiles = async () => {
+      const newProfiles = await Promise.all([getNewProfile(), getNewProfile()]);
+      setProfiles(newProfiles);
+    };
+    if (token) {
+      fetchProfiles();
+    }
+  }, []);
+
+  const handleSwiped = async () => {
+    const newProfile = await getNewProfile();
+    setProfiles(prevProfiles => [...prevProfiles, newProfile]);
   };
 
   const handleSwipedLeft = () => {
     console.log('Swiped left');
     handleSwiped();
-    //LLAMADA A API
+    handleRejectApi(profiles[0].id);
   };
 
   const handleSwipedRight = () => {
     console.log('Swiped right');
     handleSwiped();
-    //LLAMADA A API
+    handleAcceptApi(profiles[0].id);
   };
 
-  // const handleRejectApi = () => {
-  //   fetch('http://localhost:3000/reject', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify({
-  //       profile: profiles[0],
-  //     }),
-  //   });
-  // }
+  const handleRejectApi = async (id: number) => {
+    console.log('Rejecting profile with id', id);
+    await axios.post(`http://localhost:3000/v1/matching/reject/${id}`, {}, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  };
+  
+  const handleAcceptApi = async (id: number) => {
+    console.log('Accepting profile with id', id);
+    await axios.post(`http://localhost:3000/v1/matching/approve/${id}`, {}, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  };
 
-  // const handleAcceptApi = () => {
-  //   fetch('http://localhost:3000/accept', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify({
-  //       profile: profiles[0],
-  //     }),
-  //   });
-  // }
+  if (profiles.length === 0 || !token) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.title}>No profiles found</Text>
+      </View>
+    );
+  }
 
-  // const getNewProfileApi = () => {
-  //   fetch('http://localhost:3000/profile', {
-  //     method: 'GET',
-  //   })
-  //     .then(response => response.json())
-  //     .then(data => {
-  //       setProfiles(prevProfiles => {
-  //         return [...prevProfiles, data];
-  //       });
-  //     });
-  // }
+  if (true) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.title}>AAAAAAAAAAAAAAAAA</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
