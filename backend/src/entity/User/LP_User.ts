@@ -117,6 +117,10 @@ export class LP_User{
         this.rejectedUsers = this.rejectedUsers.filter(rejectedUser => rejectedUser != user);
     };
 
+    public removeAllRejectedUsers = (): void => {
+        this.rejectedUsers = [];
+    }
+
     public removeMatchedUser = (user: LP_User): void => {
         this.matchedUsers = this.matchedUsers.filter(matchedUser => matchedUser != user);
     };
