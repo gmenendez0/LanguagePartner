@@ -10,14 +10,14 @@ export const getMatchableUser = async (req: Request, res: Response) => {
 
   const user = req.user as LP_User;
   
-  const matchableUsers = await userRepository.find();
+  const matchableUsers = await userRepository.getAllUsers();
 
   const filteredUsers = fiterMatchableUsers(user, matchableUsers);
 
   if (filteredUsers.length > 0) {
     
     const profile = filteredUsers[Math.floor(Math.random() * filteredUsers.length)];
-    return res.status(200).json(await userRepository.findById(profile.getId()));
+    return res.status(200).json(profile);
 
   } else {
     // Si no hay usuarios posibles, borro la lista de rechazados y vuelvo a intentar
@@ -28,7 +28,7 @@ export const getMatchableUser = async (req: Request, res: Response) => {
     if (filteredUsers.length > 0) {
 
       const profile = filteredUsers[Math.floor(Math.random() * filteredUsers.length)];
-      return res.status(200).json(await userRepository.findById(profile.getId()));
+      return res.status(200).json(profile);
 
     } else {
       return res.status(404).json({ message: 'No matchable users found' });

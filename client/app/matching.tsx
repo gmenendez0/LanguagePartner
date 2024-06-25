@@ -56,14 +56,14 @@ export default function MatchngScreen() {
     setProfiles(prevProfiles => [...prevProfiles, newProfile]);
   };
 
-  const handleSwipedLeft = () => {
+  const handleSwipedLeft = (index: number) => {
     handleSwiped();
-    handleRejectApi(profiles[0].id);
+    handleRejectApi(profiles[index].id);
   };
 
-  const handleSwipedRight = () => {
+  const handleSwipedRight = (index: number) => {
     handleSwiped();
-    handleAcceptApi(profiles[0].id);
+    handleAcceptApi(profiles[index].id);
   };
 
   const handleRejectApi = async (id: number) => {
@@ -100,8 +100,8 @@ export default function MatchngScreen() {
         <Swiper
         cards={profiles}
         renderCard={(profile: Profile) => <ProfileCard profile={profile} />}
-        onSwipedLeft={handleSwipedLeft}
-        onSwipedRight={handleSwipedRight}
+        onSwipedLeft={(index) => handleSwipedLeft(index)}
+        onSwipedRight={(index) => handleSwipedRight(index)}
         backgroundColor={'#f0f0f0'}
         stackSize={2}
         cardIndex={0}
