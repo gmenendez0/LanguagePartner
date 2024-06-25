@@ -12,30 +12,37 @@ export default function MatchngScreen() {
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [token, setToken] = useState<string | null>(null);
 
-  const getNewProfile = async (this_token: string): Promise<Profile> => {
-    const response = await axios.get(`http://localhost:3000/v1/matching`, {
-      headers: {
-        Authorization: `Bearer ${this_token}`
+  const getNewProfile = async (this_token: string): Promise<Profile | null> => {
+    try {
+      const response = await axios.get(`http://localhost:3000/v1/matching`, {
+        headers: {
+          Authorization: `Bearer ${this_token}`
+        }
+      });
+      const data = response.data;
+      console.log(data);
+      const newProfile: Profile = {
+        id: data.id,
+        name: data.name,
+        image: data.profilePicHash,
+        city: data.city,
+        knownLanguages: data.knownLanguages.map((lang: any) => lang.name),
+        wantToKnowLanguages: data.wantToKnowLanguages.map((lang: any) => lang.name),
+      };
+      return newProfile;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 404) {
+        return null;
       }
-    });
-    const data = response.data;
-    console.log(data);
-    const newProfile: Profile = {
-      id: data.id,
-      name: data.name,
-      image: data.profilePicHash,
-      city: data.city,
-      knownLanguages: data.knownLanguages.map((lang: any) => lang.name),
-      wantToKnowLanguages: data.wantToKnowLanguages.map((lang: any) => lang.name),
-    };
-    return newProfile;
+      throw error; // Re-throw the error if it's not a 404
+    }
   };
 
   useEffect(() => {
     const fetchProfiles = async (token: string) => {
       // Assuming getNewProfile now accepts a token parameter
       const newProfiles = await Promise.all([getNewProfile(token), getNewProfile(token)]);
-      setProfiles(newProfiles);
+      setProfiles(newProfiles.filter(profile => profile !== null) as Profile[]);
     };
   
     const fetchToken = async () => {
@@ -53,7 +60,9 @@ export default function MatchngScreen() {
 
   const handleSwiped = async () => {
     const newProfile = await getNewProfile(token!);
-    setProfiles(prevProfiles => [...prevProfiles, newProfile]);
+    if (newProfile) {
+      setProfiles(prevProfiles => [...prevProfiles, newProfile]);
+    }
   };
 
   const handleSwipedLeft = (index: number) => {
