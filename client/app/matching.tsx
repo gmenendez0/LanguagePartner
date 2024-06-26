@@ -2,122 +2,106 @@ import { StyleSheet } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import Swiper from 'react-native-deck-swiper';
 import { ProfileCard, Profile, ProfileCardProps } from '@/components/ProfileCard';
-
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
 
 export default function MatchngScreen() {
 
-  const defaultprofiles: Profile[] = [
-    {
-      id: 1,
-      name: 'John Doe',
-      age: 30,
-      city: 'New York',
-      description: 'Loves hiking and outdoor adventures.',
-      image: 'https://i.imgur.com/IM82bWA.jpeg',
-      knownLanguages: ['English', 'Spanish'],
-      wantToKnowLanguages: ['French'],
-    },
-    { 
-      id: 2,
-      name: 'Jane Smith',
-      age: 25,
-      city: 'San Francisco',
-      description: 'Enjoys reading and quiet evenings at home.',
-      image: 'https://i.imgur.com/tfUxQbf.jpeg',
-      knownLanguages: ['English', 'French'],
-      wantToKnowLanguages: ['Spanish'],
-    },
-    { 
-      id: 3,
-      name: 'Alice Johnson',
-      age: 35,
-      city: 'Los Angeles',
-      description: 'Passionate about food and cooking.',
-      image: 'https://i.imgur.com/eiwJg1P.jpeg',
-      knownLanguages: ['English', 'Italian'],
-      wantToKnowLanguages: ['Japanese'],
-    },
-    {
-      id: 4,
-      name: 'Bob Brown',
-      age: 28,
-      city: 'Chicago',
-      description: 'Loves playing sports and staying active.',
-      image: 'https://i.imgur.com/38g0nji.jpeg',
-      knownLanguages: ['English', 'German'],
-      wantToKnowLanguages: ['Chinese'],
+  const [profiles, setProfiles] = useState<Profile[]>([]);
+  const [token, setToken] = useState<string | null>(null);
+
+  const getNewProfile = async (this_token: string): Promise<Profile | null> => {
+    try {
+      const response = await axios.get(`http://localhost:3000/v1/matching`, {
+        headers: {
+          Authorization: `Bearer ${this_token}`
+        }
+      });
+      const data = response.data;
+      console.log(data);
+      const newProfile: Profile = {
+        id: data.id,
+        name: data.name,
+        image: data.profilePicHash,
+        city: data.city,
+        knownLanguages: data.knownLanguages.map((lang: any) => lang.name),
+        wantToKnowLanguages: data.wantToKnowLanguages.map((lang: any) => lang.name),
+      };
+      return newProfile;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 404) {
+        return null;
+      }
+      throw error; // Re-throw the error if it's not a 404
     }
-  ];
-  
-  const getNewProfile = (): Profile => {
-    return defaultprofiles[Math.floor(Math.random() * defaultprofiles.length)];
-    //LLAMADA A API
   };
 
-
-  const [profiles, setProfiles] = useState<Profile[]>([getNewProfile(), getNewProfile()]);
-
-
   useEffect(() => {
-    setProfiles([getNewProfile(), getNewProfile()]);
+    const fetchProfiles = async (token: string) => {
+      // Assuming getNewProfile now accepts a token parameter
+      const newProfiles = await Promise.all([getNewProfile(token), getNewProfile(token)]);
+      setProfiles(newProfiles.filter(profile => profile !== null) as Profile[]);
+    };
+  
+    const fetchToken = async () => {
+      const token = await AsyncStorage.getItem('session_token');
+      setToken(token);
+      return token; // Return the token for use in the next step
+    };
+  
+    fetchToken().then(token => {
+      if (token) {
+        fetchProfiles(token);
+      }
+    });
   }, []);
 
-  const handleSwiped = () => {
-    setProfiles(prevProfiles => {
-      const newProfile = getNewProfile();
-      return [...prevProfiles, newProfile];
+  const handleSwiped = async () => {
+    const newProfile = await getNewProfile(token!);
+    if (newProfile) {
+      setProfiles(prevProfiles => [...prevProfiles, newProfile]);
+    }
+  };
+
+  const handleSwipedLeft = (index: number) => {
+    handleSwiped();
+    handleRejectApi(profiles[index].id);
+  };
+
+  const handleSwipedRight = (index: number) => {
+    handleSwiped();
+    handleAcceptApi(profiles[index].id);
+  };
+
+  const handleRejectApi = async (id: number) => {
+    console.log('Rejecting profile with id', id);
+    await axios.post(`http://localhost:3000/v1/matching/reject/${id}`, {}, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  };
+  
+  const handleAcceptApi = async (id: number) => {
+    console.log('Accepting profile with id', id);
+    await axios.post(`http://localhost:3000/v1/matching/approve/${id}`, {}, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
     });
   };
 
-  const handleSwipedLeft = () => {
-    console.log('Swiped left');
-    handleSwiped();
-    //LLAMADA A API
-  };
-
-  const handleSwipedRight = () => {
-    console.log('Swiped right');
-    handleSwiped();
-    //LLAMADA A API
-  };
-
-  // const handleRejectApi = () => {
-  //   fetch('http://localhost:3000/reject', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify({
-  //       profile: profiles[0],
-  //     }),
-  //   });
-  // }
-
-  // const handleAcceptApi = () => {
-  //   fetch('http://localhost:3000/accept', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify({
-  //       profile: profiles[0],
-  //     }),
-  //   });
-  // }
-
-  // const getNewProfileApi = () => {
-  //   fetch('http://localhost:3000/profile', {
-  //     method: 'GET',
-  //   })
-  //     .then(response => response.json())
-  //     .then(data => {
-  //       setProfiles(prevProfiles => {
-  //         return [...prevProfiles, data];
-  //       });
-  //     });
-  // }
+  if (profiles.length === 0 || !token) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.title}>No profiles found</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -125,8 +109,8 @@ export default function MatchngScreen() {
         <Swiper
         cards={profiles}
         renderCard={(profile: Profile) => <ProfileCard profile={profile} />}
-        onSwipedLeft={handleSwipedLeft}
-        onSwipedRight={handleSwipedRight}
+        onSwipedLeft={(index) => handleSwipedLeft(index)}
+        onSwipedRight={(index) => handleSwipedRight(index)}
         backgroundColor={'#f0f0f0'}
         stackSize={2}
         cardIndex={0}

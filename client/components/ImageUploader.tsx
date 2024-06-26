@@ -3,10 +3,11 @@ import { Image, Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import FormData from 'form-data';
 import * as ImagePicker from 'expo-image-picker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as FileSystem from 'expo-file-system';
 
 const ImageUploader = () => {
     const [image, setImage] = useState<string | null>(null);
-    const [uploadResponse, setUploadResponse] = useState<any | null>(null);
 
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -33,26 +34,26 @@ const ImageUploader = () => {
     };
 
     const uploadImage = async (uri: string) => {
-        let formData = new FormData();
-        let name = uri.split("/").pop();
-        let match = /\.(\w+)$/.exec(name as string);
-        let type = match ? `image/${match[1]}` : `image`;
-
-        formData.append('image', { uri, name, type });
+        //let name = uri.split("/").pop();
+        //let match = /\.(\w+)$/.exec(name as string);
+        //let type = match ? `image/${match[1]}` : `image`;
 
         try {
-            const response = await axios.post('https://api.imgur.com/3/image', formData, {
+            let formData = new FormData();
+            const res = await fetch(uri);
+            const blob = await res.blob();
+            formData.append('photo', blob);
+
+            const authToken = await AsyncStorage.getItem('session_token');
+
+            const response = await axios.post('http://localhost:3000/v1/image', formData, {
                 headers: {
-                    Authorization: `Client-ID ${process.env.CLIENT_ID}`,
+                    'Authorization': `Bearer ${authToken}`,
                 },
             });
-
-            console.log("response.data");
-            console.log(response.data);
-            setUploadResponse(response.data);
         } catch (error: any) {
             if (error.response && error.response.status === 429) {
-                console.error("You have hit the rate limit for the Imgur API. Please try again later.");
+                console.error("You have hit the rate limit. Please try again later.");
             } else {
                 console.error(error);
             }
@@ -65,13 +66,6 @@ const ImageUploader = () => {
                 <Text style={styles.buttonText}>Upload picture</Text>
             </TouchableOpacity>
             {image && <Image source={{ uri: image }} style={styles.image} />}
-            {uploadResponse && (
-                <View>
-                    <Text>{uploadResponse.data.link}</Text>
-                    <Text>{uploadResponse.data.name}</Text>
-                    <Text>{uploadResponse.data.id}</Text>
-                </View>
-            )}
         </View>
     );
 };

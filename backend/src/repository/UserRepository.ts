@@ -59,4 +59,19 @@ export const userRepository = AppDataSource.getRepository(LP_User).extend({
             throw new RepositoryAccessError();
         }
     },
+
+    /** 
+     * Finds all users with their relationships.
+     * @returns A promise that resolves with all users found.
+     * @throws {RepositoryAccessError} If an error occurs while accessing the repository.
+    */
+    getAllUsers() {
+        try {
+            return this.find({
+                relations: ["approvedUsers", "rejectedUsers", "matchedUsers", "knownLanguages", "wantToKnowLanguages"],
+            });
+        } catch (error) {
+            throw new RepositoryAccessError();
+        }
+    }
 })

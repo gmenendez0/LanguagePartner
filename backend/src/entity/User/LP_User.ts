@@ -75,6 +75,8 @@ export class LP_User{
 
     public getWantToKnowLanguages = (): Language[] => this.wantToKnowLanguages;
 
+    public getProfilePicHash = (): string => this.profilePicHash;
+
     public setProfilePicHash = (profilePicHash: string): void => {
         this.profilePicHash = profilePicHash;
     }
@@ -114,6 +116,10 @@ export class LP_User{
     public removeRejectedUser = (user: LP_User): void => {
         this.rejectedUsers = this.rejectedUsers.filter(rejectedUser => rejectedUser != user);
     };
+
+    public removeAllRejectedUsers = (): void => {
+        this.rejectedUsers = [];
+    }
 
     public removeMatchedUser = (user: LP_User): void => {
         this.matchedUsers = this.matchedUsers.filter(matchedUser => matchedUser != user);

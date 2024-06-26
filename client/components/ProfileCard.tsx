@@ -6,8 +6,6 @@ export interface Profile {
   id: number
   name: string;
   city: string;
-  age: number;
-  description: string;
   image: string;
   knownLanguages: string[];
   wantToKnowLanguages: string[];
@@ -20,9 +18,8 @@ export type ProfileCardProps = {
 export const ProfileCard: React.FC<ProfileCardProps> = ({ profile }) => {
   return (
     <View style={styles.card}>
-      <Image source={{ uri: profile.image }} style={styles.image} />
-      <Text selectable={false} style={styles.name}>{profile.name}, {profile.age}</Text>
-      <Text selectable={false} style={styles.description}>{profile.description}</Text>
+      <Image source={{ uri: `https://i.imgur.com/${profile.image}.jpg` }} style={styles.image} />
+      <Text selectable={false} style={styles.name}>{profile.name}</Text>
       <Text selectable={false} style={styles.interests}>
         Speaks {profile.knownLanguages.join(', ')} and wants to learn {profile.wantToKnowLanguages.join(', ')}.
       </Text>

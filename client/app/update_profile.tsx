@@ -12,7 +12,6 @@ interface Errors {
 interface UpdateUserData {
     name: string,
     city: string,
-    profilePicHash: string,
     knownLanguages: string[],
     wantToKnowLanguages: string[]
 }
@@ -94,8 +93,10 @@ const UpdateProfile: React.FC = () => {
                 .then(data => {
                     setUsername(data.name);
                     setCity(data.city);
-                    setKnownLanguages(data.knownLanguages);
-                    setWantToKnowLanguages(data.wantToKnowLanguages);
+
+                    //knowlanguages has an id and a name, so we need to map it to only the name
+                    setKnownLanguages(data.knownLanguages.map((lang: any) => lang.name));
+                    setWantToKnowLanguages(data.wantToKnowLanguages.map((lang: any) => lang.name));
                 })
                 .catch(error => console.error('Error:', error));
         };
@@ -109,7 +110,6 @@ const UpdateProfile: React.FC = () => {
                 const postData: UpdateUserData = {
                     "name": username,
                     "city": city,
-                    "profilePicHash": "asd",
                     "knownLanguages": knownLanguages,
                     "wantToKnowLanguages": wantToKnowLanguages
                 };
