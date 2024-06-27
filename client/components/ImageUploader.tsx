@@ -64,10 +64,10 @@ const ImageUploader = () => {
 
     return (
         <View style={styles.container}>
-            <TouchableOpacity style={styles.button} onPress={pickImage}>
-                <Text style={styles.buttonText}>Upload picture</Text>
-            </TouchableOpacity>
             {image && <Image source={{ uri: image }} style={styles.image} />}
+            <TouchableOpacity style={styles.button} onPress={pickImage}>
+                <Text style={styles.buttonText}>Update Profile Picture</Text>
+            </TouchableOpacity>
         </View>
     );
 };
