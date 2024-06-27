@@ -29,6 +29,7 @@ interface PostResponse {
     success: boolean;
     token: string;
     error: string;
+    hasConfiguredProfile: string;
 }
 
 const LoginForm: React.FC = () => {

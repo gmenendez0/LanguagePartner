@@ -21,6 +21,7 @@ import LoginForm from "@/app/login";
 import UpdateProfile from "@/app/update_profile";
 import Menu from "@/app/index";
 import Chat from "@/app/chat";
+import ProfileConfig from "@/app/profile_configuration";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -78,7 +79,7 @@ function TabNavigator() {
             checkLoginStatus();
 
             if (isLoggedIn && !hasConfiguredProfile) {
-                router.push('/update_profile');
+                router.push('/profile_configuration');
             }
         }, [isLoggedIn, hasConfiguredProfile, router])
     );
@@ -131,6 +132,7 @@ function RootLayoutNav() {
             <Stack.Screen name="login" component={LoginForm} />
             <Stack.Screen name="update_profile" component={UpdateProfile} />
             <Stack.Screen name="chat" component={ChatList} />
+            <Stack.Screen name="profile_configuration" component={ProfileConfig} />
         </Stack.Navigator>
     );
 }
