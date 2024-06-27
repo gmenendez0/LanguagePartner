@@ -1,8 +1,8 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import {DarkTheme, DefaultTheme, ThemeProvider, useFocusEffect} from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import { createStackNavigator } from '@react-navigation/stack';
-import { Stack } from 'expo-router';
+import {Stack, useRouter} from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import React, {useEffect, useState} from 'react';
 import 'react-native-reanimated';
@@ -60,15 +60,28 @@ export default function RootLayout() {
 }
 
 function TabNavigator() {
+    const router = useRouter();
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-    useEffect(() => {
-        const checkLoginStatus = async () => {
-            const token = await AsyncStorage.getItem('session_token');
-            setIsLoggedIn(!!token);
-        };
+    const [hasConfiguredProfile, setHasConfiguredProfile] = useState<boolean>(false);
+    useFocusEffect(
+        React.useCallback(() => {
+            const checkHasConfiguredProfile = async () => {
+                const token = await AsyncStorage.getItem('hasConfiguredProfile');
+                setHasConfiguredProfile(!!token);
+            };
+            const checkLoginStatus = async () => {
+                const token = await AsyncStorage.getItem('session_token');
+                setIsLoggedIn(!!token);
+                checkHasConfiguredProfile();
+            };
 
-        checkLoginStatus();
-    }, []); // Add route to the dependency array
+            checkLoginStatus();
+
+            if (isLoggedIn && !hasConfiguredProfile) {
+                router.push('/update_profile');
+            }
+        }, [isLoggedIn, hasConfiguredProfile, router])
+    );
 
     const Tab = createBottomTabNavigator();
     return (
@@ -84,14 +97,14 @@ function TabNavigator() {
             }}
         >
             <Tab.Screen name="menu"
-                        component={isLoggedIn ? Matching : Menu}
+                        component={isLoggedIn && hasConfiguredProfile ? Matching : Menu}
                         options={{
                             tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
                             tabBarLabel: () => null,
                             headerShown: false,
                         }}
             />
-            {isLoggedIn && (
+            {isLoggedIn && hasConfiguredProfile && (
                 <Tab.Screen name="chat_view" component={ChatList}
                             options={{
                                 tabBarIcon: ({ color }) => <TabBarIcon name="comments" color={color} />,
@@ -117,7 +130,7 @@ function RootLayoutNav() {
             <Stack.Screen name="matching" component={Matching} />
             <Stack.Screen name="login" component={LoginForm} />
             <Stack.Screen name="update_profile" component={UpdateProfile} />
-            <Stack.Screen name="chat" component={Chat} />
+            <Stack.Screen name="chat" component={ChatList} />
         </Stack.Navigator>
     );
 }

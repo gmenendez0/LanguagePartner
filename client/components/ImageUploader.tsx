@@ -34,17 +34,19 @@ const ImageUploader = () => {
     };
 
     const uploadImage = async (uri: string) => {
-        //let name = uri.split("/").pop();
-        //let match = /\.(\w+)$/.exec(name as string);
-        //let type = match ? `image/${match[1]}` : `image`;
+        const authToken = await AsyncStorage.getItem('session_token');
+
+        // If the session token is empty, return early without sending the request
+        if (!authToken) {
+            console.log('User is not logged in');
+            return;
+        }
 
         try {
             let formData = new FormData();
             const res = await fetch(uri);
             const blob = await res.blob();
             formData.append('photo', blob);
-
-            const authToken = await AsyncStorage.getItem('session_token');
 
             const response = await axios.post('http://localhost:3000/v1/image', formData, {
                 headers: {

@@ -25,6 +25,7 @@ const Header = () => {
 
     const handleLogout = async () => {
         await AsyncStorage.removeItem('session_token');
+        await AsyncStorage.removeItem('hasConfiguredProfile'); //TODO remove this line, placeholder for the behaviour
         setIsLoggedIn(false);
         router.push('/'); // navigate to home screen
     };

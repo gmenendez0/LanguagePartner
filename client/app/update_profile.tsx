@@ -3,6 +3,7 @@ import {SafeAreaView, TextInput, Text, StyleSheet, TouchableOpacity, View} from 
 import TagPicker from "@/components/tag_picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ImageUploader from "@/components/ImageUploader";
+import {useRouter} from "expo-router";
 
 interface Errors {
     username?: string;
@@ -23,6 +24,7 @@ interface PostResponse {
 }
 
 const UpdateProfile: React.FC = () => {
+    const router = useRouter();
     const [username, setUsername] = useState<string>('');
     const [city, setCity] = useState<string>('');
     const [errors, setErrors] = useState<Errors>({});
@@ -123,13 +125,17 @@ const UpdateProfile: React.FC = () => {
                         'Authorization': `Bearer ${token}`,
                     },
                     body: JSON.stringify(postData),
+                }).then(response => {
+                    console.log(response);
+                    return response.json();
                 })
-                    .then(response => response.json())
                     .then((data: PostResponse) => {
                         if (!data.error) {
                             console.log('Update successful');
                             // TODO: Update the user's details in the app
                             console.log(data);
+                            AsyncStorage.setItem('hasConfiguredProfile', 'true');
+                            router.push("/");
                         } else {
                             console.log("Update Failed");
                             setErrorMessage(data.error);
