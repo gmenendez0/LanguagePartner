@@ -74,7 +74,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ profilePicHash }) => {
 
     return (
         <View style={styles.container}>
-            {(image || imageHash) && <Image source={{ uri: image ? image : `https://i.imgur.com/${imageHash}.jpg` }} style={styles.image} />}
+            <Image source={{ uri: image ? image : (imageHash ? `https://i.imgur.com/${imageHash}.jpg` : 'https://i.imgur.com/tmHPMYL.jpg') }} style={styles.image} />
             <TouchableOpacity style={styles.button} onPress={pickImage}>
                 <Text style={styles.buttonText}>Update Profile Picture</Text>
             </TouchableOpacity>
@@ -86,7 +86,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'center',
         backgroundColor: '#222',
     },
     image: {

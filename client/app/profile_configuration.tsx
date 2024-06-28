@@ -99,7 +99,9 @@ const ProfileConfig: React.FC = () => {
     return (
         <SafeAreaView style={styles.container}>
             <IntroModal />
-            <ImageUploader profilePicHash={profilePicHash} />
+            <View style={styles.imageContainer}>
+                <ImageUploader profilePicHash={profilePicHash} />
+            </View>
 
             <View style={styles.inputContainer}>
                 <Text style={styles.label}>Known languages</Text>
@@ -170,6 +172,11 @@ const styles = StyleSheet.create({
     },inputContainer: {
         width: '40%',
         marginBottom: 12,
+    },
+    imageContainer: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginBottom: 20, // Adjust this value as needed
     },
     label: {
         width: '40%',

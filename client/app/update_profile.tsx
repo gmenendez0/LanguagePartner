@@ -159,7 +159,10 @@ const UpdateProfile: React.FC = () => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <ImageUploader profilePicHash={profilePicHash} />
+
+            <View style={styles.imageContainer}>
+                <ImageUploader profilePicHash={profilePicHash} />
+            </View>
         <View style={styles.inputContainer}>
             <Text style={styles.label}>Username</Text>
             <TextInput
@@ -237,6 +240,11 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.8,
         shadowRadius: 2,
         elevation: 5,
+    },
+    imageContainer: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginBottom: 20, // Adjust this value as needed
     },
     tagPickerContainer: {
         width: '100%', // Adjust this value to make the TagPicker fields less wide
