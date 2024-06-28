@@ -58,6 +58,8 @@ export class LP_User{
         this.name = name;
     }
 
+    public getName = (): string => this.name;
+
     public getEmail = (): string => this.email;
 
 

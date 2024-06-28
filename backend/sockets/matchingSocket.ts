@@ -2,10 +2,13 @@ const WebSocket = require('ws');
 import ws from 'ws';
 const server = new WebSocket.Server({ port: 3002 });
 
-export function broadcastMessage(user1: number, user2: number) {
+export function broadcastMessage(user1: number, user2: number, name1: string, name2: string) {
   clients.forEach(client => {
-      if (client.readyState === WebSocket.OPEN && client.user === user1 || client.user === user2) {
-        client.send('New match!');
+      if (client.user === user1 && client.readyState === WebSocket.OPEN) {
+        client.send(name2.toString())
+      }
+      if (client.user === user2 && client.readyState === WebSocket.OPEN) {
+        client.send(name1.toString())
       }
   });
 }

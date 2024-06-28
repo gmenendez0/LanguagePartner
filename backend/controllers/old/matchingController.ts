@@ -81,7 +81,7 @@ export const approveUser = async (req: Request, res: Response) => {
     user.addMatchedUser(userToApprove);
     userToApprove.addMatchedUser(user);
 
-    broadcastMessage(user.getId(), userToApprove.getId());
+    broadcastMessage(user.getId(), userToApprove.getId(), user.getName(), userToApprove.getName());
 
     userRepository.save(user);
     userRepository.save(userToApprove);
