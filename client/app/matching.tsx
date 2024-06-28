@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Button } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import Swiper from 'react-native-deck-swiper';
 import { ProfileCard, Profile, ProfileCardProps } from '@/components/ProfileCard';
@@ -6,12 +6,24 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
+import MatchAnimation from '@/components/MatchingAnimation';
 
 export default function MatchngScreen() {
 
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [token, setToken] = useState<string | null>(null);
   const [user, setUser] = useState<Profile | null>(null);
+  const [isMatched, setIsMatched] = useState<boolean>(false);
+  const [message, setMessage] = useState<string>('You have a new match!');
+
+  const handleMatch = (name: string) => {
+    setMessage(`You have a new match with ${name}!`);
+    setIsMatched(true);
+  };
+
+  const handleAnimationEnd = () => {
+    setIsMatched(false);
+  };
 
   const getNewProfile = async (this_token: string): Promise<Profile | null> => {
     try {
@@ -54,6 +66,7 @@ export default function MatchngScreen() {
 
     ws.onmessage = (event) => {   
       console.log('WebSocket message received:', event.data);
+      handleMatch(event.data.toString());
     };
 
     ws.onclose = () => {
@@ -169,20 +182,26 @@ export default function MatchngScreen() {
     );
   }
 
+  //<Button title="Trigger Match" onPress={() => handleMatch('CARLETTO')} />
+
   return (
-    <View style={styles.container}>
-      {profiles.length > 0 && (
-        <Swiper
-        cards={profiles}
-        renderCard={(profile: Profile) => <ProfileCard profile={profile} me={user} />}
-        onSwipedLeft={(index) => handleSwipedLeft(index)}
-        onSwipedRight={(index) => handleSwipedRight(index)}
-        backgroundColor={'#f0f0f0'}
-        stackSize={2}
-        cardIndex={0}
-        verticalSwipe={false}
-        />
-      )}
+    <View>
+      <View style={styles.container}>
+        
+        <MatchAnimation visible={isMatched} onAnimationEnd={handleAnimationEnd} message={message}/>
+        {profiles.length > 0 && (
+          <Swiper
+          cards={profiles}
+          renderCard={(profile: Profile) => <ProfileCard profile={profile} me={user} />}
+          onSwipedLeft={(index) => handleSwipedLeft(index)}
+          onSwipedRight={(index) => handleSwipedRight(index)}
+          backgroundColor={'#f0f0f0'}
+          stackSize={2}
+          cardIndex={0}
+          verticalSwipe={false}
+          />
+        )}
+      </View>
     </View>
   );
 };
