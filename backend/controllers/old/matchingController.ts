@@ -40,13 +40,17 @@ const fiterMatchableUsers = (user: LP_User, matchableUsers: LP_User[]): LP_User[
   // Map approvedUsers and rejectedUsers to arrays of their IDs
   const approvedUserIds = user.getApprovedUsers().map(approvedUser => approvedUser.getId());
   const rejectedUserIds = user.getRejectedUsers().map(rejectedUser => rejectedUser.getId());
+  const myLanguages = user.getKnownLanguages().concat(user.getWantToKnowLanguages()).map(language => language.getId());
 
-  // Filter matchableUsers by checking IDs against approved and rejected IDs
   return matchableUsers.filter(matchableUser => {
+
+    const matchableLanguages = matchableUser.getKnownLanguages().concat(matchableUser.getWantToKnowLanguages()).map(language => language.getId());
+
     return (
       !approvedUserIds.includes(matchableUser.getId()) &&
       !rejectedUserIds.includes(matchableUser.getId()) &&
-      matchableUser.getId() !== user.getId()
+      matchableUser.getId() !== user.getId() &&
+      matchableLanguages.some(language => myLanguages.includes(language))
     );
   });
 };
