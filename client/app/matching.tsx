@@ -40,6 +40,37 @@ export default function MatchngScreen() {
   };
 
   useEffect(() => {
+
+    if (!user) {
+      return;
+    }
+
+    const ws = new WebSocket(`ws://localhost:3002`);
+
+    ws.onopen = () => {
+      ws.send(user.id.toString());
+      console.log('WebSocket match connection opened');
+    };
+
+    ws.onmessage = (event) => {   
+      console.log('WebSocket message received:', event.data);
+    };
+
+    ws.onclose = () => {
+      console.log('WebSocket match connection closed');
+    };
+
+    ws.onerror = (error) => {
+      console.error('WebSocket error:', error);
+    };
+
+    return () => {
+      ws.close();
+    };
+
+  }, [user]);
+
+  useEffect(() => {
     const fetchProfiles = async (token: string) => {
       // Assuming getNewProfile now accepts a token parameter
       const newProfiles = await Promise.all([getNewProfile(token), getNewProfile(token)]);
