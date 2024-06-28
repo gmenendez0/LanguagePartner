@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, Image, StyleSheet, Animated, PanResponder } from 'react-native';
 import Swiper from 'react-native-deck-swiper';
 
 export interface Profile {
@@ -18,10 +18,33 @@ export type ProfileCardProps = {
 
 export const ProfileCard: React.FC<ProfileCardProps> = ({ profile, me }) => {
 
+  const pan = useRef(new Animated.ValueXY()).current;
+  const backgroundColor = pan.x.interpolate({
+    inputRange: [-75, 0, 75],
+    outputRange: ['rgb(255, 59, 48)', 'rgb(255, 255, 255)', 'rgb(52, 199, 89)'],
+    extrapolate: 'clamp',
+  });
+
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onPanResponderMove: Animated.event([null, { dx: pan.x }], { useNativeDriver: false }),
+      onPanResponderRelease: () => {
+        Animated.spring(pan, {
+          toValue: { x: 0, y: 0 },
+          useNativeDriver: false,
+        }).start();
+      },
+    })
+  ).current;
+
   const mylanguages = me.knownLanguages.concat(me.wantToKnowLanguages);
 
   return (
-    <View style={styles.card}>
+    <Animated.View
+      style={[styles.card, { backgroundColor }, pan.getLayout()]}
+      {...panResponder.panHandlers}
+    >
       <Image source={{ uri: `https://i.imgur.com/${profile.image}.jpg` }} style={styles.image} resizeMode="contain" />
       <Text selectable={false} style={styles.name}>{profile.name} from {profile.city}</Text>
       <Text style={styles.interests}>
@@ -48,7 +71,7 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({ profile, me }) => {
         </Text>
         ))}.
       </Text>
-    </View>
+    </Animated.View>
   );
 };
 
