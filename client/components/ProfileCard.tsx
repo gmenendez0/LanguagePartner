@@ -23,7 +23,7 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({ profile, me }) => {
   return (
     <View style={styles.card}>
       <Image source={{ uri: `https://i.imgur.com/${profile.image}.jpg` }} style={styles.image} resizeMode="contain" />
-      <Text selectable={false} style={styles.name}>{profile.name}</Text>
+      <Text selectable={false} style={styles.name}>{profile.name} from {profile.city}</Text>
       <Text style={styles.interests}>
         Speaks{' '}
         {profile.knownLanguages.map((language: string, index: number) => (
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   interests: {
-    fontSize: 14,
+    fontSize: 20,
     color: '#888',
     marginTop: 5,
   },
