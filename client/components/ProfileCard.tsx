@@ -20,7 +20,7 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({ profile, me }) => {
 
   const pan = useRef(new Animated.ValueXY()).current;
   const backgroundColor = pan.x.interpolate({
-    inputRange: [-75, 0, 75],
+    inputRange: [-80, 0, 80],
     outputRange: ['rgb(255, 59, 48)', 'rgb(255, 255, 255)', 'rgb(52, 199, 89)'],
     extrapolate: 'clamp',
   });
@@ -47,7 +47,7 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({ profile, me }) => {
     >
       <Image source={{ uri: `https://i.imgur.com/${profile.image}.jpg` }} style={styles.image} resizeMode="contain" />
       <Text selectable={false} style={styles.name}>{profile.name} from {profile.city}</Text>
-      <Text style={styles.interests}>
+      <Text style={styles.interests} selectable={false}>
         Speaks{' '}
         {profile.knownLanguages.map((language: string, index: number) => (
           <Text
@@ -59,7 +59,7 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({ profile, me }) => {
           </Text>
         ))}.
       </Text>
-      <Text style={styles.interests}>
+      <Text style={styles.interests} selectable={false}>
         Wants to learn{' '}
         {profile.wantToKnowLanguages.map((language: string, index: number) => (
           <Text
