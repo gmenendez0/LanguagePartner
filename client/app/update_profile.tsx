@@ -18,6 +18,7 @@ interface UpdateUserData {
 }
 
 interface PostResponse {
+    name: string;
     success: boolean;
     message: string;
     error: string;
@@ -32,8 +33,9 @@ const UpdateProfile: React.FC = () => {
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [knownLanguages, setKnownLanguages] = useState<string[]>([]);
     const [wantToKnowLanguages, setWantToKnowLanguages] = useState<string[]>([]);
+    const [profilePicHash, setProfilePicHash] = useState<string | null>(null);
 
-    // TODO: Fetch the current user's details and populate the state variables
+
 
     const validateField = (field: string, value: string): string | undefined => {
         switch (field) {
@@ -92,9 +94,12 @@ const UpdateProfile: React.FC = () => {
                 },
             })
                 .then(response => response.json())
-                .then(data => {
+                .then(async (data) => {
                     setUsername(data.name);
                     setCity(data.city);
+                    setProfilePicHash(data.profilePicHash);
+                    await AsyncStorage.setItem('profile_pic' ,data.profilePicHash);
+                    await AsyncStorage.setItem('name' ,data.name);
 
                     //knowlanguages has an id and a name, so we need to map it to only the name
                     setKnownLanguages(data.knownLanguages.map((lang: any) => lang.name));
@@ -116,7 +121,6 @@ const UpdateProfile: React.FC = () => {
                     "wantToKnowLanguages": wantToKnowLanguages
                 };
 
-                // TODO: Replace with your API endpoint
                 const token = await AsyncStorage.getItem('session_token');
                 fetch('http://localhost:3000/v1/user/me', {
                     method: 'PATCH',
@@ -132,9 +136,9 @@ const UpdateProfile: React.FC = () => {
                     .then((data: PostResponse) => {
                         if (!data.error) {
                             console.log('Update successful');
-                            // TODO: Update the user's details in the app
                             console.log(data);
                             AsyncStorage.setItem('hasConfiguredProfile', 'true');
+                            AsyncStorage.setItem('name', data.name);
                             router.push("/");
                         } else {
                             console.log("Update Failed");
@@ -155,7 +159,7 @@ const UpdateProfile: React.FC = () => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <ImageUploader />
+            <ImageUploader profilePicHash={profilePicHash} />
         <View style={styles.inputContainer}>
             <Text style={styles.label}>Username</Text>
             <TextInput

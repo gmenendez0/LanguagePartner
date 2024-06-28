@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { Image, Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import FormData from 'form-data';
@@ -6,8 +6,17 @@ import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as FileSystem from 'expo-file-system';
 
-const ImageUploader = () => {
+interface ImageUploaderProps {
+    profilePicHash: string | null;
+}
+
+const ImageUploader: React.FC<ImageUploaderProps> = ({ profilePicHash }) => {
+    const [imageHash, setImageHash] = useState<string | null>(profilePicHash);
     const [image, setImage] = useState<string | null>(null);
+
+    useEffect(() => {
+        setImageHash(profilePicHash);
+    }, [profilePicHash]);
 
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -53,6 +62,7 @@ const ImageUploader = () => {
                     'Authorization': `Bearer ${authToken}`,
                 },
             });
+            await AsyncStorage.setItem('profile_pic', response.data.profilePicHash);
         } catch (error: any) {
             if (error.response && error.response.status === 429) {
                 console.error("You have hit the rate limit. Please try again later.");
@@ -64,7 +74,7 @@ const ImageUploader = () => {
 
     return (
         <View style={styles.container}>
-            {image && <Image source={{ uri: image }} style={styles.image} />}
+            {(image || imageHash) && <Image source={{ uri: image ? image : `https://i.imgur.com/${imageHash}.jpg` }} style={styles.image} />}
             <TouchableOpacity style={styles.button} onPress={pickImage}>
                 <Text style={styles.buttonText}>Update Profile Picture</Text>
             </TouchableOpacity>

@@ -11,51 +11,61 @@ interface UserForHeader {
 
 const Header = () => {
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-    const router = useRouter();
+    const [name, setName] = useState<string | null>(null);
+    const [profilePic, setProfilePic] = useState<string | null>(null);
     const [user, setUser] = useState<UserForHeader | null>(null);
+    const router = useRouter();
 
     useFocusEffect(() => {
         const checkLoginStatus = async () => {
             const token = await AsyncStorage.getItem('session_token');
             setIsLoggedIn(!!token);
         };
+        const checkProfileInfoStatus = async () => {
+            const newProfilePic = await AsyncStorage.getItem('profile_pic');
+            const newName = await AsyncStorage.getItem('name');
+            if (newName && name != newName)  {
+                setName(newName);
+            }
+            if (newProfilePic && profilePic != newProfilePic)  {
+                setProfilePic(newProfilePic);
+            }
+        };
 
         checkLoginStatus();
+        checkProfileInfoStatus();
     });
 
     const handleLogout = async () => {
+        setUser(null);
         await AsyncStorage.removeItem('session_token');
-        await AsyncStorage.removeItem('hasConfiguredProfile'); //TODO remove this line, placeholder for the behaviour
+        await AsyncStorage.removeItem('hasConfiguredProfile');
+        await AsyncStorage.removeItem('profile_pic');
+        await AsyncStorage.removeItem('name');
         setIsLoggedIn(false);
         router.push('/'); // navigate to home screen
     };
 
     useEffect(() => {
-        // Fetch the auth token and then fetch the chat data
-        AsyncStorage.getItem('session_token')
-            .then((authToken) => {
-                if (authToken) {
-                    return fetch('http://localhost:3000/v1/user/me', {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${authToken}`,
-                        },
-                    });
-                } else {
-                    throw new Error('No auth token found');
+        const fetchUserData = async () => {
+            let token = await AsyncStorage.getItem('session_token');
+
+            // If the session token is not available, return early
+            if (!token) {
+                console.log('User is not logged in');
+                return;
+            } else {
+
+                let profile_pic = await AsyncStorage.getItem('profile_pic');
+                let username = await AsyncStorage.getItem('name');
+                if (username) {
+                    setUser({name: username , profilePicHash: profile_pic ? profile_pic : ""});
                 }
-            })
-            .then((response) => response.json())
-            .then((data) => {
-                console.log(data);
-                console.log("USUARIO HEADER: ", data)
-                setUser(data);
-            })
-            .catch((error) => {
-                console.error('Error fetching data:', error);
-            });
-    }, []);
+            }
+        };
+
+        fetchUserData();
+    }, [isLoggedIn, name, profilePic]);
 
     return (
         <View style={styles.header}>
@@ -68,7 +78,7 @@ const Header = () => {
                         <Image source={{ uri: `https://i.imgur.com/${user.profilePicHash}.jpg` }} style={styles.image} />
                     </View>
                 }
-                {user && 
+                {user &&
                     <View>
                         <Text style={styles.salute}>Hi, {user.name.split(' ')[0]}</Text>
                     </View>

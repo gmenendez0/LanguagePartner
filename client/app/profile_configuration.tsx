@@ -11,6 +11,7 @@ interface UpdateUserData {
 }
 
 interface PostResponse {
+    name: string;
     success: boolean;
     message: string;
     error: string;
@@ -18,6 +19,7 @@ interface PostResponse {
 
 const ProfileConfig: React.FC = () => {
     const router = useRouter();
+    const [profilePicHash, setProfilePicHash] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [knownLanguages, setKnownLanguages] = useState<string[]>([]);
@@ -56,7 +58,6 @@ const ProfileConfig: React.FC = () => {
                     "wantToKnowLanguages": wantToKnowLanguages
                 };
 
-                // TODO: Replace with your API endpoint
                 const token = await AsyncStorage.getItem('session_token');
                 fetch('http://localhost:3000/v1/user/me', {
                     method: 'PATCH',
@@ -75,6 +76,7 @@ const ProfileConfig: React.FC = () => {
                             // TODO: Update the user's details in the app
                             console.log(data);
                             AsyncStorage.setItem('hasConfiguredProfile', 'true');
+                            AsyncStorage.setItem('name', data.name);
                             router.push("/");
                         } else {
                             console.log("Update Failed");
@@ -95,7 +97,7 @@ const ProfileConfig: React.FC = () => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <ImageUploader />
+            <ImageUploader profilePicHash={profilePicHash} />
 
             <View style={styles.inputContainer}>
                 <Text style={styles.label}>Known languages</Text>
