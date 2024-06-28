@@ -13,15 +13,40 @@ export interface Profile {
 
 export type ProfileCardProps = {
   profile: Profile;
+  me: Profile;
 };
 
-export const ProfileCard: React.FC<ProfileCardProps> = ({ profile }) => {
+export const ProfileCard: React.FC<ProfileCardProps> = ({ profile, me }) => {
+
+  const mylanguages = me.knownLanguages.concat(me.wantToKnowLanguages);
+
   return (
     <View style={styles.card}>
-      <Image source={{ uri: `https://i.imgur.com/${profile.image}.jpg` }} style={styles.image} />
+      <Image source={{ uri: `https://i.imgur.com/${profile.image}.jpg` }} style={styles.image} resizeMode="contain" />
       <Text selectable={false} style={styles.name}>{profile.name}</Text>
-      <Text selectable={false} style={styles.interests}>
-        Speaks {profile.knownLanguages.join(', ')} and wants to learn {profile.wantToKnowLanguages.join(', ')}.
+      <Text style={styles.interests}>
+        Speaks{' '}
+        {profile.knownLanguages.map((language: string, index: number) => (
+          <Text
+            key={index}
+            style={mylanguages.includes(language) ? styles.incommon : null}
+            selectable={false}
+          >
+            {language}{index < profile.knownLanguages.length - 1 ? ', ' : ''}
+          </Text>
+        ))}.
+      </Text>
+      <Text style={styles.interests}>
+        Wants to learn{' '}
+        {profile.wantToKnowLanguages.map((language: string, index: number) => (
+          <Text
+            key={index}
+            style={mylanguages.includes(language) ? styles.incommon : null}
+            selectable={false}
+          >
+          {language}{index < profile.wantToKnowLanguages.length - 1 ? ', ' : ''}
+        </Text>
+        ))}.
       </Text>
     </View>
   );
@@ -38,12 +63,14 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 0 },
     elevation: 5,
     height: '80%',
+    justifyContent: 'center',
   },
   image: {
     width: '100%',
     minHeight: 300,
     maxHeight: '100%',
     borderRadius: 10,
+    minWidth: '100%',
   },
   name: {
     fontSize: 40,
@@ -59,5 +86,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#888',
     marginTop: 5,
+  },
+  incommon: {
+    color: 'yellow',
+    fontWeight: 'bold',
   },
 });

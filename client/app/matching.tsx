@@ -11,6 +11,7 @@ export default function MatchngScreen() {
 
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [token, setToken] = useState<string | null>(null);
+  const [user, setUser] = useState<Profile | null>(null);
 
   const getNewProfile = async (this_token: string): Promise<Profile | null> => {
     try {
@@ -58,6 +59,40 @@ export default function MatchngScreen() {
     });
   }, []);
 
+  useEffect(() => {
+    // Fetch the auth token and then fetch the chat data
+    AsyncStorage.getItem('session_token')
+        .then((authToken) => {
+            if (authToken) {
+                return fetch('http://localhost:3000/v1/user/me', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`,
+                    },
+                });
+            } else {
+                throw new Error('No auth token found');
+            }
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            console.log(data);
+            const newProfile: Profile = {
+              id: data.id,
+              name: data.name,
+              image: data.profilePicHash,
+              city: data.city,
+              knownLanguages: data.knownLanguages.map((lang: any) => lang.name),
+              wantToKnowLanguages: data.wantToKnowLanguages.map((lang: any) => lang.name),
+            };
+            setUser(newProfile);
+        })
+        .catch((error) => {
+            console.error('Error fetching data:', error);
+        });
+}, []);
+
   const handleSwiped = async () => {
     const newProfile = await getNewProfile(token!);
     if (newProfile) {
@@ -95,7 +130,7 @@ export default function MatchngScreen() {
     });
   };
 
-  if (profiles.length === 0 || !token) {
+  if (profiles.length === 0 || !token || !user) {
     return (
       <View style={styles.container}>
         <Text style={styles.title}>No profiles found</Text>
@@ -108,7 +143,7 @@ export default function MatchngScreen() {
       {profiles.length > 0 && (
         <Swiper
         cards={profiles}
-        renderCard={(profile: Profile) => <ProfileCard profile={profile} />}
+        renderCard={(profile: Profile) => <ProfileCard profile={profile} me={user} />}
         onSwipedLeft={(index) => handleSwipedLeft(index)}
         onSwipedRight={(index) => handleSwipedRight(index)}
         backgroundColor={'#f0f0f0'}
