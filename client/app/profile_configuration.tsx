@@ -4,6 +4,7 @@ import TagPicker from "@/components/tag_picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ImageUploader from "@/components/ImageUploader";
 import {useRouter} from "expo-router";
+import IntroModal from "@/components/IntroModal";
 
 interface UpdateUserData {
     knownLanguages: string[],
@@ -97,6 +98,7 @@ const ProfileConfig: React.FC = () => {
 
     return (
         <SafeAreaView style={styles.container}>
+            <IntroModal />
             <ImageUploader profilePicHash={profilePicHash} />
 
             <View style={styles.inputContainer}>
