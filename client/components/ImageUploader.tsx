@@ -18,6 +18,16 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ profilePicHash }) => {
         setImageHash(profilePicHash);
     }, [profilePicHash]);
 
+    useEffect(() => {
+        const setImageHashAsync = async () => {
+            const profilePic = profilePicHash ? profilePicHash : "tmHPMYL";
+            setImageHash(profilePic);
+            await AsyncStorage.setItem('profile_pic', profilePic);
+        };
+
+        setImageHashAsync();
+    }, []);
+
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
