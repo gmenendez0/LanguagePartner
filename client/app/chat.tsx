@@ -68,6 +68,7 @@ const Chat: React.FC<ChatProps> = ({ me, chatter }) => {
         const ws = new WebSocket(`ws://localhost:3001`);
 
         ws.onopen = () => {
+            console.log('WebSocket chat connection open');
             ws.send(me.toString());
         };
 
@@ -88,6 +89,11 @@ const Chat: React.FC<ChatProps> = ({ me, chatter }) => {
                 console.log('Message from another user');
             } 
         };
+
+        ws.onclose = () => {
+            console.log('WebSocket chat connection closed');
+        };
+
         return () => {
             ws.close(1000, chatter.id.toString());
         };

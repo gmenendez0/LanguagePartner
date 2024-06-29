@@ -33,7 +33,6 @@ export default function MatchngScreen() {
         }
       });
       const data = response.data;
-      console.log(data);
       const newProfile: Profile = {
         id: data.id,
         name: data.name,
@@ -68,6 +67,10 @@ export default function MatchngScreen() {
       console.log('WebSocket message received:', event.data);
       handleMatch(event.data.toString());
     };
+
+    ws.onclose = () => {
+      console.log('WebSocket match connection closed');
+    }
 
     return () => {
       ws.close();
@@ -113,7 +116,6 @@ export default function MatchngScreen() {
         })
         .then((response) => response.json())
         .then((data) => {
-            console.log(data);
             const newProfile: Profile = {
               id: data.id,
               name: data.name,
@@ -147,7 +149,6 @@ export default function MatchngScreen() {
   };
 
   const handleRejectApi = async (id: number) => {
-    console.log('Rejecting profile with id', id);
     await axios.post(`http://localhost:3000/v1/matching/reject/${id}`, {}, {
       headers: {
         'Content-Type': 'application/json',
@@ -157,7 +158,6 @@ export default function MatchngScreen() {
   };
   
   const handleAcceptApi = async (id: number) => {
-    console.log('Accepting profile with id', id);
     await axios.post(`http://localhost:3000/v1/matching/approve/${id}`, {}, {
       headers: {
         'Content-Type': 'application/json',

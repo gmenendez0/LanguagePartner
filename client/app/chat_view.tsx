@@ -114,7 +114,6 @@ const ChatList = () => {
           console.log('Disconnected from the WebSocket server');
         };
     
-        // Clean up function
         return () => {
           ws.close();
         };
