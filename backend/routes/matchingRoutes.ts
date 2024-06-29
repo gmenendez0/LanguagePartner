@@ -4,8 +4,9 @@ import { rejectUser, approveUser, getMatchableUser } from '../controllers/old/ma
 
 const matchingRouter = Router();
 
+matchingRouter.get('', SessionController.authenticate, getMatchableUser);
+
 matchingRouter.post('/reject/:id', SessionController.authenticate, rejectUser);
 matchingRouter.post('/approve/:id', SessionController.authenticate, approveUser);
-matchingRouter.get('', SessionController.authenticate, getMatchableUser);
 
 export default matchingRouter;
