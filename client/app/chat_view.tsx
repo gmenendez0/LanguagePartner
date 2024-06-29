@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect } from 'react';
 import { ScrollView, View, Text, StyleSheet } from 'react-native';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Chat from './chat';
 
@@ -17,6 +17,12 @@ const ChatList = () => {
     const [chats, setChats] = useState<matchedUserChat[] | null>(null);
     const [selectedChat, setSelectedChat] = useState<number | null>(null)
     const [user, setUser] = useState<any | null>(null);
+
+    const selectedChatRef = useRef<number | null>(selectedChat);
+
+    useEffect(() => {
+      selectedChatRef.current = selectedChat;
+  }, [selectedChat]);
 
     const fetchData = () => {
         AsyncStorage.getItem('session_token')
@@ -59,14 +65,13 @@ const ChatList = () => {
     };
 
     const handleNewChat = (from: number) => {
-        const chat = chats?.find((chat) => chat.id === from);
-        if (chat && selectedChat !== from) {
-            console.log('Message received from chat:', from, 'Im in chat:', selectedChat);
-            chat.unreadCount += 1;
-        }
-        const newChat = chats?.filter((chat) => chat.id !== from);
-        setChats([chat!, ...newChat!]);
-    }
+      const chat = chats?.find((chat) => chat.id === from);
+      if (chat && selectedChatRef.current !== from) {
+          chat.unreadCount += 1;
+      }
+      const newChat = chats?.filter((chat) => chat.id !== from);
+      setChats([chat!, ...newChat!]);
+  };
 
     const handleNewMatch = (chatview: matchedUserChat) => {
         setChats([...chats!, chatview]);
@@ -114,12 +119,6 @@ const ChatList = () => {
           ws.close();
         };
       }, [user]);
-
-    useEffect(() => {
-        if (selectedChat) {
-          console.log('Selected chat is set to:', selectedChat);
-        }
-    }, [selectedChat]);
 
     if (!chats) {
         return (
