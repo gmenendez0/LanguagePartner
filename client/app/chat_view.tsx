@@ -49,13 +49,77 @@ const ChatList = () => {
     }, []);
 
     const handleSelectChat = (chatId: number) => {
+        setSelectedChat(chatId);
+        console.log('Selected chat:', chatId);
         const chat = chats?.find((chat) => chat.id === chatId);
         if (chat) {
             chat.unreadCount = 0;
         }
         setChats([...chats!]);
-        setSelectedChat(chatId);
     };
+
+    const handleNewChat = (from: number) => {
+        const chat = chats?.find((chat) => chat.id === from);
+        if (chat && selectedChat !== from) {
+            console.log('Message received from chat:', from, 'Im in chat:', selectedChat);
+            chat.unreadCount += 1;
+        }
+        const newChat = chats?.filter((chat) => chat.id !== from);
+        setChats([chat!, ...newChat!]);
+    }
+
+    const handleNewMatch = (chatview: matchedUserChat) => {
+        setChats([...chats!, chatview]);
+    }
+
+    useEffect(() => {
+
+        if (!user) {
+          return;
+        }
+
+        const ws = new WebSocket(`ws://localhost:3003`);
+    
+        ws.onopen = () => {
+          console.log('Connected to the ChatList WebSocket');
+          ws.send(user.id.toString());
+        };
+    
+        ws.onmessage = (event) => {
+          const data = JSON.parse(event.data);
+          switch (data.type) {
+            case 'chat':
+              console.log('New chat message:', data);
+              handleNewChat(data.from)
+              break;
+            case 'match':
+              console.log('New match:', data);
+              handleNewMatch(data.chatview)
+              break;
+            default:
+              console.log('Unknown message type:', data.type);
+          }
+        };
+    
+        ws.onerror = (error) => {
+          console.error('WebSocket error:', error);
+        };
+    
+        ws.onclose = () => {
+          console.log('Disconnected from the WebSocket server');
+        };
+    
+        // Clean up function
+        return () => {
+          ws.close();
+        };
+      }, [user]);
+
+    useEffect(() => {
+        if (selectedChat) {
+          console.log('Selected chat is set to:', selectedChat);
+        }
+    }, [selectedChat]);
 
     if (!chats) {
         return (
@@ -68,7 +132,7 @@ const ChatList = () => {
     return (
         <View style={styles.outerContainer}>
             <View style={styles.chatContainer}>
-                <ScrollView contentContainerStyle={styles.container}>
+                <ScrollView contentContainerStyle={styles.container} >
                     {chats ? (
                         chats.map((chat: matchedUserChat, index: number) => (
                             <TouchableOpacity
