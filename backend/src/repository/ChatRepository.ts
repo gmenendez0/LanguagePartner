@@ -6,6 +6,8 @@ import { broadcastMessage } from '../../sockets/chatSocket';
 interface Chat {
   user1: number;
   user2: number;
+  user1LastSeen?: Date;
+  user2LastSeen?: Date;
   messages: Message[];
 }
 
@@ -66,13 +68,37 @@ export class ChatRepository {
   }
 
   public getChatList = async (user: LP_User) => {
-    const chatlist : ChatView[] = user.getMatchedUsers().map((matchedUser) => ({
+    const chatlist : ChatView[] = await Promise.all(user.getMatchedUsers().map(async (matchedUser) => ({
       id: matchedUser.getId(),
       name: matchedUser.getName(),
       profilePicHash: matchedUser.getProfilePicHash(),
-      unreadCount: 2
-    }));
+      unreadCount: await this.getUnreadCount(user.getId(), matchedUser.getId())
+    })));
     return { user: user, chatlist: chatlist };
+  }
+
+  public getUnreadCount = async (user1: number, user2: number) => {
+    const chat = this.chats.find((chat) => (chat.user1 === user1 && chat.user2 === user2) || (chat.user1 === user2 && chat.user2 === user1));
+    if (!chat) {
+      return 0;
+    }
+    const lastSeen = user1 === chat.user1 ? chat.user1LastSeen : chat.user2LastSeen;
+    if (!lastSeen) {
+      return chat.messages.filter((message) => message.from === user2).length;
+    }
+    return chat.messages.filter((message) => message.from === user2 && message.timestamp > lastSeen).length;
+  }
+
+  public setLastSeen = async (user1: number, user2: number) => {
+    const chat = this.chats.find((chat) => (chat.user1 === user1 && chat.user2 === user2) || (chat.user1 === user2 && chat.user2 === user1));
+    if (chat) {
+      if (user1 === chat.user1) {
+        chat.user1LastSeen = new Date();
+      } else {
+        chat.user2LastSeen = new Date();
+      }
+      this.saveChats();
+    }
   }
 };
 

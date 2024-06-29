@@ -10,12 +10,12 @@ import {
     SystemMessageProps,
     InputToolbarProps, BubbleProps
 } from "react-native-gifted-chat";
-import { matchedUser } from "./chat_view";
+import { matchedUserChat } from "./chat_view";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface ChatProps {
     me: number;
-    chatter: matchedUser;
+    chatter: matchedUserChat;
 }
 
 const Chat: React.FC<ChatProps> = ({ me, chatter }) => {
@@ -101,7 +101,7 @@ const Chat: React.FC<ChatProps> = ({ me, chatter }) => {
         };
 
         return () => {
-            ws.close();
+            ws.close(1000, chatter.id.toString());
         };
 
     }, [chatter]);
