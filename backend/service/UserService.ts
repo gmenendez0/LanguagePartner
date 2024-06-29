@@ -38,6 +38,24 @@ export class UserService {
         return user.asPublicDTO();
     }
 
+    public userIsConfigured = async (userId: number) => {
+        const user = await this.getUserOrError(userId);
+
+        return user.isConfigured();
+    }
+
+    public configureUser = async (userId: number, userConfig: ConfigureLP_UserDTO) => {
+        const user = await this.getUserOrError(userId);
+        if (user.isConfigured()) throw new InvalidResourceStateError('User is already configured.');
+        await userConfig.validate();
+
+        const wantToKnowLanguages = await this.getLanguagesByName(userConfig.wantToKnowLanguages);
+        const knownLanguages = await this.getLanguagesByName(userConfig.knownLanguages);
+
+        user.configure(knownLanguages, wantToKnowLanguages);
+        return this.saveUser(user);
+    }
+
     public updateUserPublicData = async (userId: number, userData: UpdateLP_UserPublicDataDTO) => {
         await userData.validate();
         const user = await this.getUserOrError(userId);
@@ -48,28 +66,9 @@ export class UserService {
         return this.saveUser(user);
     }
 
-    public userIsConfigured = async (userId: number) => {
-        const user = await this.getUserOrError(userId);
-
-        return user.isConfigured();
-    }
-
-    public configureUser = async (userId: number, userConfig: ConfigureLP_UserDTO) => {
-        const user = await this.getUserOrError(userId);
-        if(user.isConfigured()) throw new InvalidResourceStateError('User is already configured.');
-        await userConfig.validate();
-
-        const wantToKnowLanguages = await this.getLanguagesByName(userConfig.wantToKnowLanguages);
-        const knownLanguages = await this.getLanguagesByName(userConfig.knownLanguages);
-
-        user.configure(userConfig.profilePicHash, knownLanguages, wantToKnowLanguages);
-        return this.saveUser(user);
-    }
-
     private updateBasicLPUserData = async (user: LP_User, userData: UpdateLP_UserPublicDataDTO) => {
         if (userData.name) user.setName(userData.name);
         if (userData.city) user.setCity(userData.city);
-        if (userData.profilePicHash) user.setProfilePicHash(userData.profilePicHash);
     }
 
     private updateLPUserLanguages = async (user: LP_User, userData: UpdateLP_UserPublicDataDTO) => {
