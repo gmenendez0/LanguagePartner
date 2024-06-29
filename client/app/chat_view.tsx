@@ -22,8 +22,7 @@ const ChatList = () => {
     const [selectedChat, setSelectedChat] = useState<number | null>(null)
     const [user, setUser] = useState<any | null>(null);
 
-    useEffect(() => {
-        // Fetch the auth token and then fetch the chat data
+    const fetchData = () => {
         AsyncStorage.getItem('session_token')
             .then((authToken) => {
                 if (authToken) {
@@ -41,13 +40,17 @@ const ChatList = () => {
             .then((response) => response.json())
             .then((data) => {
                 console.log(data);
-                console.log("USUARIO REGISTRADO: ", data)
+                console.log("USUARIO REGISTRADO: ", data);
                 setChats(data.matchedUsers);
                 setUser(data);
             })
             .catch((error) => {
                 console.error('Error fetching data:', error);
             });
+    };
+
+    useEffect(() => {
+        fetchData();
     }, []);
 
     const loadChatDetails = (chatId: number) => {
