@@ -1,9 +1,10 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable } from 'typeorm';
 import { Language } from '../Language/Language';
 import bcrypt from "bcrypt";
-import {userApprovedUsersTableOptionsTableOptions, userMatchedUsersTableOptions, userKnownLanguagesTableOptions, userWantToKnowLanguagesTableOptions, userRejectedUsersTableOptionsTableOptions} from "./UserTableOptions";
+import {userApprovedUsersTableOptionsTableOptions, userMatchedUsersTableOptions, userKnownLanguagesTableOptions, userWantToKnowLanguagesTableOptions, userRejectedUsersTableOptionsTableOptions} from "./LP_UserTableOptions";
 import {CreateLP_UserDTO} from "../../../DTOs/UserDTOs/CreateLP_UserDTO";
 import {plainToInstance} from "class-transformer";
+import {ConfigureLP_UserDTO} from "../../../DTOs/UserDTOs/ConfigureLP_UserDTO";
 
 @Entity()
 export class LP_User{
@@ -53,6 +54,7 @@ export class LP_User{
         this.email = email;
         this.password = password;
         this.city = city;
+        this.is_configured = false;
     };
 
     public getId = (): number => this.id;
@@ -65,9 +67,17 @@ export class LP_User{
 
     public getEmail = (): string => this.email;
 
-
     public setCity = (city: string): void => {
         this.city = city;
+    }
+
+    public isConfigured = (): boolean => this.is_configured;
+
+    public configure = (profilePicHash: string, knownLanguages: Language[], wantToKnowLanguages: Language[]): void => {
+        this.profilePicHash = profilePicHash;
+        this.knownLanguages = knownLanguages;
+        this.wantToKnowLanguages = wantToKnowLanguages;
+        this.is_configured = true;
     }
 
     public getApprovedUsers = (): LP_User[] => this.approvedUsers;

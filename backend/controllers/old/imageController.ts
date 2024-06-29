@@ -3,7 +3,7 @@
 import { Request, Response } from 'express';
 import { AppDataSource } from '../../src/data-source';
 import { userRepository } from '../../src/repository/UserRepository';
-import { LP_User } from '../../src/entity/User/LP_User';
+import { LP_User } from '../../src/entity/LP_User/LP_User';
 import { Blob } from 'buffer';
 
 const axios = require('axios');
@@ -72,7 +72,7 @@ export const deleteProfilePicture = async (req: Request, res: Response) => {
     return res.status(401).json({ message: 'Unauthorized' });
   }
 
-  const userRepository = AppDataSource.getRepository(User) as UserRepository;
+  const userRepository = AppDataSource.getRepository(LP_User) as UserRepository;
   const user = await userRepository.findOneBy({ id: userid })
   if (!user.profilePicHash) {
     return res.status(404).json({ message: 'No profile picture found' });

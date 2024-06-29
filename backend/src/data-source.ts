@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import { DataSource } from "typeorm";
-import { LP_User } from './entity/User/LP_User';
+import { LP_User } from './entity/LP_User/LP_User';
 import { Language } from './entity/Language/Language';
 import * as dotenv from 'dotenv';
 

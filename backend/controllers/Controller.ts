@@ -1,3 +1,5 @@
+// noinspection t
+
 import {Request, Response} from "express";
 import {InvalidArgumentsError} from "../errors/InvalidArgumentsError";
 import {PersistanceError} from "../errors/PersistanceError";
@@ -9,6 +11,7 @@ import {HttpStatusCode} from "axios";
 import {ResourceNotFoundError} from "../errors/ResourceNotFoundError";
 import {ClassConstructor, plainToInstance} from "class-transformer";
 import {DTO} from "../DTOs/DTO";
+import {InvalidResourceStateError} from "../errors/InvalidResourceStateError";
 
 const UNHANDLED_ERROR_OBJECT = { error: "Internal server error." };
 
@@ -77,6 +80,10 @@ export abstract class Controller {
         this.setUpAndSendResponse(res, object, HttpStatusCode.InternalServerError);
     }
 
+    protected conflictResponse = <T>(res: Response, object: T): void => {
+        this.setUpAndSendResponse(res, object, HttpStatusCode.Conflict);
+    }
+
     /**
      * Sets the provided object as the response body and sends the response with the given status code.
      * @param res - The Response object to send.
@@ -104,6 +111,7 @@ export abstract class Controller {
         if (err instanceof InvalidRequestFormatError) return this.badRequestResponse(res, { error: err.message });
         if (err instanceof AuthenticationError)       return this.internalServerErrorResponse(res, { error: err.message })
         if (err instanceof ResourceNotFoundError)     return this.notFoundResponse(res, { error: err.message });
+        if (err instanceof InvalidResourceStateError) return this.conflictResponse(res, { error: err.message })
 
         this.internalServerErrorResponse(res, UNHANDLED_ERROR_OBJECT);
     }
