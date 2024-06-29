@@ -25,6 +25,9 @@ export class LP_User{
     @Column({ nullable: true })
     private profilePicHash: string;
 
+    @Column({ nullable: false, default: false})
+    private is_configured: boolean;
+
     @ManyToMany(() => LP_User)
     @JoinTable(userApprovedUsersTableOptionsTableOptions)
     private approvedUsers: LP_User[];
