@@ -25,7 +25,7 @@ export function broadcastMessageChatView(user1: number, user2: number) {
 
 export function broadcastMessageChatViewMatch(user1: LP_User, user2: LP_User) {
   clients.forEach(client => {
-    if (client.user === user1 && client.readyState === WebSocket.OPEN) {
+    if (client.user === user1.getId() && client.readyState === WebSocket.OPEN) {
       const chatview : ChatView = {
         id: user2.getId(),
         name: user2.getName(),
@@ -38,7 +38,7 @@ export function broadcastMessageChatViewMatch(user1: LP_User, user2: LP_User) {
       });
       client.send(message)
     }
-    if (client.user === user2 && client.readyState === WebSocket.OPEN) {
+    if (client.user === user2.getId() && client.readyState === WebSocket.OPEN) {
       const chatview : ChatView = {
         id: user1.getId(),
         name: user1.getName(),

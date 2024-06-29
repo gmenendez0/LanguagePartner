@@ -69,14 +69,6 @@ export default function MatchngScreen() {
       handleMatch(event.data.toString());
     };
 
-    ws.onclose = () => {
-      console.log('WebSocket match connection closed');
-    };
-
-    ws.onerror = (error) => {
-      console.error('WebSocket error:', error);
-    };
-
     return () => {
       ws.close();
     };
