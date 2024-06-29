@@ -1,7 +1,7 @@
 const WebSocket = require('ws');
 import ws from 'ws';
 const server = new WebSocket.Server({ port: 3003 });
-import { LP_User } from '../src/entity/User/LP_User';
+import { LP_User } from '../src/entity/LP_User/LP_User';
 import { ChatView } from '../src/repository/ChatRepository';
 
 export function broadcastMessageChatView(user1: number, user2: number) {
