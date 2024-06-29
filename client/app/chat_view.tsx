@@ -8,11 +8,6 @@ import Chat from './chat';
 export interface matchedUserChat {
     id: number;
     name: string;
-    email: string;
-    age: number;
-    city: string;
-    knownLanguages: string[];
-    wantToKnowLanguages: string[];
     profilePicHash: string;
     unreadCount: number;
 }
@@ -27,7 +22,7 @@ const ChatList = () => {
         AsyncStorage.getItem('session_token')
             .then((authToken) => {
                 if (authToken) {
-                    return fetch('http://localhost:3000/v1/user/me', {
+                    return fetch('http://localhost:3000/v1/chat/', {
                         method: 'GET',
                         headers: {
                             'Content-Type': 'application/json',
@@ -41,13 +36,8 @@ const ChatList = () => {
             .then((response) => response.json())
             .then((data) => {
                 console.log(data);
-                console.log("USUARIO REGISTRADO: ", data);
-                const updatedChats: matchedUserChat[] = data.matchedUsers.map((chat: matchedUserChat) => ({
-                    ...chat,
-                    unreadCount: (chat.unreadCount || 0) + 1,
-                }));
-                setChats(updatedChats);
-                setUser(data);
+                setChats(data.chatlist);
+                setUser(data.user);
             })
             .catch((error) => {
                 console.error('Error fetching data:', error);

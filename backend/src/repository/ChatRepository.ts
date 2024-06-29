@@ -19,6 +19,13 @@ interface ChatData {
   chats: Chat[];
 }
 
+interface ChatView {
+  id: number;
+  name: string;
+  profilePicHash: string;
+  unreadCount: number;
+}
+
 export class ChatRepository {
   private chats: Chat[];
   CHATS_FILE_PATH = 'chats.json';
@@ -56,6 +63,16 @@ export class ChatRepository {
   public getChat = async (user1: number, user2: number) => {
     const chat = this.chats.find((chat) => (chat.user1 === user1 && chat.user2 === user2) || (chat.user1 === user2 && chat.user2 === user1));
     return chat || { user1, user2, messages: [] };
+  }
+
+  public getChatList = async (user: LP_User) => {
+    const chatlist : ChatView[] = user.getMatchedUsers().map((matchedUser) => ({
+      id: matchedUser.getId(),
+      name: matchedUser.getName(),
+      profilePicHash: matchedUser.getProfilePicHash(),
+      unreadCount: 2
+    }));
+    return { user: user, chatlist: chatlist };
   }
 };
 
