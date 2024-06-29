@@ -40,8 +40,19 @@ export class ChatRepository {
     try {
       const data = fs.readFileSync(this.CHATS_FILE_PATH, 'utf-8');
       const userData: ChatData = JSON.parse(data);
+  
+      // Convert timestamp strings to Date objects
+      userData.chats.forEach(chat => {
+        chat.messages.forEach(message => {
+          message.timestamp = new Date(message.timestamp);
+        });
+        if (chat.user1LastSeen) chat.user1LastSeen = new Date(chat.user1LastSeen);
+        if (chat.user2LastSeen) chat.user2LastSeen = new Date(chat.user2LastSeen);
+      });
+  
       return userData.chats;
     } catch (error) {
+      console.error("Failed to load chats:", error);
       return [];
     }
   }
@@ -74,6 +85,28 @@ export class ChatRepository {
       profilePicHash: matchedUser.getProfilePicHash(),
       unreadCount: await this.getUnreadCount(user.getId(), matchedUser.getId())
     })));
+
+    chatlist.sort((a, b) => {
+      const chatA = this.chats.find(chat => (chat.user1 === user.getId() && chat.user2 === a.id) || (chat.user1 === a.id && chat.user2 === user.getId()));
+      const chatB = this.chats.find(chat => (chat.user1 === user.getId() && chat.user2 === b.id) || (chat.user1 === b.id && chat.user2 === user.getId()));
+    
+      if (!chatA && chatB) return 1;
+      if (chatA && !chatB) return -1;
+      if (!chatA && !chatB) return 0;
+    
+      const lastMessageA = chatA.messages[chatA.messages.length - 1];
+      const lastMessageB = chatB.messages[chatB.messages.length - 1];
+    
+      if (!lastMessageA && lastMessageB) return 1;
+      if (lastMessageA && !lastMessageB) return -1;
+      if (!lastMessageA && !lastMessageB) return 0;
+    
+      const timestampA = new Date(lastMessageA.timestamp);
+      const timestampB = new Date(lastMessageB.timestamp);
+    
+      return timestampB.getTime() - timestampA.getTime();
+    });
+
     return { user: user, chatlist: chatlist };
   }
 
