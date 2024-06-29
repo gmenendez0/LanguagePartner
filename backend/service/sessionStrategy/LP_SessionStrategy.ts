@@ -1,6 +1,6 @@
 import {UserService} from "../UserService";
 import {CreateLP_UserDTO} from "../../DTOs/UserDTOs/CreateLP_UserDTO";
-import {LP_User} from "../../src/entity/User/LP_User";
+import {LP_User} from "../../src/entity/LP_User/LP_User";
 import {LogInDTO} from "../../DTOs/SessionDTOs/LogInDTO";
 
 //Se agrega LP_ al nombre de la interfaz para indicar que es una interfaz nativa de LanguagePartner y evitar chocar con otras entidades de otras librerias.

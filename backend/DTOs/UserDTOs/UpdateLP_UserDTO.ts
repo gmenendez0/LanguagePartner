@@ -2,7 +2,7 @@ import {IsArray, IsNotEmpty, IsOptional, IsString} from "class-validator";
 import {DTO} from "../DTO";
 import {InvalidArgumentsError} from "../../errors/InvalidArgumentsError";
 
-export class UpdateLPUserPublicDataDTO extends DTO {
+export class UpdateLP_UserPublicDataDTO extends DTO {
     @IsOptional()
     @IsString()
     @IsNotEmpty()

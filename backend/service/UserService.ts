@@ -1,12 +1,13 @@
 import {UserRepository} from "../src/repository/UserRepository";
 import {userRepository} from "../src/repository/UserRepository";
 import {Language} from "../src/entity/Language/Language";
-import {LP_User} from "../src/entity/User/LP_User";
+import {LP_User} from "../src/entity/LP_User/LP_User";
 import {ResourceNotFoundError} from "../errors/ResourceNotFoundError";
 import {CreateLP_UserDTO} from "../DTOs/UserDTOs/CreateLP_UserDTO";
 import {InvalidArgumentsError} from "../errors/InvalidArgumentsError";
-import {UpdateLPUserPublicDataDTO} from "../DTOs/UserDTOs/UpdateLPUserDTO";
+import {UpdateLP_UserPublicDataDTO} from "../DTOs/UserDTOs/UpdateLP_UserDTO";
 import {languageService} from "./LanguageService";
+import {ConfigureLP_UserDTO} from "../DTOs/UserDTOs/ConfigureLP_UserDTO";
 
 export class UserService {
     private userRepository: UserRepository;
@@ -32,15 +33,13 @@ export class UserService {
     }
 
     public getUserPublicDataById = async (id: number) => {
-        const user = await this.getUserById(id);
-        if(!user) throw new ResourceNotFoundError();
-        //return user.asPublicDTO();
-        return user
+        const user = await this.getUserOrError(id);
+        return user.asPublicDTO();
     }
 
-    public updateUserPublicData = async (userId: number, userData: UpdateLPUserPublicDataDTO) => {
+    public updateUserPublicData = async (userId: number, userData: UpdateLP_UserPublicDataDTO) => {
         await userData.validate();
-        const user = await this.getUserById(userId);
+        const user = await this.getUserOrError(userId);
 
         await this.updateBasicLPUserData(user, userData);
         await this.updateLPUserLanguages(user, userData);
@@ -48,13 +47,30 @@ export class UserService {
         return this.saveUser(user);
     }
 
-    private updateBasicLPUserData = async (user: LP_User, userData: UpdateLPUserPublicDataDTO) => {
+    public userIsConfigured = async (userId: number) => {
+        const user = await this.getUserOrError(userId);
+
+        return user.isConfigured();
+    }
+
+    public configureUser = async (userId: number, userConfig: ConfigureLP_UserDTO) => {
+        const user = await this.getUserOrError(userId);
+        await userConfig.validate();
+
+        const wantToKnowLanguages = await this.getLanguagesByName(userConfig.wantToKnowLanguages);
+        const knownLanguages = await this.getLanguagesByName(userConfig.knownLanguages);
+
+        user.configure(userConfig.profilePicHash, knownLanguages, wantToKnowLanguages);
+        return this.saveUser(user);
+    }
+
+    private updateBasicLPUserData = async (user: LP_User, userData: UpdateLP_UserPublicDataDTO) => {
         if (userData.name) user.setName(userData.name);
         if (userData.city) user.setCity(userData.city);
         if (userData.profilePicHash) user.setProfilePicHash(userData.profilePicHash);
     }
 
-    private updateLPUserLanguages = async (user: LP_User, userData: UpdateLPUserPublicDataDTO) => {
+    private updateLPUserLanguages = async (user: LP_User, userData: UpdateLP_UserPublicDataDTO) => {
         await this.setLanguagesOnLPUserOperation(userData.knownLanguages, user.setKnownLanguages);
         await this.setLanguagesOnLPUserOperation(userData.wantToKnowLanguages, user.setWantToKnowLanguages);
         await this.executeUpdateLanguageCollectionOperationOnLPUser(userData.knownLanguagesToRemove, user.removeKnownLanguage);
@@ -82,6 +98,13 @@ export class UserService {
 
     private saveUser = async (user: LP_User) => {
         return await this.userRepository.saveUser(user);
+    }
+
+    private getUserOrError = async (userId: number) => {
+        const user = await this.getUserById(userId);
+        if (!user) throw new ResourceNotFoundError();
+
+        return user;
     }
 
     private getLanguagesByName = async (languagesNames: string[]) => {

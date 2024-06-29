@@ -20,7 +20,7 @@ export class CreateUserAndLanguageTables1716926274922 implements MigrationInterf
             ],
         }), true);
 
-        // Create the User table
+        // Create the LP_User table
         await queryRunner.createTable(new Table({
             name: 'lp_user',
             columns: [
@@ -58,7 +58,7 @@ export class CreateUserAndLanguageTables1716926274922 implements MigrationInterf
             ],
         }), true);
 
-        // Create the many-to-many relationships between User and User
+        // Create the many-to-many relationships between LP_User and LP_User
         await queryRunner.createTable(new Table({
             name: 'user_approved_users',
             columns: [
@@ -143,7 +143,7 @@ export class CreateUserAndLanguageTables1716926274922 implements MigrationInterf
             ],
         }), true);
 
-        // Create the many-to-many relationships between User and Language
+        // Create the many-to-many relationships between LP_User and Language
         await queryRunner.createTable(new Table({
             name: 'user_known_languages',
             columns: [

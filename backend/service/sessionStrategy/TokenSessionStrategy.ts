@@ -1,5 +1,5 @@
 import {InvalidCredentialsError} from "../../errors/InvalidCredentialsError";
-import {LP_User} from "../../src/entity/User/LP_User";
+import {LP_User} from "../../src/entity/LP_User/LP_User";
 import {LP_SessionStrategy} from "./LP_SessionStrategy";
 import * as jwt from "jsonwebtoken";
 import {UserService} from "../UserService";
@@ -23,8 +23,8 @@ export class TokenSessionStrategy implements LP_SessionStrategy {
         await logInData.validate();
 
         let user: LP_User = await userService.getUserByEmail(logInData.email);
-        if (!user) throw new InvalidCredentialsError('User not found with given credentials.');
-        if (!user.stringMatchesPassword(logInData.password)) throw new InvalidCredentialsError('User not found with given credentials.');
+        if (!user) throw new InvalidCredentialsError('LP_User not found with given credentials.');
+        if (!user.stringMatchesPassword(logInData.password)) throw new InvalidCredentialsError('LP_User not found with given credentials.');
 
         return this.generateJWTForUser(user);
     }

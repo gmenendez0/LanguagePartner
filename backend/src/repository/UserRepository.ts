@@ -1,4 +1,4 @@
-import {LP_User} from "../entity/User/LP_User";
+import {LP_User} from "../entity/LP_User/LP_User";
 import {AppDataSource} from "../data-source";
 import {RepositoryAccessError} from "../../errors/RepositoryAccessError";
 import {PersistanceError} from "../../errors/PersistanceError";

@@ -2,7 +2,7 @@
 
 import { Request, Response } from 'express';
 import { userRepository } from '../../src/repository/UserRepository';
-import { LP_User } from '../../src/entity/User/LP_User';
+import { LP_User } from '../../src/entity/LP_User/LP_User';
 import { LP_UserPublicDataDTO } from '../../DTOs/UserDTOs/LP_UserPublicDataDTO';
 import { broadcastMessage } from '../../sockets/matchingSocket';
 
@@ -70,7 +70,7 @@ export const approveUser = async (req: Request, res: Response) => {
   const userToApprove = await userRepository.findById(Number(req.params.id));
 
   if (!userToApprove) {
-    return res.status(404).json({ message: 'User not found' });
+    return res.status(404).json({ message: 'LP_User not found' });
   }
 
   user.addApprovedUser(userToApprove);
@@ -93,7 +93,7 @@ export const approveUser = async (req: Request, res: Response) => {
     userRepository.save(user);
     userRepository.save(userToApprove);
 
-    return res.status(200).json({ message: 'User Approved' });
+    return res.status(200).json({ message: 'LP_User Approved' });
   }
 }
 
@@ -111,13 +111,13 @@ export const rejectUser = async (req: Request, res: Response) => {
   const userToReject = await userRepository.findById(Number(req.params.id));
 
   if (!userToReject) {
-    return res.status(404).json({ message: 'User not found' });
+    return res.status(404).json({ message: 'LP_User not found' });
   }
 
   user.addRejectedUser(userToReject);
 
   userRepository.save(user);
-  return res.status(200).json({ message: 'User Rejected' });
+  return res.status(200).json({ message: 'LP_User Rejected' });
 }
 /*
 export const getRelationships = async (req: Request, res: Response) => {
@@ -125,7 +125,7 @@ export const getRelationships = async (req: Request, res: Response) => {
     return res.status(401).json({ message: 'Unauthorized' });
   }
 
-  const userRepository = AppDataSource.getRepository(User) as UserRepository;
+  const userRepository = AppDataSource.getRepository(LP_User) as UserRepository;
 
   const user = await userRepository.findOne({
     where: { id: req.session.user },
