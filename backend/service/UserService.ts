@@ -8,6 +8,7 @@ import {InvalidArgumentsError} from "../errors/InvalidArgumentsError";
 import {UpdateLP_UserPublicDataDTO} from "../DTOs/UserDTOs/UpdateLP_UserDTO";
 import {languageService} from "./LanguageService";
 import {ConfigureLP_UserDTO} from "../DTOs/UserDTOs/ConfigureLP_UserDTO";
+import {InvalidResourceStateError} from "../errors/InvalidResourceStateError";
 
 export class UserService {
     private userRepository: UserRepository;
@@ -55,6 +56,7 @@ export class UserService {
 
     public configureUser = async (userId: number, userConfig: ConfigureLP_UserDTO) => {
         const user = await this.getUserOrError(userId);
+        if(user.isConfigured()) throw new InvalidResourceStateError('User is already configured.');
         await userConfig.validate();
 
         const wantToKnowLanguages = await this.getLanguagesByName(userConfig.wantToKnowLanguages);

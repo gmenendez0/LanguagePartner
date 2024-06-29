@@ -46,10 +46,12 @@ export class UserController extends Controller {
         await this.updateUserPublicData(req, res);
     }
 
-    public userIsConfigured = (req: Request, res: Response) => {
+    public userIsConfigured = async (req: Request, res: Response) => {
         try {
             const userId = Number(req.params.id);
-            this.okResponse(res, this.service.userIsConfigured(userId));
+            const isConfigured = await this.service.userIsConfigured(userId);
+
+            this.okResponse(res, isConfigured);
         } catch (error) {
             this.handleError(error, res);
         }
@@ -57,7 +59,7 @@ export class UserController extends Controller {
 
     public meIsConfigured = async (req: Request, res: Response) => {
         req.params.id = this.getAuthenticatedUserIdFromRequest(req).toString();
-        this.userIsConfigured(req, res);
+        await this.userIsConfigured(req, res);
     }
 
     public configureUser = async (req: Request, res: Response) => {

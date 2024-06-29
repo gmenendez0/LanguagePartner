@@ -3,7 +3,6 @@ import {sessionService, SessionService} from "../service/SessionService";
 import {NextFunction, Request, Response} from "express";
 import {passportAuthenticate} from "../config/passportConfig";
 import {CreateLP_UserDTO} from "../DTOs/UserDTOs/CreateLP_UserDTO";
-import {plainToInstance} from "class-transformer";
 import {LogInDTO} from "../DTOs/SessionDTOs/LogInDTO";
 
 class SessionController extends Controller {
@@ -40,7 +39,7 @@ class SessionController extends Controller {
             const userData = this.convertBodyToDTO(req, LogInDTO);
 
             const userToken = await this.service.login(userData);
-            this.okResponse(res, { success: true, token: userToken });
+            this.okResponse(res, { token: userToken });
         } catch (error) {
             this.handleError(error, res)
         }
