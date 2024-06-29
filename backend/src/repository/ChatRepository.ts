@@ -2,6 +2,7 @@ import fs from 'fs';
 import { LP_User } from '../entity/User/LP_User';
 import { configLoader } from 'tsconfig-paths/lib/config-loader';
 import { broadcastMessage } from '../../sockets/chatSocket';
+import { broadcastMessageChatView } from '../../sockets/chatViewSocket';
 
 interface Chat {
   user1: number;
@@ -21,7 +22,7 @@ interface ChatData {
   chats: Chat[];
 }
 
-interface ChatView {
+export interface ChatView {
   id: number;
   name: string;
   profilePicHash: string;
@@ -70,6 +71,7 @@ export class ChatRepository {
       chat.messages.push({ from: user2, message, timestamp: new Date() });
     }
     broadcastMessage({ from: user2, message, timestamp: new Date(), to: user1 });
+    broadcastMessageChatView(user1, user2);
     this.saveChats();
   }
 
