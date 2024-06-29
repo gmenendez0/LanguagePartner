@@ -48,8 +48,12 @@ const ChatList = () => {
         fetchData();
     }, []);
 
-    const loadChatDetails = (chatId: number) => {
-        // Function to load chat details based on chatId
+    const handleSelectChat = (chatId: number) => {
+        const chat = chats?.find((chat) => chat.id === chatId);
+        if (chat) {
+            chat.unreadCount = 0;
+        }
+        setChats([...chats!]);
         setSelectedChat(chatId);
     };
 
@@ -70,7 +74,7 @@ const ChatList = () => {
                             <TouchableOpacity
                                 key={index}
                                 style={index % 2 === 0 ? styles.chatItemEven : styles.chatItemOdd}
-                                onPress={() => loadChatDetails(chat.id)}
+                                onPress={() => handleSelectChat(chat.id)}
                             >
                                 <Text style={styles.chatText}>{chat.name}</Text>
                                 {chat.unreadCount > 0 && (
