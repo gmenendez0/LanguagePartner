@@ -10,12 +10,12 @@ import {
     SystemMessageProps,
     InputToolbarProps, BubbleProps
 } from "react-native-gifted-chat";
-import { matchedUser } from "./chat_view";
+import { matchedUserChat } from "./chat_view";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface ChatProps {
     me: number;
-    chatter: matchedUser;
+    chatter: matchedUserChat;
 }
 
 const Chat: React.FC<ChatProps> = ({ me, chatter }) => {
@@ -40,7 +40,6 @@ const Chat: React.FC<ChatProps> = ({ me, chatter }) => {
                         },
                     });
                     const data = await response.json();
-                    console.log(data);
                     data.messages.reverse()
                     data.messages.forEach((message: any) => {
                         message.createdAt = new Date(message.timestamp);
@@ -69,12 +68,11 @@ const Chat: React.FC<ChatProps> = ({ me, chatter }) => {
         const ws = new WebSocket(`ws://localhost:3001`);
 
         ws.onopen = () => {
-            console.log('WebSocket connection opened');
+            console.log('WebSocket chat connection open');
             ws.send(me.toString());
         };
 
         ws.onmessage = (event) => {
-            console.log('WebSocket message received:', event.data);
             const newMessage = JSON.parse(event.data);
             if (newMessage.from === chatter.id) {
                 newMessage.createdAt = new Date(newMessage.timestamp);
@@ -93,15 +91,11 @@ const Chat: React.FC<ChatProps> = ({ me, chatter }) => {
         };
 
         ws.onclose = () => {
-            console.log('WebSocket connection closed');
-        };
-
-        ws.onerror = (error) => {
-            console.error('WebSocket error:', error);
+            console.log('WebSocket chat connection closed');
         };
 
         return () => {
-            ws.close();
+            ws.close(1000, chatter.id.toString());
         };
 
     }, [chatter]);

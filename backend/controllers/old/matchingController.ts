@@ -5,6 +5,7 @@ import { userRepository } from '../../src/repository/UserRepository';
 import { LP_User } from '../../src/entity/LP_User/LP_User';
 import { LP_UserPublicDataDTO } from '../../DTOs/UserDTOs/LP_UserPublicDataDTO';
 import { broadcastMessage } from '../../sockets/matchingSocket';
+import { broadcastMessageChatViewMatch } from '../../sockets/chatViewSocket';
 
 
 export const getMatchableUser = async (req: Request, res: Response) => {
@@ -82,6 +83,7 @@ export const approveUser = async (req: Request, res: Response) => {
     userToApprove.addMatchedUser(user);
 
     broadcastMessage(user.getId(), userToApprove.getId(), user.getName(), userToApprove.getName());
+    broadcastMessageChatViewMatch(user, userToApprove);
 
     userRepository.save(user);
     userRepository.save(userToApprove);

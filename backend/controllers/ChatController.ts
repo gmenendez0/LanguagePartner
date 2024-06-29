@@ -28,6 +28,15 @@ class ChatController extends Controller {
       this.handleError(error, res);
     }
   }
+
+  public getChatList = async (req: Request, res: Response) => {
+    try {
+      const chats = await this.service.getChatList((req.user as LP_User));
+      this.okResponse(res, chats);
+    } catch (error) {
+      this.handleError(error, res);
+    }
+  }
 }
 
 export default new ChatController();
