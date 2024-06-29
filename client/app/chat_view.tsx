@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Chat from './chat';
 
-export interface matchedUser {
+export interface matchedUserChat {
     id: number;
     name: string;
     email: string;
@@ -14,11 +14,12 @@ export interface matchedUser {
     knownLanguages: string[];
     wantToKnowLanguages: string[];
     profilePicHash: string;
+    unreadCount: number;
 }
 
 const ChatList = () => {
 
-    const [chats, setChats] = useState<matchedUser[] | null>(null);
+    const [chats, setChats] = useState<matchedUserChat[] | null>(null);
     const [selectedChat, setSelectedChat] = useState<number | null>(null)
     const [user, setUser] = useState<any | null>(null);
 
@@ -41,7 +42,11 @@ const ChatList = () => {
             .then((data) => {
                 console.log(data);
                 console.log("USUARIO REGISTRADO: ", data);
-                setChats(data.matchedUsers);
+                const updatedChats: matchedUserChat[] = data.matchedUsers.map((chat: matchedUserChat) => ({
+                    ...chat,
+                    unreadCount: (chat.unreadCount || 0) + 1,
+                }));
+                setChats(updatedChats);
                 setUser(data);
             })
             .catch((error) => {
@@ -71,13 +76,18 @@ const ChatList = () => {
             <View style={styles.chatContainer}>
                 <ScrollView contentContainerStyle={styles.container}>
                     {chats ? (
-                        chats.map((chat, index) => (
+                        chats.map((chat: matchedUserChat, index: number) => (
                             <TouchableOpacity
                                 key={index}
                                 style={index % 2 === 0 ? styles.chatItemEven : styles.chatItemOdd}
                                 onPress={() => loadChatDetails(chat.id)}
                             >
                                 <Text style={styles.chatText}>{chat.name}</Text>
+                                {chat.unreadCount > 0 && (
+                                    <View style={styles.unreadCircle}>
+                                        <Text style={styles.unreadText}>{chat.unreadCount}</Text>
+                                    </View>
+                                )}
                             </TouchableOpacity>
                         ))
                     ) : (
@@ -114,12 +124,18 @@ const styles = StyleSheet.create({
         padding: 10,
     },
     chatItemEven: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
         backgroundColor: '#555',
         padding: 10,
         marginBottom: 10,
         borderRadius: 5,
     },
     chatItemOdd: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
         backgroundColor: '#777',
         padding: 10,
         marginBottom: 10,
@@ -127,6 +143,20 @@ const styles = StyleSheet.create({
     },
     chatText: {
         color: '#fff',
+    },
+    unreadCircle: {
+        minWidth: 24,
+        height: 24,
+        borderRadius: 12,
+        backgroundColor: 'red',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 5,
+    },
+    unreadText: {
+        color: '#ffffff',
+        fontSize: 12,
+        fontWeight: 'bold',
     },
 });
 
