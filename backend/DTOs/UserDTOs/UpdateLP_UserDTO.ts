@@ -14,11 +14,6 @@ export class UpdateLP_UserPublicDataDTO extends DTO {
     public city: string;
 
     @IsOptional()
-    @IsString()
-    @IsNotEmpty()
-    public profilePicHash: string;
-
-    @IsOptional()
     @IsArray()
     @IsString({each: true})
     @IsNotEmpty({each: true})
@@ -61,8 +56,8 @@ export class UpdateLP_UserPublicDataDTO extends DTO {
 
     private noFieldsFilled(): boolean {
         return !this.name && !this.city
-            && !this.profilePicHash && !this.knownLanguagesToAdd
+            && !this.knownLanguagesToAdd && !this.wantToKnowLanguages
             && !this.knownLanguagesToRemove && !this.wantToKnowLanguagesToAdd
-            && !this.wantToKnowLanguagesToRemove && !this.knownLanguages && !this.wantToKnowLanguages;
+            && !this.wantToKnowLanguagesToRemove && !this.knownLanguages;
     }
 }
