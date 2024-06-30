@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 import {userApprovedUsersTableOptionsTableOptions, userMatchedUsersTableOptions, userKnownLanguagesTableOptions, userWantToKnowLanguagesTableOptions, userRejectedUsersTableOptionsTableOptions} from "./LP_UserTableOptions";
 import {CreateLP_UserDTO} from "../../DTOs/UserDTOs/CreateLP_UserDTO";
 import {plainToInstance} from "class-transformer";
-import {DEFAULT_USER_PIC_HASH} from "../../config/constants";
+import {DEFAULT_USER_PIC_HASH, HASH_SALT_ROUNDS} from "../../config/constants";
 
 @Entity()
 export class LP_User{
@@ -174,7 +174,7 @@ export class LP_User{
      * @returns  string as a hash.
      */
     private hashString = (string: string): string => {
-        return bcrypt.hashSync(string, 10); //TODO Reemplazar 10 por una variable de entorno.
+        return bcrypt.hashSync(string, HASH_SALT_ROUNDS);
     };
 
     private getApprovedUsersIds = (): number[] => {

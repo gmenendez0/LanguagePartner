@@ -2,7 +2,7 @@ import passport from 'passport';
 import { Strategy as JwtStrategy, ExtractJwt, StrategyOptions } from 'passport-jwt';
 import {Request, Response, NextFunction} from "express";
 import {userService} from "../service/UserService";
-import {JWT_SECRET} from "./constants";
+import {JWT_SECRET, PASSPORT_AUTH_STRATEGY} from "./constants";
 
 const options: StrategyOptions = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -23,7 +23,7 @@ const tokenStrategy = new JwtStrategy(options, jwtVerify);
 passport.use(tokenStrategy);
 
 export const passportAuthenticate = async (req: Request, res: Response, next: NextFunction) => {
-    await passport.authenticate("jwt", {session: false})(req, res, next);
+    await passport.authenticate(PASSPORT_AUTH_STRATEGY, {session: false})(req, res, next);
 }
 
 export default passport;
