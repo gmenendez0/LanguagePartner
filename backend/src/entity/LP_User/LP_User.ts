@@ -96,7 +96,7 @@ export class LP_User{
     }
 
     public setDefaultProfilePicHash = (): void => {
-        this.setProfilePicHash('default'); //TODO Reemplazar por el hash de una foto por defecto.
+        this.setProfilePicHash('vADlmQs');
     }
 
     public addApprovedUser = (user: LP_User): void => {

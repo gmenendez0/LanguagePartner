@@ -67,7 +67,7 @@ export class UserService {
         const oldPicHash = user.getProfilePicHash();
         user.setProfilePicHash(picHash);
 
-        if(oldPicHash) await this.imgurService.deletePhoto(oldPicHash);
+        if(oldPicHash && oldPicHash != "vADlmQs") await this.imgurService.deletePhoto(oldPicHash);
         return this.saveUser(user);
     }
 
