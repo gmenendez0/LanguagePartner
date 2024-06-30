@@ -27,6 +27,7 @@ export class CreateLP_UserDTO extends DTO implements CreationDTO<LP_User> {
 
         const user = new LP_User(this.name, this.email, this.password, this.city);
         user.hashPassword();
+        user.setDefaultProfilePicHash();
 
         return user;
     }

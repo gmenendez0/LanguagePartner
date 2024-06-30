@@ -73,8 +73,7 @@ export class LP_User{
 
     public isConfigured = (): boolean => this.is_configured;
 
-    public configure = (profilePicHash: string, knownLanguages: Language[], wantToKnowLanguages: Language[]): void => {
-        this.profilePicHash = profilePicHash;
+    public configure = (knownLanguages: Language[], wantToKnowLanguages: Language[]): void => {
         this.knownLanguages = knownLanguages;
         this.wantToKnowLanguages = wantToKnowLanguages;
         this.is_configured = true;
@@ -94,6 +93,10 @@ export class LP_User{
 
     public setProfilePicHash = (profilePicHash: string): void => {
         this.profilePicHash = profilePicHash;
+    }
+
+    public setDefaultProfilePicHash = (): void => {
+        this.setProfilePicHash('default'); //TODO Reemplazar por el hash de una foto por defecto.
     }
 
     public addApprovedUser = (user: LP_User): void => {
