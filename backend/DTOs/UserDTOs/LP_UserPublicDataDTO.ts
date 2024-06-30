@@ -2,6 +2,8 @@ import {DTO} from "../DTO";
 import {Language} from "../../src/entity/Language/Language";
 
 export class LP_UserPublicDataDTO extends DTO {
+    public id: number;
+
     public name: string;
 
     public email: string;

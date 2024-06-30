@@ -71,7 +71,7 @@ const ChatList = () => {
       }
       const newChat = chats?.filter((chat) => chat.id !== from);
       setChats([chat!, ...newChat!]);
-  };
+    };
 
     const handleNewMatch = (chatview: matchedUserChat) => {
         setChats([...chats!, chatview]);

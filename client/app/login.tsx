@@ -26,7 +26,6 @@ interface LoginUserData {
 }
 
 interface PostResponse {
-    success: boolean;
     token: string;
     error: string;
     hasConfiguredProfile: string;
@@ -58,31 +57,33 @@ const LoginForm: React.FC = () => {
                 },
                 body: JSON.stringify(postData),
             })
-                .then(response => response.json())
+                .then(async response => {
+                    if (!response.ok) {
+                        console.log("Login Failed");
+                        setIsLoading(false);
+                        const responseData = await response.json();
+                        setErrorMessage(responseData.error);
+                    }
+                    return response.json();
+                })
                 .then((data: PostResponse) => {
                     console.log(data);
                     // Handle the response data
-                    if (data.success) {
-                        setLoadingMessage('Logged in! Redirecting...');
-                        const token = data.token;
-                        AsyncStorage.setItem('session_token', token)
-                            .then(() => {
-                                console.log('Session token saved');
-                                setEmail('');
-                                setPassword('');
-                                setTimeout(() => {
-                                    router.push('/'); // navigate to home screen
-                                    setIsLoading(false); // Hide loading modal
-                                }, 500); // Wait for 2 seconds before redirecting
-                            })
-                            .catch(error => {
-                                console.error('Error saving session token:', error);
-                            });
-                    } else {
-                        console.log("Login Failed");
-                        setIsLoading(false);
-                        setErrorMessage(data.error);
-                    }
+                    setLoadingMessage('Logged in! Redirecting...');
+                    const token = data.token;
+                    AsyncStorage.setItem('session_token', token)
+                        .then(() => {
+                            console.log('Session token saved');
+                            setEmail('');
+                            setPassword('');
+                            setTimeout(() => {
+                                router.push('/'); // navigate to home screen
+                                setIsLoading(false); // Hide loading modal
+                            }, 500); // Wait for 2 seconds before redirecting
+                        })
+                        .catch(error => {
+                            console.error('Error saving session token:', error);
+                        });
                 })
                 .catch(error => {
                     console.error('Error sending data:', error);

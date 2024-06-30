@@ -59,6 +59,7 @@ export default function MatchngScreen() {
     const ws = new WebSocket(`ws://localhost:3002`);
 
     ws.onopen = () => {
+      console.log(user)
       ws.send(user.id.toString());
       console.log('WebSocket match connection opened');
     };

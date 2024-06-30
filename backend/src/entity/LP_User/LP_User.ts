@@ -195,6 +195,7 @@ export class LP_User{
      */
     private asPublic = () => {
         return {
+            id: this.id,
             name: this.name,
             email: this.email,
             city: this.city,
