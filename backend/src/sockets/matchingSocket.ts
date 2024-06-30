@@ -1,5 +1,4 @@
 const WebSocket = require('ws');
-import ws from 'ws';
 const server = new WebSocket.Server({ port: 3002 });
 
 export function broadcastMessage(user1: number, user2: number, name1: string, name2: string) {
