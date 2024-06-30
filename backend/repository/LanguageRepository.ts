@@ -1,6 +1,6 @@
-import {AppDataSource} from "../data-source";
-import {RepositoryAccessError} from "../../errors/RepositoryAccessError";
-import {PersistanceError} from "../../errors/PersistanceError";
+import {AppDataSource} from "../db/data-source";
+import {RepositoryAccessError} from "../errors/RepositoryAccessError";
+import {PersistanceError} from "../errors/PersistanceError";
 import {Language} from "../entity/Language/Language";
 import {In, Repository} from "typeorm";
 

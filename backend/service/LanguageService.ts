@@ -1,7 +1,7 @@
-import { Language } from '../src/entity/Language/Language';
+import { Language } from '../entity/Language/Language';
 import '../app'
 import {InvalidArgumentsError} from "../errors/InvalidArgumentsError";
-import {LanguageRepository, languageRepository} from "../src/repository/LanguageRepository";
+import {LanguageRepository, languageRepository} from "../repository/LanguageRepository";
 
 export class LanguageService {
     private languageRepository: LanguageRepository;

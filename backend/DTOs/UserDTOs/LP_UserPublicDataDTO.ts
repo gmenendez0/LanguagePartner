@@ -1,5 +1,5 @@
 import {DTO} from "../DTO";
-import {Language} from "../../src/entity/Language/Language";
+import {Language} from "../../entity/Language/Language";
 
 export class LP_UserPublicDataDTO extends DTO {
     public id: number;

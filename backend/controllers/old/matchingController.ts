@@ -1,9 +1,8 @@
 
 
 import { Request, Response } from 'express';
-import { userRepository } from '../../src/repository/UserRepository';
-import { LP_User } from '../../src/entity/LP_User/LP_User';
-import { LP_UserPublicDataDTO } from '../../DTOs/UserDTOs/LP_UserPublicDataDTO';
+import { userRepository } from '../../repository/UserRepository';
+import { LP_User } from '../../entity/LP_User/LP_User';
 import { broadcastMessage } from '../../sockets/matchingSocket';
 import { broadcastMessageChatViewMatch } from '../../sockets/chatViewSocket';
 

@@ -1,7 +1,7 @@
 import {LP_User} from "../entity/LP_User/LP_User";
-import {AppDataSource} from "../data-source";
-import {RepositoryAccessError} from "../../errors/RepositoryAccessError";
-import {PersistanceError} from "../../errors/PersistanceError";
+import {AppDataSource} from "../db/data-source";
+import {RepositoryAccessError} from "../errors/RepositoryAccessError";
+import {PersistanceError} from "../errors/PersistanceError";
 import {Repository} from "typeorm";
 
 export type UserRepository = Repository<LP_User> & { findByEmail(email: string): Promise<LP_User>; saveUser(user: LP_User): Promise<LP_User>; findById(id: number): Promise<LP_User>; };

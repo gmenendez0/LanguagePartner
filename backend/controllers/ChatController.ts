@@ -1,6 +1,6 @@
 import {Controller} from "./Controller";
 import {Request, Response} from "express";
-import { LP_User } from "../src/entity/LP_User/LP_User";
+import { LP_User } from "../entity/LP_User/LP_User";
 import {chatService, ChatService} from "../service/ChatService";
 
 class ChatController extends Controller {

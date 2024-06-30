@@ -2,9 +2,8 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable } from 't
 import { Language } from '../Language/Language';
 import bcrypt from "bcrypt";
 import {userApprovedUsersTableOptionsTableOptions, userMatchedUsersTableOptions, userKnownLanguagesTableOptions, userWantToKnowLanguagesTableOptions, userRejectedUsersTableOptionsTableOptions} from "./LP_UserTableOptions";
-import {CreateLP_UserDTO} from "../../../DTOs/UserDTOs/CreateLP_UserDTO";
+import {CreateLP_UserDTO} from "../../DTOs/UserDTOs/CreateLP_UserDTO";
 import {plainToInstance} from "class-transformer";
-import {ConfigureLP_UserDTO} from "../../../DTOs/UserDTOs/ConfigureLP_UserDTO";
 
 @Entity()
 export class LP_User{

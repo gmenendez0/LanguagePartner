@@ -1,6 +1,6 @@
 import {IsString, IsNotEmpty, IsEmail} from 'class-validator';
 import {DTO} from "../DTO";
-import {LP_User} from "../../src/entity/LP_User/LP_User";
+import {LP_User} from "../../entity/LP_User/LP_User";
 import {CreationDTO} from "../CreationDTO";
 
 

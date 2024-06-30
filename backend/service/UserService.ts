@@ -1,7 +1,7 @@
-import {UserRepository} from "../src/repository/UserRepository";
-import {userRepository} from "../src/repository/UserRepository";
-import {Language} from "../src/entity/Language/Language";
-import {LP_User} from "../src/entity/LP_User/LP_User";
+import {UserRepository} from "../repository/UserRepository";
+import {userRepository} from "../repository/UserRepository";
+import {Language} from "../entity/Language/Language";
+import {LP_User} from "../entity/LP_User/LP_User";
 import {ResourceNotFoundError} from "../errors/ResourceNotFoundError";
 import {CreateLP_UserDTO} from "../DTOs/UserDTOs/CreateLP_UserDTO";
 import {InvalidArgumentsError} from "../errors/InvalidArgumentsError";
@@ -11,7 +11,6 @@ import {ConfigureLP_UserDTO} from "../DTOs/UserDTOs/ConfigureLP_UserDTO";
 import {InvalidResourceStateError} from "../errors/InvalidResourceStateError";
 import {ImgurService} from "./ImgurService";
 import {HttpInterface} from "../externalAPI/HttpInterface";
-import {Multer} from "multer";
 
 export class UserService {
     private userRepository: UserRepository;

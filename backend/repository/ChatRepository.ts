@@ -1,8 +1,7 @@
 import fs from 'fs';
 import { LP_User } from '../entity/LP_User/LP_User';
-import { configLoader } from 'tsconfig-paths/lib/config-loader';
-import { broadcastMessage } from '../../sockets/chatSocket';
-import { broadcastMessageChatView } from '../../sockets/chatViewSocket';
+import { broadcastMessage } from '../sockets/chatSocket';
+import { broadcastMessageChatView } from '../sockets/chatViewSocket';
 
 interface Chat {
   user1: number;
@@ -135,7 +134,7 @@ export class ChatRepository {
       this.saveChats();
     }
   }
-};
+}
 
 
 export const chatRepository = new ChatRepository();

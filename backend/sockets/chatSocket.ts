@@ -1,7 +1,6 @@
 const WebSocket = require('ws');
-import ws from 'ws';
 const server = new WebSocket.Server({ port: 3001 });
-import { chatRepository } from '../src/repository/ChatRepository';
+import { chatRepository } from '../repository/ChatRepository';
 
 interface MessageBroadcast {
   from: number;

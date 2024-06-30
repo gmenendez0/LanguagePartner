@@ -1,7 +1,7 @@
 import {Controller} from "./Controller";
 import {userService, UserService} from "../service/UserService";
 import {Request, Response} from "express";
-import {LP_User} from "../src/entity/LP_User/LP_User";
+import {LP_User} from "../entity/LP_User/LP_User";
 import {UpdateLP_UserPublicDataDTO} from "../DTOs/UserDTOs/UpdateLP_UserDTO";
 import {ConfigureLP_UserDTO} from "../DTOs/UserDTOs/ConfigureLP_UserDTO";
 import {InvalidArgumentsError} from "../errors/InvalidArgumentsError";

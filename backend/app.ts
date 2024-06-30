@@ -1,10 +1,10 @@
 import express from 'express';
 import myRouter from './routes/routes';
 import "reflect-metadata";
-import { AppDataSource } from "./src/data-source"
+import { AppDataSource } from "./db/data-source"
 import passport from './config/passportConfig';
 import swaggerUi from 'swagger-ui-express';
-import * as swaggerDocument from './swagger_output.json';
+import * as swaggerDocument from './config/swagger/swagger_output.json';
 import cors from 'cors';
 import langs from 'langs';
 import {languageService} from "./service/LanguageService";

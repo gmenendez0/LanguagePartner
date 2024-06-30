@@ -1,6 +1,6 @@
 const swaggerAutogen = require('swagger-autogen')()
 
-const outputFile = '../../swagger_output.json'
+const outputFile = './swagger_output.json'
 const endpointsFiles = [
     './routes/routes.ts',
     './routes/languageRoutes.ts',

@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import { DataSource } from "typeorm";
-import { LP_User } from './entity/LP_User/LP_User';
-import { Language } from './entity/Language/Language';
+import { LP_User } from '../entity/LP_User/LP_User';
+import { Language } from '../entity/Language/Language';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -16,6 +16,6 @@ export const AppDataSource = new DataSource({
     synchronize: false,
     logging: false,
     entities: [LP_User, Language],
-    migrations: ['./src/migration/*.ts'],
+    migrations: ['./db/migration/*.ts'],
     subscribers: [],
 });
