@@ -10,7 +10,14 @@ const whitelist: string[] = [
 ];
 
 const corsOptions = {
-    origin: function (origin, callback) {
+    /**
+     * @function origin
+     * @description Checks if the request origin is allowed by CORS.
+     *
+     * @param {string | undefined} origin - The origin of the request.
+     * @param {Function} callback - The callback function to signal whether the origin is allowed.
+     */
+    origin: function (origin: string | undefined, callback: Function) {
         if (whitelist.indexOf(origin) !== -1 || origin === undefined) {
             callback(null, true)
         } else {

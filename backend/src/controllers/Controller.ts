@@ -77,6 +77,16 @@ export abstract class Controller {
         this.setUpAndSendResponse(res, object, HttpStatusCode.InternalServerError);
     }
 
+    /**
+     * @function conflictResponse
+     * @description Sends a conflict response with a 409 status code.
+     *
+     * @template T
+     * @param {Response} res - The response object used to send the result.
+     * @param {T} object - The object to be sent in the response body.
+     *
+     * @returns {void}
+     */
     protected conflictResponse = <T>(res: Response, object: T): void => {
         this.setUpAndSendResponse(res, object, HttpStatusCode.Conflict);
     }

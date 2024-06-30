@@ -23,8 +23,14 @@ export class LanguageService {
         await this.languageRepository.saveLanguage(newLanguage);
     }
 
-    //Adds all received languages to the database. Should only be used once, when the database is created.
-    public addLanguagesToDatabase = async (languagesNames: string[]) => {
+    /**
+     * @function addLanguagesToDatabase
+     * @description Adds all received languages to the database. Should only be used once, when the database is created.
+     *
+     * @param {string[]} languagesNames - An array of language names to add to the database.
+     *
+     * @returns {Promise<void>}
+     */    public addLanguagesToDatabase = async (languagesNames: string[]): Promise<void> => {
         this.validateLanguageNames(languagesNames);
 
         const persistedLanguages = await this.getAllLanguages();
@@ -47,6 +53,14 @@ export class LanguageService {
         return await this.languageRepository.getLanguagesByName(names);
     }
 
+    /**
+     * @function validateLanguageNames
+     * @description Validates an array of language names. Throws an error if no names are provided.
+     *
+     * @param {string[]} languageNames - An array of language names to validate.
+     *
+     * @throws {InvalidArgumentsError} If no languages are provided.
+     */
     private validateLanguageNames = (languageNames: string[]) => {
         if (!languageNames || languageNames.length === 0) throw new InvalidArgumentsError('No languages provided.');
     }

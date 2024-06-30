@@ -56,6 +56,14 @@ export const languageRepository = AppDataSource.getRepository(Language).extend({
             throw new RepositoryAccessError();
         }
     },
+    /**
+     * @function getAllLanguagesNames
+     * @description Retrieves all language names from the repository.
+     *
+     * @returns {Language[]} An array of Language objects containing only the name of each language.
+     *
+     * @throws {RepositoryAccessError} Throws an error if there is an issue accessing the repository.
+     */
     getAllLanguagesNames(): Language[] {
         try {
             return this.find({

@@ -47,8 +47,15 @@ export class TokenSessionStrategy implements LP_SessionStrategy {
         return null;
     }
 
-    //Post: Returns a unique JWT token for the user.
-    private generateJWTForUser = (user: LP_User) => {
+    /**
+     * @function generateJWTForUser
+     * @description Generates a JWT token for the provided user.
+     *
+     * @param {LP_User} user - The user object for which to generate the JWT token.
+     * @returns {string} A unique JWT token for the user.
+     * @private
+     */
+    private generateJWTForUser = (user: LP_User): string => {
         return jwt.sign({userId: user.getId()}, JWT_SECRET, {expiresIn: JWT_EXPIRATION_TIME});
     }
 }
