@@ -37,10 +37,6 @@ export abstract class Controller {
         this.setUpAndSendResponse(res, object, HttpStatusCode.Created);
     }
 
-    protected noContentResponse = (res: Response): void => {
-        this.setUpAndSendResponse(res, {}, HttpStatusCode.NoContent);
-    }
-
     /**
      * Sets the provided object as the response body and sends the response with status code .
      * @param res - The Response object to send.
