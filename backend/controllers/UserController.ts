@@ -4,6 +4,7 @@ import {Request, Response} from "express";
 import {LP_User} from "../src/entity/LP_User/LP_User";
 import {UpdateLP_UserPublicDataDTO} from "../DTOs/UserDTOs/UpdateLP_UserDTO";
 import {ConfigureLP_UserDTO} from "../DTOs/UserDTOs/ConfigureLP_UserDTO";
+import {InvalidArgumentsError} from "../errors/InvalidArgumentsError";
 
 export class UserController extends Controller {
     private service: UserService;
@@ -78,6 +79,27 @@ export class UserController extends Controller {
         req.params.id = this.getAuthenticatedUserIdFromRequest(req).toString();
         await this.configureUser(req, res);
     }
+
+    public updateUserProfilePic = async (req: Request, res: Response) => {
+        try {
+            const userId = Number(req.params.id);
+            const profilePic = req.file;
+
+            if(!profilePic) throw new InvalidArgumentsError('No photo provided');
+            if(!userId) throw new InvalidArgumentsError('No user id provided');
+
+            const user = await this.service.updateUserProfilePic(userId, profilePic);
+            this.okResponse(res, user.asPublicDTO());
+        } catch (error) {
+            this.handleError(error, res);
+        }
+    }
+
+    /*
+    * TODO:
+    *  1. Agregar un endpoint que reciba el id de un user X y le actualice su foto.
+    *
+     */
 
     private getAuthenticatedUserIdFromRequest = (req: Request) => {
         return (req.user as LP_User).getId();

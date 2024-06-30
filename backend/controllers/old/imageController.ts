@@ -64,20 +64,3 @@ const deleteImage = async (user: LP_User): Promise<Response> => {
   user.setProfilePicHash(null)
   return response;
 }
-/*
-export const deleteProfilePicture = async (req: Request, res: Response) => {
-  const userid = req.user;
-
-  if (!userid) {
-    return res.status(401).json({ message: 'Unauthorized' });
-  }
-
-  const userRepository = AppDataSource.getRepository(LP_User) as UserRepository;
-  const user = await userRepository.findOneBy({ id: userid })
-  if (!user.profilePicHash) {
-    return res.status(404).json({ message: 'No profile picture found' });
-  }
-  await deleteImage(user);
-  userRepository.save(user);
-  return res.status(200).json(user);
-}*/

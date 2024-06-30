@@ -9,12 +9,17 @@ import {UpdateLP_UserPublicDataDTO} from "../DTOs/UserDTOs/UpdateLP_UserDTO";
 import {languageService} from "./LanguageService";
 import {ConfigureLP_UserDTO} from "../DTOs/UserDTOs/ConfigureLP_UserDTO";
 import {InvalidResourceStateError} from "../errors/InvalidResourceStateError";
+import {ImgurService} from "./ImgurService";
+import {HttpInterface} from "../externalAPI/HttpInterface";
+import {Multer} from "multer";
 
 export class UserService {
     private userRepository: UserRepository;
+    private imgurService: ImgurService;
 
     constructor() {
         this.userRepository = userRepository;
+        this.imgurService = new ImgurService(new HttpInterface());
     }
 
     public createUser = async (userData: CreateLP_UserDTO) => {
@@ -53,6 +58,17 @@ export class UserService {
         const knownLanguages = await this.getLanguagesByName(userConfig.knownLanguages);
 
         user.configure(knownLanguages, wantToKnowLanguages);
+        return this.saveUser(user);
+    }
+
+    public updateUserProfilePic = async (userId: number, pic: Express.Multer.File) => {
+        const user = await this.getUserOrError(userId);
+        const picHash = await this.imgurService.uploadPhoto(pic);
+
+        const oldPicHash = user.getProfilePicHash();
+        user.setProfilePicHash(picHash);
+
+        if(oldPicHash) await this.imgurService.deletePhoto(oldPicHash);
         return this.saveUser(user);
     }
 

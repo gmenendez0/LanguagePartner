@@ -12,6 +12,7 @@ import {ResourceNotFoundError} from "../errors/ResourceNotFoundError";
 import {ClassConstructor, plainToInstance} from "class-transformer";
 import {DTO} from "../DTOs/DTO";
 import {InvalidResourceStateError} from "../errors/InvalidResourceStateError";
+import {ExternalInterfaceError} from "../errors/ExternalInterfaceError";
 
 const UNHANDLED_ERROR_OBJECT = { error: "Internal server error." };
 
@@ -111,7 +112,8 @@ export abstract class Controller {
         if (err instanceof InvalidRequestFormatError) return this.badRequestResponse(res, { error: err.message });
         if (err instanceof AuthenticationError)       return this.internalServerErrorResponse(res, { error: err.message })
         if (err instanceof ResourceNotFoundError)     return this.notFoundResponse(res, { error: err.message });
-        if (err instanceof InvalidResourceStateError) return this.conflictResponse(res, { error: err.message })
+        if (err instanceof InvalidResourceStateError) return this.conflictResponse(res, { error: err.message });
+        if (err instanceof ExternalInterfaceError)    return this.internalServerErrorResponse(res, { error: "Internal server error." });
 
         this.internalServerErrorResponse(res, UNHANDLED_ERROR_OBJECT);
     }
