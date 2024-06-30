@@ -1,5 +1,5 @@
 import { Language } from '../entity/Language/Language';
-import '../../app'
+import '../app'
 import {InvalidArgumentsError} from "../errors/InvalidArgumentsError";
 import {LanguageRepository, languageRepository} from "../repository/LanguageRepository";
 

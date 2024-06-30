@@ -1,4 +1,4 @@
-import '../../app'
+import '../app'
 import {InvalidArgumentsError} from "../errors/InvalidArgumentsError";
 import { LP_User } from '../entity/LP_User/LP_User';
 import { chatRepository, ChatRepository } from "../repository/ChatRepository";

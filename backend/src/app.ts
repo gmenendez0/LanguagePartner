@@ -1,13 +1,13 @@
 import express from 'express';
-import myRouter from './src/routes/routes';
+import myRouter from './routes/routes';
 import "reflect-metadata";
-import { AppDataSource } from "./src/db/data-source"
-import passport from './src/config/passportConfig';
+import { AppDataSource } from "./db/data-source"
+import passport from './config/passportConfig';
 import swaggerUi from 'swagger-ui-express';
-import * as swaggerDocument from './src/config/swagger/swagger_output.json';
+import * as swaggerDocument from './config/swagger/swagger_output.json';
 import cors from 'cors';
 import langs from 'langs';
-import {languageService} from "./src/service/LanguageService";
+import {languageService} from "./service/LanguageService";
 
 
 /*
