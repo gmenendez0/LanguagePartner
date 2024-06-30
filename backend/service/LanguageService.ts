@@ -1,14 +1,13 @@
 import { Language } from '../src/entity/Language/Language';
 import '../app'
 import {InvalidArgumentsError} from "../errors/InvalidArgumentsError";
-import {LanguageRepository, languageRepository} from "../src/repository/LanguageRepository";
+import {LanguageRepository} from "../src/repository/LanguageRepository";
+import {inject, injectable} from "inversify";
+import {TYPES} from "../config/InversifyJSTypes";
 
+@injectable()
 export class LanguageService {
-    private languageRepository: LanguageRepository;
-
-    constructor() {
-        this.languageRepository = languageRepository;
-    }
+    @inject(TYPES.LanguageRepository) private languageRepository: LanguageRepository;
 
     /**
      * Creates a new language with the provided name and saves it in the repository.

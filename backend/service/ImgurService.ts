@@ -1,16 +1,18 @@
 import {InvalidArgumentsError} from "../errors/InvalidArgumentsError";
 import {HttpInterface} from "../externalAPI/HttpInterface";
 import {ExternalInterfaceError} from "../errors/ExternalInterfaceError";
+import {inject, injectable} from "inversify";
+import {TYPES} from "../config/InversifyJSTypes";
 
 const TOKEN = 'faf88da0b48658a09e9fce28e6659a3b7c2310ff';
 const IMGUR_URL = 'https://api.imgur.com/3/image';
 
+@injectable()
 export class ImgurService {
+    @inject(TYPES.HttpInterface) private httpInterface: HttpInterface;
     private readonly imgurUrl: string;
-    private httpInterface: HttpInterface;
 
-    constructor(httpInterface: HttpInterface) {
-        this.httpInterface = httpInterface;
+    constructor() {
         this.imgurUrl = IMGUR_URL;
     }
 

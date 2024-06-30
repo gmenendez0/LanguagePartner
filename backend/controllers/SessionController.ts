@@ -1,17 +1,15 @@
 import {Controller} from "./Controller";
-import {sessionService, SessionService} from "../service/SessionService";
+import {SessionService} from "../service/SessionService";
 import {NextFunction, Request, Response} from "express";
 import {passportAuthenticate} from "../config/passportConfig";
 import {CreateLP_UserDTO} from "../DTOs/UserDTOs/CreateLP_UserDTO";
 import {LogInDTO} from "../DTOs/SessionDTOs/LogInDTO";
+import {inject, injectable} from "inversify";
+import {TYPES} from "../config/InversifyJSTypes";
 
+@injectable()
 class SessionController extends Controller {
-    private service: SessionService;
-
-    constructor() {
-        super();
-        this.service = sessionService;
-    }
+    @inject(TYPES.SessionService) private service: SessionService;
 
     /**
      * Delegates the request to the service to register a new user.

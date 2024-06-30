@@ -1,14 +1,12 @@
 import {Controller} from "./Controller";
 import {Request, Response} from "express";
-import {languageService, LanguageService} from "../service/LanguageService";
+import {LanguageService} from "../service/LanguageService";
+import {inject, injectable} from "inversify";
+import {TYPES} from "../config/InversifyJSTypes";
 
+@injectable()
 class LanguageController extends Controller {
-    private service: LanguageService;
-
-    constructor() {
-        super();
-        this.service = languageService;
-    }
+    @inject(TYPES.LanguageService) private service: LanguageService;
 
     /**
      * Creates a new Language with the given name.

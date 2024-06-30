@@ -1,17 +1,14 @@
 import {LP_SessionStrategy} from "./sessionStrategy/LP_SessionStrategy";
-import {userService, UserService} from "./UserService";
-import {TokenSessionStrategy} from "./sessionStrategy/TokenSessionStrategy";
+import {UserService} from "./UserService";
 import {CreateLP_UserDTO} from "../DTOs/UserDTOs/CreateLP_UserDTO";
 import {LogInDTO} from "../DTOs/SessionDTOs/LogInDTO";
+import {inject, injectable} from "inversify";
+import {TYPES} from "../config/InversifyJSTypes";
 
+@injectable()
 export class SessionService {
-    private readonly service: UserService;
-    private strategy: LP_SessionStrategy;
-
-    constructor(strategy: LP_SessionStrategy) {
-        this.service = userService;
-        this.strategy = strategy;
-    }
+    @inject(TYPES.UserService) private readonly service: UserService;
+    @inject(TYPES.TokenSessionStrategy) private strategy: LP_SessionStrategy;
 
     /**
      * Delegates user registration to the authentication strategy.
@@ -32,5 +29,3 @@ export class SessionService {
         return this.strategy.logIn(userData, this.service);
     }
 }
-
-export const sessionService = new SessionService(new TokenSessionStrategy());

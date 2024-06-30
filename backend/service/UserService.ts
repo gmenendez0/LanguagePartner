@@ -10,17 +10,13 @@ import {languageService} from "./LanguageService";
 import {ConfigureLP_UserDTO} from "../DTOs/UserDTOs/ConfigureLP_UserDTO";
 import {InvalidResourceStateError} from "../errors/InvalidResourceStateError";
 import {ImgurService} from "./ImgurService";
-import {HttpInterface} from "../externalAPI/HttpInterface";
-import {Multer} from "multer";
+import {inject, injectable} from "inversify";
+import {TYPES} from "../config/InversifyJSTypes";
 
+@injectable()
 export class UserService {
-    private userRepository: UserRepository;
-    private imgurService: ImgurService;
-
-    constructor() {
-        this.userRepository = userRepository;
-        this.imgurService = new ImgurService(new HttpInterface());
-    }
+    @inject(TYPES.UserRepository) private userRepository: UserRepository;
+    @inject(TYPES.ImgurService) private imgurService: ImgurService;
 
     public createUser = async (userData: CreateLP_UserDTO) => {
         const newUser = await userData.toBusinessObject();
@@ -67,6 +63,7 @@ export class UserService {
         const oldPicHash = user.getProfilePicHash();
         user.setProfilePicHash(picHash);
 
+        //TODO Pasar a variable de config
         if(oldPicHash && oldPicHash != "vADlmQs") await this.imgurService.deletePhoto(oldPicHash);
         return this.saveUser(user);
     }

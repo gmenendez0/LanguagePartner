@@ -1,18 +1,16 @@
 import {Controller} from "./Controller";
-import {userService, UserService} from "../service/UserService";
+import {UserService} from "../service/UserService";
 import {Request, Response} from "express";
 import {LP_User} from "../src/entity/LP_User/LP_User";
 import {UpdateLP_UserPublicDataDTO} from "../DTOs/UserDTOs/UpdateLP_UserDTO";
 import {ConfigureLP_UserDTO} from "../DTOs/UserDTOs/ConfigureLP_UserDTO";
 import {InvalidArgumentsError} from "../errors/InvalidArgumentsError";
+import {inject, injectable} from "inversify";
+import {TYPES} from "../config/InversifyJSTypes";
 
+@injectable()
 export class UserController extends Controller {
-    private service: UserService;
-
-    constructor() {
-        super();
-        this.service = userService;
-    }
+    @inject(TYPES.UserService) private service: UserService;
 
     //Post: Returns 200 Ok and the user object (only public data) if the user was retrieved successfully by service layer or error.
     public getUserPublicData = async (req: Request, res: Response) => {
