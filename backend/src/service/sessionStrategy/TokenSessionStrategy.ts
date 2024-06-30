@@ -6,7 +6,7 @@ import {UserService} from "../UserService";
 import {CreateLP_UserDTO} from "../../DTOs/UserDTOs/CreateLP_UserDTO";
 import {LogInDTO} from "../../DTOs/SessionDTOs/LogInDTO";
 
-const JWT_EXPIRATION_TIME = "1h";
+const JWT_EXPIRATION_TIME = "1h"; //TODO ENVVAR
 
 export class TokenSessionStrategy implements LP_SessionStrategy {
     /**
@@ -50,6 +50,6 @@ export class TokenSessionStrategy implements LP_SessionStrategy {
 
     //Post: Returns a unique JWT token for the user.
     private generateJWTForUser = (user: LP_User) => {
-        return jwt.sign({userId: user.getId()}, "your_jwt_secret_key", {expiresIn: JWT_EXPIRATION_TIME}); //TODO Reemplazar secretKey por una variable de entorno, expiresIn debe ser CONST.
+        return jwt.sign({userId: user.getId()}, "your_jwt_secret_key", {expiresIn: JWT_EXPIRATION_TIME}); //TODO ENVVAR
     }
 }

@@ -5,7 +5,7 @@ import {userService} from "../service/UserService";
 
 const options: StrategyOptions = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-    secretOrKey: 'your_jwt_secret_key', //TODO Debe reemplezarse
+    secretOrKey: 'your_jwt_secret_key', //TODO ENVVAR
 };
 const jwtVerify = async (payload: any, done: any) => {
     try {

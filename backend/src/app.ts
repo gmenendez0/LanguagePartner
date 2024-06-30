@@ -8,14 +8,16 @@ import * as swaggerDocument from './config/swagger/swagger_output.json';
 import langs from 'langs';
 import {languageService} from "./service/LanguageService";
 import corsConfigured from "./config/corsConfig";
+
 const PORT = process.env.PORT || 3000;
+const SWAGGER_ENDPOINT = process.env.SWAGGER_ENDPOINT || '/api-docs';
 
 const app = express();
 app.use(express.json());
 app.use(corsConfigured);
 app.use(passport.initialize());
 app.use('/', myRouter);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use(SWAGGER_ENDPOINT, swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 const addLanguagesToDatabase = async () => {
     const languages = langs.all().map((lang: { name: string; }) => lang.name);

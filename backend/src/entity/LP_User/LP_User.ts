@@ -95,7 +95,7 @@ export class LP_User{
     }
 
     public setDefaultProfilePicHash = (): void => {
-        this.setProfilePicHash('JkzGSGZ');
+        this.setProfilePicHash('JkzGSGZ'); //TODO ENVVAR
     }
 
     public addApprovedUser = (user: LP_User): void => {
