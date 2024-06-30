@@ -4,7 +4,7 @@
    "description": "",
    "main": "index.js",
    "scripts": {
-      "start": "bin/create_database.sh && node config/swagger/swagger.js && ts-node app.ts",
+      "start": "bin/create_database.sh && node src/config/swagger/swagger.js && ts-node src/app.ts",
       "test": "echo \"Error: no test specified\" && exit 1",
       "typeorm": "typeorm-ts-node-commonjs"
    },

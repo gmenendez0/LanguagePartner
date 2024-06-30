@@ -1,4 +1,3 @@
-import {InvalidArgumentsError} from "../errors/InvalidArgumentsError";
 import {HttpInterface} from "../externalAPI/HttpInterface";
 import {ExternalInterfaceError} from "../errors/ExternalInterfaceError";
 
