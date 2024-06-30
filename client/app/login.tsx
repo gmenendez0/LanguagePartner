@@ -77,8 +77,26 @@ const LoginForm: React.FC = () => {
                             setEmail('');
                             setPassword('');
                             setTimeout(() => {
-                                router.push('/'); // navigate to home screen
-                                setIsLoading(false); // Hide loading modal
+                                // TODO ask the server if i have configured my profile before
+                                fetch('http://localhost:3000/v1/user/me/config', {
+                                    method: 'GET',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'Authorization': `Bearer ${token}`,
+                                    },
+                                })
+                                    .then(response => response.json())
+                                    .then(async (data) => {
+                                        console.log("@@@");
+                                        console.log(data);
+                                        console.log("@@@");
+                                        await AsyncStorage.setItem('hasConfiguredProfile', data);
+                                        router.push('/'); // navigate to home screen
+                                        setIsLoading(false); // Hide loading modal
+                                    })
+                                    .catch(error => console.error('Error:', error));
+
+
                             }, 500); // Wait for 2 seconds before redirecting
                         })
                         .catch(error => {

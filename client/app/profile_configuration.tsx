@@ -62,7 +62,7 @@ const ProfileConfig: React.FC = () => {
                 };
 
                 const token = await AsyncStorage.getItem('session_token');
-                fetch('http://localhost:3000/v1/user/me', {
+                fetch('http://localhost:3000/v1/user/me/config', {
                     method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json',
@@ -75,18 +75,19 @@ const ProfileConfig: React.FC = () => {
                 })
                     .then((data: PostResponse) => {
                         if (!data.error) {
-                            console.log('Update successful');
-                            // TODO: Update the user's details in the app
+                            console.log('Profile configured successfully');
                             console.log(data);
                             AsyncStorage.setItem('hasConfiguredProfile', 'true');
                             AsyncStorage.setItem('name', data.name);
                             router.push("/");
                         } else {
                             console.log("Update Failed");
+                            setIsSubmitting(false);
                             setErrorMessage(data.error);
                         }
                     })
                     .catch(error => {
+                        setIsSubmitting(false);
                         console.error('Error sending data:', error);
                     })
                     .finally(() => {

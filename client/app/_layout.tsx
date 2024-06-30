@@ -67,7 +67,8 @@ function TabNavigator() {
     useFocusEffect(
         React.useCallback(() => {
             const checkHasConfiguredProfile = async () => {
-                const token = await AsyncStorage.getItem('hasConfiguredProfile');
+                let token = await AsyncStorage.getItem('hasConfiguredProfile');
+                token = token ==  "false" ? "" : token;
                 setHasConfiguredProfile(!!token);
             };
             const checkLoginStatus = async () => {
