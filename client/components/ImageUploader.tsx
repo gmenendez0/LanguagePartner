@@ -15,18 +15,25 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ profilePicHash }) => {
     const [image, setImage] = useState<string | null>(null);
 
     useEffect(() => {
-        setImageHash(profilePicHash);
-    }, [profilePicHash]);
-
-    useEffect(() => {
         const setImageHashAsync = async () => {
-            const profilePic = profilePicHash ? profilePicHash : "tmHPMYL";
-            setImageHash(profilePic);
-            await AsyncStorage.setItem('profile_pic', profilePic);
+            if (profilePicHash) {
+        setImageHash(profilePicHash);
+        await AsyncStorage.setItem('profile_pic', profilePicHash);
+        }
         };
 
         setImageHashAsync();
-    }, []);
+    }, [profilePicHash]);
+
+    // useEffect(() => {
+    //     const setImageHashAsync = async () => {
+    //         const profilePic = profilePicHash ? profilePicHash : "tmHPMYL";
+    //         setImageHash(profilePic);
+    //         await AsyncStorage.setItem('profile_pic', profilePic);
+    //     };
+    //
+    //     setImageHashAsync();
+    // }, []);
 
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -84,7 +91,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ profilePicHash }) => {
 
     return (
         <View style={styles.container}>
-            <Image source={{ uri: image ? image : (imageHash ? `https://i.imgur.com/${imageHash}.jpg` : 'https://i.imgur.com/tmHPMYL.jpg') }} style={styles.image} />
+            <Image source={{ uri: image ? image : (imageHash ? `https://i.imgur.com/${imageHash}.jpg` : "") }} style={styles.image} />
             <TouchableOpacity style={styles.button} onPress={pickImage}>
                 <Text style={styles.buttonText}>Update Profile Picture</Text>
             </TouchableOpacity>

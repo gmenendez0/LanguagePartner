@@ -16,6 +16,7 @@ interface PostResponse {
     success: boolean;
     message: string;
     error: string;
+    profilePicHash: string;
 }
 
 const ProfileConfig: React.FC = () => {
@@ -44,6 +45,7 @@ const ProfileConfig: React.FC = () => {
                 .then(data => {
                     setKnownLanguages(data.knownLanguages.map((lang: any) => lang.name));
                     setWantToKnowLanguages(data.wantToKnowLanguages.map((lang: any) => lang.name));
+                    setProfilePicHash(data.profilePicHash);
                 })
                 .catch(error => console.error('Error:', error));
         };
