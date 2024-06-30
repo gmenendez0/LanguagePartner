@@ -11,6 +11,7 @@ import {ConfigureLP_UserDTO} from "../DTOs/UserDTOs/ConfigureLP_UserDTO";
 import {InvalidResourceStateError} from "../errors/InvalidResourceStateError";
 import {ImgurService} from "./ImgurService";
 import {HttpInterface} from "../externalAPI/HttpInterface";
+import {DEFAULT_USER_PIC_HASH} from "../config/constants";
 
 export class UserService {
     private userRepository: UserRepository;
@@ -66,7 +67,7 @@ export class UserService {
         const oldPicHash = user.getProfilePicHash();
         user.setProfilePicHash(picHash);
 
-        if(oldPicHash && oldPicHash != "JkzGSGZ") await this.imgurService.deletePhoto(oldPicHash);  //TODO ENVVAR
+        if(oldPicHash && oldPicHash != DEFAULT_USER_PIC_HASH) await this.imgurService.deletePhoto(oldPicHash);
         return this.saveUser(user);
     }
 

@@ -2,10 +2,11 @@ import passport from 'passport';
 import { Strategy as JwtStrategy, ExtractJwt, StrategyOptions } from 'passport-jwt';
 import {Request, Response, NextFunction} from "express";
 import {userService} from "../service/UserService";
+import {JWT_SECRET} from "./constants";
 
 const options: StrategyOptions = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-    secretOrKey: 'your_jwt_secret_key', //TODO ENVVAR
+    secretOrKey: JWT_SECRET,
 };
 const jwtVerify = async (payload: any, done: any) => {
     try {

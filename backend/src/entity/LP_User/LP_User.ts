@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import {userApprovedUsersTableOptionsTableOptions, userMatchedUsersTableOptions, userKnownLanguagesTableOptions, userWantToKnowLanguagesTableOptions, userRejectedUsersTableOptionsTableOptions} from "./LP_UserTableOptions";
 import {CreateLP_UserDTO} from "../../DTOs/UserDTOs/CreateLP_UserDTO";
 import {plainToInstance} from "class-transformer";
+import {DEFAULT_USER_PIC_HASH} from "../../config/constants";
 
 @Entity()
 export class LP_User{
@@ -95,7 +96,7 @@ export class LP_User{
     }
 
     public setDefaultProfilePicHash = (): void => {
-        this.setProfilePicHash('JkzGSGZ'); //TODO ENVVAR
+        this.setProfilePicHash(DEFAULT_USER_PIC_HASH);
     }
 
     public addApprovedUser = (user: LP_User): void => {
