@@ -74,7 +74,9 @@ const ChatList = () => {
     };
 
     const handleNewMatch = (chatview: matchedUserChat) => {
-        setChats([...chats!, chatview]);
+
+      //setChats([...chats!, chatview]);
+      fetchData();
     }
 
     useEffect(() => {
