@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, Image, StyleSheet, Animated, PanResponder } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
+
 import Swiper from 'react-native-deck-swiper';
 
 export interface Profile {
@@ -21,7 +23,7 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({ profile, me }) => {
   const pan = useRef(new Animated.ValueXY()).current;
   const backgroundColor = pan.x.interpolate({
     inputRange: [-80, 0, 80],
-    outputRange: ['rgb(255, 59, 48)', 'rgb(255, 255, 255)', 'rgb(52, 199, 89)'],
+    outputRange: ['rgb(255, 59, 48)', 'rgb(51, 51, 51)', 'rgb(52, 199, 89)'],
     extrapolate: 'clamp',
   });
 
@@ -46,6 +48,7 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({ profile, me }) => {
       {...panResponder.panHandlers}
     >
       <Image source={{ uri: `https://i.imgur.com/${profile.image}.jpg` }} style={styles.image} resizeMode="contain" />
+      <View style={{ borderBottomColor: '#555', borderBottomWidth: 1, marginVertical: 10, alignSelf: 'center', width: '70%' }} />
       <Text selectable={false} style={styles.name}>{profile.name} from {profile.city}</Text>
       <Text style={styles.interests} selectable={false}>
         Speaks{' '}
@@ -80,7 +83,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 20,
     backgroundColor: '#fff',
-    shadowColor: '#000',
+    shadowColor: '#111',
     shadowOpacity: 0.2,
     shadowRadius: 10,
     shadowOffset: { width: 0, height: 0 },
@@ -99,15 +102,16 @@ const styles = StyleSheet.create({
     fontSize: 40,
     fontWeight: 'bold',
     marginTop: 10,
+    color: '#fff',
   },
   description: {
     fontSize: 16,
-    color: '#666',
+    color: '#bbb',
     marginTop: 5,
   },
   interests: {
     fontSize: 20,
-    color: '#888',
+    color: '#bbb',
     marginTop: 5,
   },
   incommon: {

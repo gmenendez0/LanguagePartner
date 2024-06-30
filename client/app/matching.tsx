@@ -177,10 +177,9 @@ export default function MatchngScreen() {
     );
   }
 
-  //<Button title="Trigger Match" onPress={() => handleMatch('CARLETTO')} />
 
   return (
-    <View>
+    <View style={styles.outerContainer}>
       <View style={styles.container}>
         
         <MatchAnimation visible={isMatched} onAnimationEnd={handleAnimationEnd} message={message}/>
@@ -190,7 +189,7 @@ export default function MatchngScreen() {
           renderCard={(profile: Profile) => <ProfileCard profile={profile} me={user} />}
           onSwipedLeft={(index) => handleSwipedLeft(index)}
           onSwipedRight={(index) => handleSwipedRight(index)}
-          backgroundColor={'#f0f0f0'}
+          backgroundColor={'#1a1a1a'}
           stackSize={2}
           cardIndex={0}
           verticalSwipe={false}
@@ -206,10 +205,16 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: '#333',
+  },
+  outerContainer: {
+    flex: 1,
+    backgroundColor: '#1a1a1a',
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
+    color: '#fff',
   },
   separator: {
     marginVertical: 30,

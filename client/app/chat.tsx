@@ -178,7 +178,7 @@ const Chat: React.FC<ChatProps> = ({ me, chatter }) => {
             <InputToolbar
                 {...props}
                 containerStyle={{
-                    backgroundColor: '#333',
+                    backgroundColor: '#222',
                     borderTopColor: '#777',
                     borderTopWidth: 3,
                 }}
@@ -204,7 +204,7 @@ const Chat: React.FC<ChatProps> = ({ me, chatter }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#333'
+        backgroundColor: '#222'
     }
 });
 
