@@ -117,6 +117,8 @@ export default function MatchngScreen() {
         })
         .then((response) => response.json())
         .then((data) => {
+            AsyncStorage.setItem('profile_pic', data.profilePicHash);
+            AsyncStorage.setItem('name', data.name);
             const newProfile: Profile = {
               id: data.id,
               name: data.name,
