@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
 import MatchAnimation from '@/components/MatchingAnimation';
+import LoadingIcon from "@/components/LoadingIcon";
 
 export default function MatchngScreen() {
 
@@ -64,7 +65,7 @@ export default function MatchngScreen() {
       console.log('WebSocket match connection opened');
     };
 
-    ws.onmessage = (event) => {   
+    ws.onmessage = (event) => {
       console.log('WebSocket message received:', event.data);
       handleMatch(event.data.toString());
     };
@@ -85,13 +86,13 @@ export default function MatchngScreen() {
       const newProfiles = await Promise.all([getNewProfile(token), getNewProfile(token)]);
       setProfiles(newProfiles.filter(profile => profile !== null) as Profile[]);
     };
-  
+
     const fetchToken = async () => {
       const token = await AsyncStorage.getItem('session_token');
       setToken(token);
       return token; // Return the token for use in the next step
     };
-  
+
     fetchToken().then(token => {
       if (token) {
         fetchProfiles(token);
@@ -159,7 +160,7 @@ export default function MatchngScreen() {
       },
     });
   };
-  
+
   const handleAcceptApi = async (id: number) => {
     await axios.post(`http://localhost:3000/v1/matching/approve/${id}`, {}, {
       headers: {
@@ -172,7 +173,7 @@ export default function MatchngScreen() {
   if (profiles.length === 0 || !token || !user) {
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>No profiles found</Text>
+        <LoadingIcon />
       </View>
     );
   }
@@ -181,7 +182,7 @@ export default function MatchngScreen() {
   return (
     <View style={styles.outerContainer}>
       <View style={styles.container}>
-        
+
         <MatchAnimation visible={isMatched} onAnimationEnd={handleAnimationEnd} message={message}/>
         {profiles.length > 0 && (
           <Swiper
@@ -210,11 +211,6 @@ const styles = StyleSheet.create({
   outerContainer: {
     flex: 1,
     backgroundColor: '#1a1a1a',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#fff',
   },
   separator: {
     marginVertical: 30,
