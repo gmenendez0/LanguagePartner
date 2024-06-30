@@ -45,7 +45,6 @@ export class UserService {
 
     public userIsConfigured = async (userId: number) => {
         const user = await this.getUserOrError(userId);
-
         return user.isConfigured();
     }
 
