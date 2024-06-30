@@ -10,5 +10,6 @@ userRouter.get('/me/config', sessionController.authenticate, userController.meIs
 
 userRouter.patch('/me', sessionController.authenticate, userController.updateMe);
 userRouter.patch('/me/config', sessionController.authenticate, userController.configureMe);
+userRouter.patch('/me/profile-pic', sessionController.authenticate, userController.updateMeProfilePic);
 
 export default userRouter;

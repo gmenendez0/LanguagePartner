@@ -47,7 +47,7 @@ export class UserController extends Controller {
         await this.updateUserPublicData(req, res);
     }
 
-    public userIsConfigured = async (req: Request, res: Response) => {
+    private userIsConfigured = async (req: Request, res: Response) => {
         try {
             const userId = Number(req.params.id);
             const isConfigured = await this.service.userIsConfigured(userId);
@@ -63,7 +63,7 @@ export class UserController extends Controller {
         await this.userIsConfigured(req, res);
     }
 
-    public configureUser = async (req: Request, res: Response) => {
+    private configureUser = async (req: Request, res: Response) => {
         try {
             const userId = Number(req.params.id);
             const userConfig = this.convertBodyToDTO(req, ConfigureLP_UserDTO);
@@ -80,7 +80,7 @@ export class UserController extends Controller {
         await this.configureUser(req, res);
     }
 
-    public updateUserProfilePic = async (req: Request, res: Response) => {
+    private updateUserProfilePic = async (req: Request, res: Response) => {
         try {
             const userId = Number(req.params.id);
             const profilePic = req.file;
@@ -95,11 +95,10 @@ export class UserController extends Controller {
         }
     }
 
-    /*
-    * TODO:
-    *  1. Agregar un endpoint que reciba el id de un user X y le actualice su foto.
-    *
-     */
+    public updateMeProfilePic = async (req: Request, res: Response) => {
+        req.params.id = this.getAuthenticatedUserIdFromRequest(req).toString();
+        await this.updateUserProfilePic(req, res);
+    }
 
     private getAuthenticatedUserIdFromRequest = (req: Request) => {
         return (req.user as LP_User).getId();
