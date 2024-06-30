@@ -157,7 +157,8 @@ const ChatList = () => {
                 {selectedChat ? (
                     <Chat me={user.id} chatter={chats?.find((chat) => chat.id === selectedChat) || chats[0]} />
                 ) : (
-                    <View>
+                    <View style={styles.messageContainer}>
+                        <Text style={styles.title}>You have no new matches</Text>
                     </View>
                 )}
             </View>
@@ -166,13 +167,20 @@ const ChatList = () => {
 };
 
 const styles = StyleSheet.create({
+    messageContainer: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#333',
+    },
     outerContainer: {
         flex: 1,
         flexDirection: 'row',
+        backgroundColor: '#222'
     },
     chatContainer: {
         flex: 0.2,
-        backgroundColor: '#333',
+        backgroundColor: '#1a1a1a',
     },
     blankContainer: {
         flex: 0.8,
@@ -188,6 +196,11 @@ const styles = StyleSheet.create({
         padding: 10,
         marginBottom: 10,
         borderRadius: 5,
+    },
+    title: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: '#fff',
     },
     chatItemOdd: {
         flexDirection: 'row',
