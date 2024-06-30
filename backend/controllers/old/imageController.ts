@@ -45,7 +45,7 @@ export const uploadProfilePicture = async (req: Request, res: Response) => {
   if (response.status !== 200) {
     return res.status(response.status).json(response.data);
   } else {
-    if (user.getProfilePicHash()) {
+    if (user.getProfilePicHash() && user.getProfilePicHash() !== 'JkzGSGZ') {
       deleteImage(user);
     }
     user.setProfilePicHash(response.data.data.id);

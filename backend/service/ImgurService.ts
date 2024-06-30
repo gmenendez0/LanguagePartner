@@ -15,14 +15,12 @@ export class ImgurService {
     }
 
     public uploadPhoto = async (photo: Express.Multer.File) => {
+        console.log(photo.mimetype);
         switch (photo.mimetype) {
             case 'blob':
                 return await this.uploadBlob(photo);
-            case 'base64':
-                return await this.uploadBase64(photo);
-
             default:
-                throw new InvalidArgumentsError('Invalid mimetype.');
+                return await this.uploadBase64(photo);
         }
     }
 
@@ -48,7 +46,7 @@ export class ImgurService {
         if (!this.httpInterface.responseWasSuccessful()) throw new ExternalInterfaceError('Error uploading photo.');
 
         const responseData = this.httpInterface.getResponseData();
-        return responseData.data.data.id;
+        return responseData.data.id;
     }
 
     private sendUploadRequest = async <T, J>(data: T, headers: J) => {

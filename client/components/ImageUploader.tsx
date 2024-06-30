@@ -74,7 +74,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ profilePicHash }) => {
             const blob = await res.blob();
             formData.append('photo', blob);
 
-            const response = await axios.post('http://localhost:3000/v1/image', formData, {
+            const response = await axios.patch('http://localhost:3000/v1/user/me/profile-pic', formData, {
                 headers: {
                     'Authorization': `Bearer ${authToken}`,
                 },
