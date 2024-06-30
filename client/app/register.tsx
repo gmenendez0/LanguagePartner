@@ -90,27 +90,28 @@ const RegistrationForm: React.FC = () => {
                             },
                             body: JSON.stringify({ email, password }),
                         })
-                            .then(response => response.json())
-                            .then((data: LoginResponse) => {
-                                if (data.success) {
-                                    setLoadingMessage('Logged in! Redirecting...');
-                                    const token = data.token;
-                                    AsyncStorage.setItem('session_token', token)
-                                        .then(() => {
-                                            console.log('Session token saved');
-                                            setTimeout(() => {
-                                                router.push('/'); // navigate to home screen
-                                                setIsLoading(false); // Hide loading modal
-                                            }, 500); // Wait for 2 seconds before redirecting
-                                        })
-                                        .catch(error => {
-                                            console.error('Error saving session token:', error);
-                                        });
-                                } else {
+                            .then(response => {
+                                if (!response.ok) {
                                     console.log("Login Failed");
                                     setIsLoading(false);
                                     setErrorMessage(data.error);
                                 }
+                                return response.json();
+                            })
+                            .then((data: LoginResponse) => {
+                                setLoadingMessage('Logged in! Redirecting...');
+                                const token = data.token;
+                                AsyncStorage.setItem('session_token', token)
+                                    .then(() => {
+                                        console.log('Session token saved');
+                                        setTimeout(() => {
+                                            router.push('/'); // navigate to home screen
+                                            setIsLoading(false); // Hide loading modal
+                                        }, 500); // Wait for 2 seconds before redirecting
+                                    })
+                                    .catch(error => {
+                                        console.error('Error saving session token:', error);
+                                    });
                             })
                             .catch(error => {
                                 console.error('Error sending data:', error);
