@@ -95,6 +95,7 @@ const UpdateProfile: React.FC = () => {
             })
                 .then(response => response.json())
                 .then(async (data) => {
+                    console.log("NUEVA DATA:", data);
                     setUsername(data.name);
                     setCity(data.city);
                     setProfilePicHash(data.profilePicHash);
