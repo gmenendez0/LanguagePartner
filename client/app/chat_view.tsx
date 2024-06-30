@@ -158,7 +158,6 @@ const ChatList = () => {
                     <Chat me={user.id} chatter={chats?.find((chat) => chat.id === selectedChat) || chats[0]} />
                 ) : (
                     <View>
-                        <Text>Select a chat to view details</Text>
                     </View>
                 )}
             </View>
