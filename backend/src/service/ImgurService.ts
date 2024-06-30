@@ -1,7 +1,7 @@
 import {HttpInterface} from "../externalAPI/HttpInterface";
 import {ExternalInterfaceError} from "../errors/ExternalInterfaceError";
 
-const TOKEN = 'faf88da0b48658a09e9fce28e6659a3b7c2310ff';
+const TOKEN = 'faf88da0b48658a09e9fce28e6659a3b7c2310ff'; //TODO ENVVAR
 const IMGUR_URL = 'https://api.imgur.com/3/image';
 
 export class ImgurService {
