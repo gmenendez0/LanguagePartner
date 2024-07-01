@@ -180,9 +180,10 @@ export default function MatchngScreen() {
 
 
   return (
-    <View style={styles.outerContainer}>
+    <View>
+      <Button title="MATCH" onPress={() => handleMatch('Bruno')} />
       <View style={styles.container}>
-
+        
         <MatchAnimation visible={isMatched} onAnimationEnd={handleAnimationEnd} message={message}/>
         {profiles.length > 0 && (
           <Swiper
@@ -190,7 +191,7 @@ export default function MatchngScreen() {
           renderCard={(profile: Profile) => <ProfileCard profile={profile} me={user} />}
           onSwipedLeft={(index) => handleSwipedLeft(index)}
           onSwipedRight={(index) => handleSwipedRight(index)}
-          backgroundColor={'#1a1a1a'}
+          backgroundColor={'#f0f0f0'}
           stackSize={2}
           cardIndex={0}
           verticalSwipe={false}
@@ -200,6 +201,7 @@ export default function MatchngScreen() {
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {

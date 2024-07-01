@@ -20,3 +20,4 @@ backend/node-v14.17.0-linux-x64.tar.xz
 
 # Ignore swagger_output directory
 backend/swagger_output.json
+backend/src/config/swagger/swagger_output.json
