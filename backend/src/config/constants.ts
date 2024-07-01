@@ -1,3 +1,6 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 const PORT = process.env.PORT || 3000;
 const SWAGGER_ENDPOINT = process.env.SWAGGER_ENDPOINT || '/api-docs';
 const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_key';
