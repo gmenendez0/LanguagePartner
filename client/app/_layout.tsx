@@ -6,8 +6,6 @@ import {Stack, useRouter} from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import React, {useEffect, useState} from 'react';
 import 'react-native-reanimated';
-
-import { useColorScheme } from '@/components/useColorScheme';
 import Header from '@/components/Header';
 import HomeScreen from "@/app/index";
 import Matching from "@/app/matching";
@@ -27,11 +25,6 @@ export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
 } from 'expo-router';
-
-export const unstable_settings = {
-  // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: '(tabs)',
-};
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -60,7 +53,7 @@ export default function RootLayout() {
   return <RootLayoutNav />;
 }
 
-function TabNavigator() {
+function TabNavigator(): React.ReactElement {
     const router = useRouter();
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
     const [hasConfiguredProfile, setHasConfiguredProfile] = useState<boolean>(false);
