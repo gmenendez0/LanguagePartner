@@ -181,7 +181,6 @@ export default function MatchngScreen() {
 
   return (
     <View>
-      <Button title="MATCH" onPress={() => handleMatch('Bruno')} />
       <View style={styles.container}>
         
         <MatchAnimation visible={isMatched} onAnimationEnd={handleAnimationEnd} message={message}/>
