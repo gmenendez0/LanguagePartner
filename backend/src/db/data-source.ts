@@ -16,6 +16,6 @@ export const AppDataSource = new DataSource({
     synchronize: false,
     logging: false,
     entities: [LP_User, Language],
-    migrations: ['./db/migration/*.ts'],
+    migrations: ['./src/db/migration/*.ts'],
     subscribers: [],
 });
