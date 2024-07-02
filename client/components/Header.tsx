@@ -38,11 +38,14 @@ const Header = () => {
 
     const handleLogout = async () => {
         setUser(null);
-        await AsyncStorage.removeItem('session_token');
-        await AsyncStorage.removeItem('hasConfiguredProfile');
-        await AsyncStorage.removeItem('profile_pic');
-        await AsyncStorage.removeItem('name');
+        //await AsyncStorage.removeItem('session_token');
+        //await AsyncStorage.removeItem('hasConfiguredProfile');
+        //await AsyncStorage.removeItem('profile_pic');
+        //await AsyncStorage.removeItem('name');
         setIsLoggedIn(false);
+        setProfilePic(null);
+        setName(null);
+        await AsyncStorage.clear();
         router.push('/'); // navigate to home screen
     };
 
@@ -56,16 +59,24 @@ const Header = () => {
                 return;
             } else {
 
-                let profile_pic = await AsyncStorage.getItem('profile_pic');
-                let username = await AsyncStorage.getItem('name');
-                if (username) {
-                    setUser({name: username , profilePicHash: profile_pic ? profile_pic : ""});
-                }
+                //let profile_pic = await AsyncStorage.getItem('profile_pic');
+                //let username = await AsyncStorage.getItem('name');
+                fetch('http://localhost:3000/v1/user/me', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    },
+                })
+                .then((response) => response.json())
+                .then((data) => {
+                    setUser({name: data.name, profilePicHash: data.profilePicHash});
+                })
             }
         };
 
         fetchUserData();
-    }, [isLoggedIn, name, profilePic]);
+    }, []);
 
     return (
         <View style={styles.header}>

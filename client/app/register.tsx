@@ -90,34 +90,36 @@ const RegistrationForm: React.FC = () => {
                             },
                             body: JSON.stringify({ email, password }),
                         })
-                            .then(response => {
-                                if (!response.ok) {
-                                    console.log("Login Failed");
-                                    setIsLoading(false);
-                                    setErrorMessage(data.error);
-                                }
-                                return response.json();
-                            })
-                            .then((data: LoginResponse) => {
-                                setLoadingMessage('Logged in! Redirecting...');
-                                const token = data.token;
-                                AsyncStorage.setItem('session_token', token)
-                                    .then(() => {
-                                        console.log('Session token saved');
-                                        setTimeout(() => {
-                                            router.push('/'); // navigate to home screen
-                                            setIsLoading(false); // Hide loading modal
-                                        }, 500); // Wait for 2 seconds before redirecting
-                                    })
-                                    .catch(error => {
-                                        console.error('Error saving session token:', error);
-                                    });
-                            })
-                            .catch(error => {
-                                console.error('Error sending data:', error);
+                        .then(response => {
+                            if (!response.ok) {
+                                console.log("Login Failed");
                                 setIsLoading(false);
-                                setErrorMessage("An error occurred while trying to log in.");
-                            });
+                                // Correctly handle and display the login error message
+                                return response.json().then(data => Promise.reject(data.error)); // Extract and reject with the actual error message from login attempt
+                            }
+                            return response.json();
+                        })
+                        .then((data: LoginResponse) => {
+                            setLoadingMessage('Logged in! Redirecting...');
+                            const token = data.token;
+                            AsyncStorage.setItem('session_token', token)
+                                .then(() => {
+                                    console.log('Session token saved');
+                                    setTimeout(() => {
+                                        router.push('/'); // navigate to home screen
+                                        setIsLoading(false); // Hide loading modal
+                                    }, 500); // Corrected comment: Wait for 500ms before redirecting
+                                })
+                                .catch(error => {
+                                    console.error('Error saving session token:', error);
+                                });
+                        })
+                        .catch(error => {
+                            console.error('Error during login:', error);
+                            setIsLoading(false);
+                            // Set the error message from the login attempt
+                            setErrorMessage("An error occurred while trying to log in: " + error);
+                        });
                     } else {
                         console.log("Registration Failed");
                         setIsLoading(false);
