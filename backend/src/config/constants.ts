@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-dotenv.config();
+dotenv.config({ path: "../../.env"});
 
 const PORT = process.env.PORT || 3000;
 const SWAGGER_ENDPOINT = process.env.SWAGGER_ENDPOINT || '/api-docs';
