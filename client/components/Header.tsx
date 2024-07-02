@@ -13,7 +13,7 @@ const Header = () => {
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
     const [name, setName] = useState<string | null>(null);
     const [profilePic, setProfilePic] = useState<string | null>(null);
-    const [user, setUser] = useState<UserForHeader | null>(null);
+    //const [user, setUser] = useState<UserForHeader | null>(null);
     const router = useRouter();
 
     useFocusEffect(() => {
@@ -22,12 +22,16 @@ const Header = () => {
             setIsLoggedIn(!!token);
         };
         const checkProfileInfoStatus = async () => {
+            //console.log("getting prof pic");
             const newProfilePic = await AsyncStorage.getItem('profile_pic');
+            //console.log("got prof pic" + newProfilePic);
+            //console.log("with old pic" + profilePic);
             const newName = await AsyncStorage.getItem('name');
             if (newName && name != newName)  {
                 setName(newName);
             }
             if (newProfilePic && profilePic != newProfilePic)  {
+                //console.log("updating my pic" + newProfilePic);
                 setProfilePic(newProfilePic);
             }
         };
@@ -37,7 +41,7 @@ const Header = () => {
     });
 
     const handleLogout = async () => {
-        setUser(null);
+        //setUser(null);
         //await AsyncStorage.removeItem('session_token');
         //await AsyncStorage.removeItem('hasConfiguredProfile');
         //await AsyncStorage.removeItem('profile_pic');
@@ -68,7 +72,9 @@ const Header = () => {
                 })
                 .then((response) => response.json())
                 .then((data) => {
-                    setUser({name: data.name, profilePicHash: data.profilePicHash});
+                    //setUser({name: data.name, profilePicHash: data.profilePicHash});
+                    setName(data.name);
+                    setProfilePic(data.profilePicHash);
                 })
             };
         }
@@ -82,14 +88,14 @@ const Header = () => {
                 <Text style={styles.title}>LanguagePartner</Text>
             </Link>
             <View style={styles.buttonsContainer}>
-                {user && 
+                {profilePic &&
                     <View>
-                        <Image source={{ uri: `https://i.imgur.com/${user.profilePicHash}.jpg` }} style={styles.image} />
+                        <Image source={{ uri: `https://i.imgur.com/${profilePic}.jpg` }} style={styles.image} />
                     </View>
                 }
-                {user &&
+                {name &&
                     <View>
-                        <Text style={styles.salute}>Hi, {user.name.split(' ')[0]}</Text>
+                        <Text style={styles.salute}>Hi, {name.split(' ')[0]}</Text>
                     </View>
                 }
                 {isLoggedIn && <Link href="/update_profile" asChild>
