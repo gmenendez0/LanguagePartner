@@ -88,7 +88,7 @@ const Header = () => {
                 <Text style={styles.title}>LanguagePartner</Text>
             </Link>
             <View style={styles.buttonsContainer}>
-                {profilePic &&
+                {profilePic && name &&
                     <View>
                         <Image source={{ uri: `https://i.imgur.com/${profilePic}.jpg` }} style={styles.image} />
                     </View>

@@ -78,7 +78,7 @@ function TabNavigator(): React.ReactElement {
         token = token ==  "false" ? "" : token;
         setHasConfiguredProfile(!!token);
     };
-    
+
     useEffect(() => {
         checkHasConfiguredProfile();
     }, []);
