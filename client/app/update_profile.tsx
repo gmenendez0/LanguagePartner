@@ -4,6 +4,7 @@ import TagPicker from "@/components/tag_picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ImageUploader from "@/components/ImageUploader";
 import {useRouter} from "expo-router";
+import {useFocusEffect} from "@react-navigation/native";
 
 interface Errors {
     username?: string;
@@ -83,7 +84,7 @@ const UpdateProfile: React.FC = () => {
         }
     };
 
-    useEffect(() => {
+    useFocusEffect(React.useCallback(() => {
         const fetchUserData = async () => {
             const token = await AsyncStorage.getItem('session_token');
             fetch('http://localhost:3000/v1/user/me', {
@@ -99,8 +100,8 @@ const UpdateProfile: React.FC = () => {
                     setUsername(data.name);
                     setCity(data.city);
                     setProfilePicHash(data.profilePicHash);
-                    await AsyncStorage.setItem('profile_pic' ,data.profilePicHash);
-                    await AsyncStorage.setItem('name' ,data.name);
+                    await AsyncStorage.setItem('profile_pic', data.profilePicHash);
+                    await AsyncStorage.setItem('name', data.name);
 
                     //knowlanguages has an id and a name, so we need to map it to only the name
                     setKnownLanguages(data.knownLanguages.map((lang: any) => lang.name));
@@ -110,7 +111,9 @@ const UpdateProfile: React.FC = () => {
         };
 
         fetchUserData();
-    }, []);
+
+    },[router])
+    );
 
     useEffect(() => {
         const updateUserData = async () => {
