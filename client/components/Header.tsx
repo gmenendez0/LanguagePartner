@@ -16,6 +16,26 @@ const Header = () => {
     const [user, setUser] = useState<UserForHeader | null>(null);
     const router = useRouter();
 
+    useFocusEffect(() => {
+        const checkLoginStatus = async () => {
+            const token = await AsyncStorage.getItem('session_token');
+            setIsLoggedIn(!!token);
+        };
+        const checkProfileInfoStatus = async () => {
+            const newProfilePic = await AsyncStorage.getItem('profile_pic');
+            const newName = await AsyncStorage.getItem('name');
+            if (newName && name != newName)  {
+                setName(newName);
+            }
+            if (newProfilePic && profilePic != newProfilePic)  {
+                setProfilePic(newProfilePic);
+            }
+        };
+
+        checkLoginStatus();
+        checkProfileInfoStatus();
+    });
+
     const handleLogout = async () => {
         setUser(null);
         //await AsyncStorage.removeItem('session_token');
@@ -31,15 +51,7 @@ const Header = () => {
 
     useEffect(() => {
         const fetchUserData = async () => {
-            console.log('Fetching user data');
-
-            const checkLoginStatus = async () => {
-                const token = await AsyncStorage.getItem('session_token');
-                setIsLoggedIn(!!token);
-            };
-
-            checkLoginStatus();
-
+            
             let token = await AsyncStorage.getItem('session_token');
 
             // If the session token is not available, return early
