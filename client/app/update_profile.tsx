@@ -37,7 +37,6 @@ const UpdateProfile: React.FC = () => {
     const [profilePicHash, setProfilePicHash] = useState<string | null>(null);
 
 
-
     const validateField = (field: string, value: string): string | undefined => {
         switch (field) {
             case 'username':
@@ -85,34 +84,34 @@ const UpdateProfile: React.FC = () => {
     };
 
     useFocusEffect(React.useCallback(() => {
-        const fetchUserData = async () => {
-            const token = await AsyncStorage.getItem('session_token');
-            fetch('http://localhost:3000/v1/user/me', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                },
-            })
-                .then(response => response.json())
-                .then(async (data) => {
-                    console.log("NUEVA DATA:", data);
-                    setUsername(data.name);
-                    setCity(data.city);
-                    setProfilePicHash(data.profilePicHash);
-                    await AsyncStorage.setItem('profile_pic', data.profilePicHash);
-                    await AsyncStorage.setItem('name', data.name);
-
-                    //knowlanguages has an id and a name, so we need to map it to only the name
-                    setKnownLanguages(data.knownLanguages.map((lang: any) => lang.name));
-                    setWantToKnowLanguages(data.wantToKnowLanguages.map((lang: any) => lang.name));
+            const fetchUserData = async () => {
+                const token = await AsyncStorage.getItem('session_token');
+                fetch('http://localhost:3000/v1/user/me', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    },
                 })
-                .catch(error => console.error('Error:', error));
-        };
+                    .then(response => response.json())
+                    .then(async (data) => {
+                        console.log("NUEVA DATA:", data);
+                        setUsername(data.name);
+                        setCity(data.city);
+                        setProfilePicHash(data.profilePicHash);
+                        await AsyncStorage.setItem('profile_pic', data.profilePicHash);
+                        await AsyncStorage.setItem('name', data.name);
 
-        fetchUserData();
+                        //knowlanguages has an id and a name, so we need to map it to only the name
+                        setKnownLanguages(data.knownLanguages.map((lang: any) => lang.name));
+                        setWantToKnowLanguages(data.wantToKnowLanguages.map((lang: any) => lang.name));
+                    })
+                    .catch(error => console.error('Error:', error));
+            };
 
-    },[router])
+            fetchUserData();
+
+        }, [router])
     );
 
     useEffect(() => {
@@ -165,49 +164,50 @@ const UpdateProfile: React.FC = () => {
         <SafeAreaView style={styles.container}>
 
             <View style={styles.imageContainer}>
-                <ImageUploader profilePicHash={profilePicHash} />
+                <ImageUploader profilePicHash={profilePicHash}/>
             </View>
-        <View style={styles.inputContainer}>
-            <Text style={styles.label}>Username</Text>
-            <TextInput
-                style={styles.input}
-                placeholder="Username"
-                onChangeText={(text) => handleChange('username', text)}
-                value={username}
-            />
-        </View>
-        {errors.username && <Text style={styles.errorText}>{errors.username}</Text>}
-
-        <View style={styles.inputContainer}>
-            <Text style={styles.label}>City</Text>
-            <TextInput
-                style={styles.input}
-                placeholder="City"
-                onChangeText={(text) => handleChange('city', text)}
-                value={city}
-            />
-        </View>
-        {errors.city && <Text style={styles.errorText}>{errors.city}</Text>}
-
-        <View style={styles.inputContainer}>
-            <Text style={styles.label}>Known languages</Text>
-            <View style={styles.tagPickerContainer}>
-                <TagPicker input_text="Enter known language..." setTags={setKnownLanguages} tags={knownLanguages} />
+            <View style={styles.inputContainer}>
+                <Text style={styles.label}>Username</Text>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Username"
+                    onChangeText={(text) => handleChange('username', text)}
+                    value={username}
+                />
             </View>
-        </View>
+            {errors.username && <Text style={styles.errorText}>{errors.username}</Text>}
 
-        <View style={styles.inputContainer}>
-            <Text style={styles.label}>Want to know languages</Text>
-            <View style={styles.tagPickerContainer}>
-                <TagPicker input_text="Enter want to know language..." setTags={setWantToKnowLanguages} tags={wantToKnowLanguages} />
+            <View style={styles.inputContainer}>
+                <Text style={styles.label}>City</Text>
+                <TextInput
+                    style={styles.input}
+                    placeholder="City"
+                    onChangeText={(text) => handleChange('city', text)}
+                    value={city}
+                />
             </View>
-        </View>
+            {errors.city && <Text style={styles.errorText}>{errors.city}</Text>}
 
-        <TouchableOpacity style={styles.button} onPress={handleUpdate}>
-            <Text style={styles.buttonText}>Update</Text>
-        </TouchableOpacity>
-        {errorMessage && <Text style={styles.errorText}>{errorMessage}</Text>}
-    </SafeAreaView>
+            <View style={styles.inputContainer}>
+                <Text style={styles.label}>Known languages</Text>
+                <View style={styles.tagPickerContainer}>
+                    <TagPicker input_text="Enter known language..." setTags={setKnownLanguages} tags={knownLanguages}/>
+                </View>
+            </View>
+
+            <View style={styles.inputContainer}>
+                <Text style={styles.label}>Want to know languages</Text>
+                <View style={styles.tagPickerContainer}>
+                    <TagPicker input_text="Enter want to know language..." setTags={setWantToKnowLanguages}
+                               tags={wantToKnowLanguages}/>
+                </View>
+            </View>
+
+            <TouchableOpacity style={styles.button} onPress={handleUpdate}>
+                <Text style={styles.buttonText}>Update</Text>
+            </TouchableOpacity>
+            {errorMessage && <Text style={styles.errorText}>{errorMessage}</Text>}
+        </SafeAreaView>
     );
 };
 
@@ -240,7 +240,7 @@ const styles = StyleSheet.create({
         borderRadius: 30,
         marginVertical: 10,
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
+        shadowOffset: {width: 0, height: 2},
         shadowOpacity: 0.8,
         shadowRadius: 2,
         elevation: 5,
@@ -260,7 +260,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
         textAlign: 'center',
-    },inputContainer: {
+    }, inputContainer: {
         width: '40%',
         marginBottom: 12,
     },
