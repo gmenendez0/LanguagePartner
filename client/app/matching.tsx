@@ -28,7 +28,13 @@ export default function MatchngScreen() {
 
   const getNewProfile = async (this_token: string): Promise<Profile | null> => {
     try {
-      const response = await axios.get(`http://localhost:3000/v1/matching`, {
+      const queryParams = new URLSearchParams()
+      const lastProfiles = profiles.slice(-3);
+      if (lastProfiles.length > 0) {
+        queryParams.append('exclude', lastProfiles.map(profile => profile.id).join(','));
+      }
+
+      const response = await axios.get(`http://localhost:3000/v1/matching?${queryParams.toString()}`, {
         headers: {
           Authorization: `Bearer ${this_token}`
         }
@@ -47,7 +53,7 @@ export default function MatchngScreen() {
       if (axios.isAxiosError(error) && error.response?.status === 404) {
         return null;
       }
-      throw error; // Re-throw the error if it's not a 404
+      throw error;
     }
   };
 
@@ -142,14 +148,14 @@ export default function MatchngScreen() {
     }
   };
 
-  const handleSwipedLeft = (index: number) => {
+  const handleSwipedLeft = async (index: number) => {
+    await handleRejectApi(profiles[index].id);
     handleSwiped();
-    handleRejectApi(profiles[index].id);
   };
 
-  const handleSwipedRight = (index: number) => {
+  const handleSwipedRight = async (index: number) => {
+    await handleAcceptApi(profiles[index].id);
     handleSwiped();
-    handleAcceptApi(profiles[index].id);
   };
 
   const handleRejectApi = async (id: number) => {

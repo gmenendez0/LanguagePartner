@@ -10,10 +10,19 @@ import { broadcastMessageChatViewMatch } from '../../sockets/chatViewSocket';
 export const getMatchableUser = async (req: Request, res: Response) => {
 
   const user = req.user as LP_User;
-  
   const matchableUsers = await userRepository.getAllUsers();
 
-  const filteredUsers = fiterMatchableUsers(user, matchableUsers);
+  let exclude = req.query.exclude;
+  let filtered_out_users: Number[];
+  if (typeof exclude === 'undefined') {
+    filtered_out_users = [];
+  } else {
+    filtered_out_users = (exclude as string).split(',').map(Number);
+  }
+
+  console.log(exclude);
+
+  const filteredUsers = fiterMatchableUsers(user, matchableUsers, filtered_out_users);
 
   if (filteredUsers.length > 0) {
     
@@ -23,8 +32,9 @@ export const getMatchableUser = async (req: Request, res: Response) => {
   } else {
     // Si no hay usuarios posibles, borro la lista de rechazados y vuelvo a intentar
     user.removeAllRejectedUsers();
+    console.log('No matchable users found, trying again');
     userRepository.save(user);
-    const filteredUsers = fiterMatchableUsers(user, matchableUsers);
+    const filteredUsers = fiterMatchableUsers(user, matchableUsers, []);
 
     if (filteredUsers.length > 0) {
 
@@ -37,7 +47,7 @@ export const getMatchableUser = async (req: Request, res: Response) => {
   }
 }
 
-const fiterMatchableUsers = (user: LP_User, matchableUsers: LP_User[]): LP_User[] => {
+const fiterMatchableUsers = (user: LP_User, matchableUsers: LP_User[], filtered: Number[]): LP_User[] => {
   // Map approvedUsers and rejectedUsers to arrays of their IDs
   const approvedUserIds = user.getApprovedUsers().map(approvedUser => approvedUser.getId());
   const rejectedUserIds = user.getRejectedUsers().map(rejectedUser => rejectedUser.getId());
@@ -50,6 +60,7 @@ const fiterMatchableUsers = (user: LP_User, matchableUsers: LP_User[]): LP_User[
     return (
       !approvedUserIds.includes(matchableUser.getId()) &&
       !rejectedUserIds.includes(matchableUser.getId()) &&
+      !filtered.includes(matchableUser.getId()) &&
       matchableUser.getId() !== user.getId() &&
       matchableLanguages.some(language => myLanguages.includes(language))
     );
