@@ -59,11 +59,6 @@ function TabNavigator(): React.ReactElement {
     const [hasConfiguredProfile, setHasConfiguredProfile] = useState<boolean>(false);
     useFocusEffect(
         React.useCallback(() => {
-            const checkHasConfiguredProfile = async () => {
-                let token = await AsyncStorage.getItem('hasConfiguredProfile');
-                token = token ==  "false" ? "" : token;
-                setHasConfiguredProfile(!!token);
-            };
             const checkLoginStatus = async () => {
                 const token = await AsyncStorage.getItem('session_token');
                 setIsLoggedIn(!!token);
@@ -77,6 +72,16 @@ function TabNavigator(): React.ReactElement {
             }
         }, [isLoggedIn, hasConfiguredProfile, router])
     );
+
+    const checkHasConfiguredProfile = async () => {
+        let token = await AsyncStorage.getItem('hasConfiguredProfile');
+        token = token ==  "false" ? "" : token;
+        setHasConfiguredProfile(!!token);
+    };
+
+    useEffect(() => {
+        checkHasConfiguredProfile();
+    }, []);
 
     const Tab = createBottomTabNavigator();
     return (
