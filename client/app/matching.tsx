@@ -26,17 +26,17 @@ export default function MatchngScreen() {
     setIsMatched(false);
   };
 
-  const getNewProfile = async (this_token: string): Promise<Profile | null> => {
+  const getNewProfile = async (thisToken: string, lastProfiles: number[]): Promise<Profile | null> => {
     try {
       const queryParams = new URLSearchParams()
-      const lastProfiles = profiles.slice(-3);
+      console.log(lastProfiles);
       if (lastProfiles.length > 0) {
-        queryParams.append('exclude', lastProfiles.map(profile => profile.id).join(','));
+        queryParams.append('exclude', lastProfiles.join(','));
       }
 
       const response = await axios.get(`http://localhost:3000/v1/matching?${queryParams.toString()}`, {
         headers: {
-          Authorization: `Bearer ${this_token}`
+          Authorization: `Bearer ${thisToken}`
         }
       });
       const data = response.data;
@@ -88,9 +88,10 @@ export default function MatchngScreen() {
 
   useEffect(() => {
     const fetchProfiles = async (token: string) => {
-      // Assuming getNewProfile now accepts a token parameter
-      const newProfiles = await Promise.all([getNewProfile(token), getNewProfile(token)]);
-      setProfiles(newProfiles.filter(profile => profile !== null) as Profile[]);
+      const firstProfile = await getNewProfile(token, []);
+      setProfiles([firstProfile].filter(profile => profile !== null) as Profile[]);
+      const secondProfile = await getNewProfile(token, [firstProfile!.id]);
+      setProfiles(prevProfiles => [...prevProfiles, secondProfile].filter(profile => profile !== null) as Profile[]);
     };
 
     const fetchToken = async () => {
@@ -142,7 +143,7 @@ export default function MatchngScreen() {
 }, []);
 
   const handleSwiped = async () => {
-    const newProfile = await getNewProfile(token!);
+    const newProfile = await getNewProfile(token!, profiles.slice(-2).map(profile => profile.id));
     if (newProfile) {
       setProfiles(prevProfiles => [...prevProfiles, newProfile]);
     }
