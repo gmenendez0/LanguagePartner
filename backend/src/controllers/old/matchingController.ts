@@ -20,8 +20,6 @@ export const getMatchableUser = async (req: Request, res: Response) => {
     filtered_out_users = (exclude as string).split(',').map(Number);
   }
 
-  console.log(exclude);
-
   const filteredUsers = fiterMatchableUsers(user, matchableUsers, filtered_out_users);
 
   if (filteredUsers.length > 0) {
@@ -32,7 +30,6 @@ export const getMatchableUser = async (req: Request, res: Response) => {
   } else {
     // Si no hay usuarios posibles, borro la lista de rechazados y vuelvo a intentar
     user.removeAllRejectedUsers();
-    console.log('No matchable users found, trying again');
     userRepository.save(user);
     const filteredUsers = fiterMatchableUsers(user, matchableUsers, []);
 
@@ -88,6 +85,10 @@ export const approveUser = async (req: Request, res: Response) => {
 
   // Si el usuario aprobado también nos ha aprobado, se produce un match
   if (userToApprove.approvedUsers.map(approvedUser => approvedUser.id).includes(user.getId())) {
+
+    if (user.getMatchedUsers().map(matchedUser => matchedUser.getId()).includes(userToApprove.getId())) {
+      return res.status(200).json({ message: 'Match already exists' });
+    }
 
     user.addMatchedUser(userToApprove);
     userToApprove.addMatchedUser(user);
