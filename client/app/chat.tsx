@@ -90,11 +90,18 @@ const Chat: React.FC<ChatProps> = ({ me, chatter }) => {
             } 
         };
 
+        const handleClose = () => {
+            ws.close(1000, chatter.id.toString());
+        }
+
+        window.addEventListener('beforeunload', handleClose);
+
         ws.onclose = () => {
             console.log('WebSocket chat connection closed');
         };
 
         return () => {
+            window.removeEventListener('beforeunload', handleClose)
             ws.close(1000, chatter.id.toString());
         };
 
